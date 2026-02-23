@@ -53,12 +53,16 @@ describe("CVPage", () => {
     }
   });
 
-  it("renders the Education section", () => {
+  it("renders the Education section only when education data exists", () => {
     render(<CVPage />);
-    expect(screen.getByText("Education")).toBeInTheDocument();
-    for (const edu of cvData.education) {
-      expect(screen.getByText(edu.degree)).toBeInTheDocument();
-      expect(screen.getByText(new RegExp(edu.institution))).toBeInTheDocument();
+    if (cvData.education.length > 0) {
+      expect(screen.getByText("Education")).toBeInTheDocument();
+      for (const edu of cvData.education) {
+        expect(screen.getByText(edu.degree)).toBeInTheDocument();
+        expect(screen.getByText(new RegExp(edu.institution))).toBeInTheDocument();
+      }
+    } else {
+      expect(screen.queryByText("Education")).not.toBeInTheDocument();
     }
   });
 

@@ -1,63 +1,135 @@
 /**
  * Tests for content/cv.json — validates the CV data structure.
  *
- * These tests ensure the JSON schema is correct so that the CV page
- * and About page don't crash due to missing or malformed data.
+ * TDD: These tests encode the EXPECTED state of cv.json after
+ * populating it with real LinkedIn export data. Write RED first,
+ * then update cv.json to make them GREEN.
  */
 import cvData from "../../content/cv.json";
 
 describe("cv.json data integrity", () => {
   it("has required top-level fields", () => {
-    expect(cvData.name).toBeDefined();
-    expect(typeof cvData.name).toBe("string");
-    expect(cvData.headline).toBeDefined();
-    expect(cvData.summary).toBeDefined();
+    expect(cvData.name).toBe("Chad Moore");
+    expect(cvData.headline).toBe("Senior / Staff Full‑Stack Engineer");
+    expect(cvData.location).toBe("Northampton, Massachusetts, United States");
+    expect(typeof cvData.summary).toBe("string");
+    expect(cvData.summary.length).toBeGreaterThan(100);
   });
 
-  it("has a skills object with at least one category", () => {
-    expect(typeof cvData.skills).toBe("object");
+  it("has links with email, github, and linkedin", () => {
+    expect(cvData.links.email).toBe("chad@chadmoore.info");
+    expect(cvData.links.github).toBe("https://github.com/chadmoore");
+    expect(cvData.links.linkedin).toBe("https://www.linkedin.com/in/chad-moore-info");
+  });
+
+  it("has specialties as an array of strings", () => {
+    expect(Array.isArray(cvData.specialties)).toBe(true);
+    expect(cvData.specialties.length).toBeGreaterThanOrEqual(5);
+    for (const s of cvData.specialties) {
+      expect(typeof s).toBe("string");
+    }
+  });
+});
+
+describe("cv.json experience (from LinkedIn Positions)", () => {
+  it("has exactly 5 experience entries", () => {
+    expect(cvData.experience).toHaveLength(5);
+  });
+
+  it("has Qlik as the most recent position", () => {
+    const qlik = cvData.experience[0];
+    expect(qlik.company).toBe("Qlik");
+    expect(qlik.title).toBe("Senior Implementation Consultant");
+    expect(qlik.startDate).toBe("2020-03");
+    expect(qlik.endDate).toBe("2026-02");
+    expect(qlik.location).toBe("Northampton, MA");
+  });
+
+  it("has RCN as the second position", () => {
+    const rcn = cvData.experience[1];
+    expect(rcn.company).toBe("RCN");
+    expect(rcn.title).toBe("Application Developer");
+    expect(rcn.startDate).toBe("2012-01");
+    expect(rcn.endDate).toBe("2020-03");
+  });
+
+  it("has Bridgeport National Bindery as the third position", () => {
+    const bnb = cvData.experience[2];
+    expect(bnb.company).toBe("Bridgeport National Bindery");
+    expect(bnb.title).toBe("Lead Software Developer");
+    expect(bnb.startDate).toBe("2006-10");
+    expect(bnb.endDate).toBe("2012-01");
+  });
+
+  it("has Mitem Corporation as the fourth position", () => {
+    const mitem = cvData.experience[3];
+    expect(mitem.company).toBe("Mitem Corporation");
+    expect(mitem.title).toBe("Professional Services Consultant");
+    expect(mitem.startDate).toBe("1999");
+    expect(mitem.endDate).toBe("2006");
+  });
+
+  it("has Winthrop Technologies as the fifth position", () => {
+    const winthrop = cvData.experience[4];
+    expect(winthrop.company).toBe("Winthrop Technologies");
+    expect(winthrop.title).toBe("Junior Consultant");
+    expect(winthrop.startDate).toBe("1996");
+    expect(winthrop.endDate).toBe("1998");
+  });
+
+  it("has highlights array on every experience entry", () => {
+    for (const entry of cvData.experience) {
+      expect(Array.isArray(entry.highlights)).toBe(true);
+      expect(entry.highlights.length).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it("has a description on every experience entry", () => {
+    for (const entry of cvData.experience) {
+      expect(typeof entry.description).toBe("string");
+    }
+  });
+});
+
+describe("cv.json skills (organized from LinkedIn Skills)", () => {
+  it("has a skills object with at least 6 categories", () => {
     const categories = Object.keys(cvData.skills);
-    expect(categories.length).toBeGreaterThan(0);
+    expect(categories.length).toBeGreaterThanOrEqual(6);
   });
 
   it("has arrays of strings in each skill category", () => {
-    for (const [category, skills] of Object.entries(cvData.skills)) {
+    for (const [, skills] of Object.entries(cvData.skills)) {
       expect(Array.isArray(skills)).toBe(true);
+      expect(skills.length).toBeGreaterThan(0);
       for (const skill of skills) {
         expect(typeof skill).toBe("string");
       }
     }
   });
 
-  it("has an experience array", () => {
-    expect(Array.isArray(cvData.experience)).toBe(true);
-  });
-
-  it("has experience entries with required fields", () => {
-    for (const entry of cvData.experience) {
-      expect(entry.title).toBeDefined();
-      expect(entry.company).toBeDefined();
-      expect(entry.startDate).toBeDefined();
-      // endDate can be null (current position)
-      expect("endDate" in entry).toBe(true);
+  it("includes key skills from LinkedIn endorsements", () => {
+    const allSkills = Object.values(cvData.skills).flat();
+    // These are heavily endorsed skills from the LinkedIn export
+    const keySkills = [
+      "JavaScript", "React", "TypeScript", "Node.js",
+      "Ruby", "SQL", "Java", "C#", "Linux",
+      "REST APIs", "Git", "Agile Methodologies",
+    ];
+    for (const skill of keySkills) {
+      expect(allSkills).toContain(skill);
     }
   });
 
+  it("includes modern skills not yet endorsed but listed on LinkedIn", () => {
+    const allSkills = Object.values(cvData.skills).flat();
+    expect(allSkills).toContain("Agentic AI");
+    expect(allSkills).toContain("SSO");
+    expect(allSkills).toContain("SAML");
+  });
+});
+
+describe("cv.json education", () => {
   it("has an education array", () => {
     expect(Array.isArray(cvData.education)).toBe(true);
-  });
-
-  it("has links with email, github, and linkedin", () => {
-    expect(cvData.links).toBeDefined();
-    expect(cvData.links.email).toContain("@");
-    expect(cvData.links.github).toContain("github.com");
-    expect(cvData.links.linkedin).toContain("linkedin.com");
-  });
-
-  it("has specialties as an array of strings", () => {
-    expect(Array.isArray(cvData.specialties)).toBe(true);
-    for (const s of cvData.specialties) {
-      expect(typeof s).toBe("string");
-    }
   });
 });

@@ -24,6 +24,17 @@ import type { Metadata } from "next";
 import cvData from "@/../content/cv.json";
 import { formatDateRange } from "@/lib/dates";
 
+/** Education entries may be empty but TypeScript needs the shape. */
+interface Education {
+  degree: string;
+  institution: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+}
+const education = cvData.education as Education[];
+
 export const metadata: Metadata = {
   title: "CV | Chad Moore",
   description: cvData.headline,
@@ -136,13 +147,13 @@ export default function CVPage() {
       )}
 
       {/* Education */}
-      {cvData.education.length > 0 && (
+      {education.length > 0 && (
         <section className="mb-12">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
             Education
           </h2>
           <div className="space-y-6">
-            {cvData.education.map((edu, i) => (
+            {education.map((edu, i) => (
               <div
                 key={i}
                 className="relative pl-6 border-l-2 border-border"
