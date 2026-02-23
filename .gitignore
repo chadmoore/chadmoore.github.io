@@ -38,4 +38,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# input data (LinkedIn exports, etc.)
+/input
 next-env.d.ts
