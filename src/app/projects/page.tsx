@@ -1,3 +1,14 @@
+/**
+ * Projects Page — GitHub Repos, Live from the API
+ *
+ * This is a thin wrapper around <ProjectsList />, which does all the
+ * heavy lifting (fetching, filtering, rendering). This page component
+ * just provides the layout, heading, and metadata.
+ *
+ * Currently hidden via siteConfig.sections.projects = false.
+ * The page still exists and is accessible by URL — it's just not
+ * linked in the nav. Security through obscurity? No. Soft launch.
+ */
 import type { Metadata } from "next";
 import ProjectsList from "@/components/ProjectsList";
 

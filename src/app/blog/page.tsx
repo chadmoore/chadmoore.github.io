@@ -1,3 +1,23 @@
+/**
+ * Blog Index — All posts, newest first.
+ *
+ * Reads every .md file from /content/blog/ at build time
+ * and renders them as a clean, scannable list.
+ *
+ * Each entry shows:
+ *  - Title (linked to the full post)
+ *  - Date in a monospaced font for alignment
+ *  - Excerpt (clamped to 2 lines)
+ *  - Tags as colored pills
+ *
+ * If there are no posts yet, shows a polite empty state.
+ *
+ * The hover effect uses negative margin + padding to create
+ * a full-bleed highlight without breaking the layout. Classic trick.
+ *
+ * // You know what's harder than writing code? Writing blog posts.
+ * // But here we are. Committed to both.
+ */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";

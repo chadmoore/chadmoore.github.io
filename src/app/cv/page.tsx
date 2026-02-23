@@ -1,3 +1,25 @@
+/**
+ * CV Page — Professional timeline, powered by JSON.
+ *
+ * All CV data lives in /content/cv.json, which was originally
+ * generated from a LinkedIn CSV export and then hand-polished.
+ * This means updating the CV is a JSON edit, not a code change.
+ *
+ * Sections rendered (in order):
+ *  1. Summary — one-paragraph elevator pitch
+ *  2. Experience — reverse-chronological work history
+ *  3. Education — degrees and institutions
+ *  4. Skills — grouped by category as tag pills
+ *  5. Certifications — if any exist in the JSON
+ *
+ * The formatDateRange helper parses "YYYY-MM" strings into
+ * human-friendly "Mon YYYY — Mon YYYY" ranges. If there's no
+ * end date, it shows "Present" because optimism.
+ *
+ * // If you're reading this because you're hiring:
+ * // yes, the CV data is structured and machine-parseable.
+ * // You're welcome, ATS robots.
+ */
 import type { Metadata } from "next";
 import cvData from "@/../content/cv.json";
 
@@ -6,10 +28,14 @@ export const metadata: Metadata = {
   description: cvData.headline,
 };
 
+/**
+ * Converts a "YYYY-MM" start/end pair into a display-friendly date range.
+ * Handles year-only strings and null end dates ("Present").
+ */
 function formatDateRange(start: string, end: string | null): string {
   const fmt = (d: string) => {
     const [year, month] = d.split("-");
-    if (!month) return year;
+    if (!month) return year;                  // year-only fallback
     const date = new Date(Number(year), Number(month) - 1);
     return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
   };

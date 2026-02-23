@@ -1,6 +1,24 @@
+/*
+ * chadmoore.info — Global Styles
+ *
+ * Design philosophy: dark, minimal, and fast.
+ * All colors are defined as Tailwind v4 theme tokens so they
+ * cascade through every utility class automatically.
+ *
+ * If you're reading this, you probably care about CSS.
+ * Respect. Pull up a chair. The tokens are below.
+ */
+
 @import "tailwindcss";
 
 @theme inline {
+  /* --- Color System ---
+   * background  : the void (page bg)
+   * surface     : elevated cards and containers
+   * border      : subtle dividers
+   * muted       : secondary text
+   * accent      : interactive / highlight blue
+   */
   --color-background: #0a0a0a;
   --color-foreground: #ededed;
   --color-muted: #888888;
@@ -9,6 +27,11 @@
   --color-surface: #141414;
   --color-surface-hover: #1e1e1e;
   --color-border: #262626;
+
+  /* --- Typography ---
+   * Geist Sans + Geist Mono — loaded via next/font in layout.tsx
+   * so we get zero layout shift and optimal font rendering.
+   */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -19,7 +42,10 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Good taste extends to text selection. */
 ::selection {
   background: var(--color-accent);
   color: white;
 }
+
+/* P.S. — No !important was harmed in the making of this stylesheet. */

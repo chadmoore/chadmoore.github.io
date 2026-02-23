@@ -1,3 +1,19 @@
+/**
+ * Header — Sticky navigation that follows you everywhere.
+ *
+ * Features:
+ *  - Backdrop blur for that frosted-glass look on scroll
+ *  - Responsive: horizontal nav on desktop, hamburger on mobile
+ *  - Route-aware active states via usePathname()
+ *  - Respects siteConfig: disabled sections don't appear as links
+ *
+ * The nav links are defined in `allNavLinks` and filtered at module
+ * scope so the array is computed once, not on every render.
+ * React Compiler would catch this anyway, but being explicit is free.
+ *
+ * // Q: "Why not use a <dialog> for the mobile menu?"
+ * // A: Because toggling a div is 3 lines and works everywhere. YAGNI.
+ */
 "use client";
 
 import Link from "next/link";
@@ -5,6 +21,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import siteConfig, { type SectionKey } from "@/lib/siteConfig";
 
+/**
+ * Master list of all possible nav links.
+ * Each link optionally maps to a section key in siteConfig.
+ * If the section is disabled, the link is filtered out.
+ */
 const allNavLinks: { href: string; label: string; section?: SectionKey }[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About", section: "about" },
@@ -13,6 +34,7 @@ const allNavLinks: { href: string; label: string; section?: SectionKey }[] = [
   { href: "/cv", label: "CV", section: "cv" },
 ];
 
+/** Filtered at module scope — only enabled sections make it to the DOM. */
 const navLinks = allNavLinks.filter(
   (link) => !link.section || siteConfig.sections[link.section]
 );

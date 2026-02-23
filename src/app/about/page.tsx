@@ -1,3 +1,17 @@
+/**
+ * About Page — The "who is this person" page.
+ *
+ * Intentionally written in first person and kept short.
+ * Nobody reads a 2000-word about page. If they want the
+ * full story, that's what the CV page is for.
+ *
+ * The skills grid pulls from a hardcoded array. It could
+ * be driven by siteConfig or cv.json, but duplicating 9
+ * strings felt simpler than adding an import chain.
+ *
+ * // If you've read this far into the source code of someone's
+ * // about page, we should probably be friends. chad@chadmoore.info
+ */
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

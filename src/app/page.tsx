@@ -1,8 +1,29 @@
+/**
+ * Homepage — The front door.
+ *
+ * Three sections, from top to bottom:
+ *
+ * 1. Hero — Name, tagline, and CTAs. The buttons dynamically
+ *    adjust based on which sections are enabled in siteConfig.
+ *    If projects is off, "About Me" gets promoted to primary.
+ *
+ * 2. Feature cards — Three pillars of what I do, each with an
+ *    SVG icon. These are intentionally not data-driven because
+ *    there are exactly three and they won't change often.
+ *
+ * 3. Recent posts — The latest 3 blog posts, pulled at build time.
+ *    Only renders if the blog section is enabled AND posts exist.
+ *    A "View all" link takes visitors to the full blog index.
+ *
+ * // Confession: I spent more time choosing the hero font size
+ * // than writing most of the blog posts. Priorities.
+ */
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import siteConfig from "@/lib/siteConfig";
 
 export default function Home() {
+  // Only fetch posts if the blog is enabled — no wasted I/O
   const recentPosts = siteConfig.sections.blog ? getAllPosts().slice(0, 3) : [];
 
   return (

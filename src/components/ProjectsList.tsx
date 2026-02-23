@@ -1,7 +1,30 @@
+/**
+ * ProjectsList — Live GitHub Repository Showcase
+ *
+ * Fetches public repos from the GitHub API at runtime (client-side)
+ * and renders them as a responsive card grid.
+ *
+ * Why client-side instead of build-time?
+ * Because the GitHub API has rate limits per-IP, and at build time
+ * in CI that IP is shared. Client-side means each visitor gets
+ * their own rate limit bucket, and the data is always fresh.
+ *
+ * Features:
+ *  - Skeleton loading animation while fetching
+ *  - Error state with a direct link to the GitHub profile
+ *  - Forks are filtered out (only original work shown)
+ *  - Sorted by stars, because democracy
+ *  - Language color dots matching GitHub's linguist colors
+ *
+ * // Easter egg: the language colors object below is lovingly
+ * // hand-transcribed from GitHub's linguist YAML. If your favorite
+ * // language is missing, it's not personal. Probably.
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 
+/** Shape of the GitHub API /repos response (only the fields we use). */
 interface Repo {
   id: number;
   name: string;
@@ -14,6 +37,10 @@ interface Repo {
   updated_at: string;
 }
 
+/**
+ * Language → color mapping, matching GitHub's linguist colors.
+ * See: https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
+ */
 const LANGUAGE_COLORS: Record<string, string> = {
   TypeScript: "#3178c6",
   JavaScript: "#f1e05a",

@@ -1,3 +1,20 @@
+/**
+ * Blog Post Page — Individual post rendered from markdown.
+ *
+ * This is a dynamic route ([slug]) that's pre-rendered at build time
+ * via generateStaticParams(). Every .md file in /content/blog/ gets
+ * its own static HTML page — zero JavaScript needed to read a post.
+ *
+ * The flow:
+ *  1. generateStaticParams() lists all slugs for static generation
+ *  2. generateMetadata() sets the <title> and description per-post
+ *  3. The page component fetches the post and renders it via <Markdown />
+ *  4. If the slug doesn't match a file, notFound() triggers the 404 page
+ *
+ * // Pro tip for future me: if you rename a blog post file,
+ * // the old URL will 404. Set up redirects if you care about that.
+ * // (You probably don't. It's a personal blog.)
+ */
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import type { Metadata } from "next";

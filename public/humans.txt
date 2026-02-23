@@ -1,0 +1,17 @@
+/* TEAM */
+Developer: Chad Moore
+Contact: chad@chadmoore.info
+LinkedIn: www.linkedin.com/in/chad-moore-info
+GitHub: github.com/chadmoore
+Location: Earth (mostly)
+
+/* SITE */
+Built with: Next.js, React, Tailwind CSS, TypeScript
+Hosted on: GitHub Pages
+Fonts: Geist Sans, Geist Mono (by Vercel)
+Last updated: 2025
+
+/* THANKS */
+Coffee: for existing
+Stack Overflow: for the weird edge cases
+You: for reading this file — seriously, who checks humans.txt?
