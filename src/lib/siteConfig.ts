@@ -19,7 +19,7 @@ const siteConfig = {
   name: "Chad Moore",
 
   /** Tagline shown below the name on the homepage */
-  tagline: "Creative Data Driven Full Stack Software",
+  tagline: "Full-stack engineer. Enterprise systems. Cloud to UI.",
 
   /**
    * Section visibility flags.

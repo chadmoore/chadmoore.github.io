@@ -18,7 +18,8 @@ import { sortSkills, getSkillClasses, type Skill } from "@/lib/skills";
 
 export const metadata: Metadata = {
   title: "About | Chad Moore",
-  description: "About Chad Moore — Creative Data Driven Full Stack Software",
+  description:
+    "About Chad Moore — Full-stack engineer building enterprise systems from cloud to UI.",
 };
 
 export default function AboutPage() {
@@ -30,16 +31,19 @@ export default function AboutPage() {
 
       <div className="prose prose-invert max-w-none space-y-6 text-muted leading-relaxed">
         <p className="text-lg">
-          I&apos;m Chad Moore — a full-stack software developer who loves building
-          creative, data-driven solutions. I enjoy working across the entire
-          stack, from crafting intuitive front-end experiences to designing
-          robust back-end systems.
+          I&apos;m Chad Moore — a senior full-stack engineer with nearly three decades
+          of experience designing and delivering complex enterprise systems. I&apos;ve
+          worked across financial services, telecommunications, government, healthcare,
+          and manufacturing — from Fortune 50 organizations to federal agencies.
         </p>
 
         <p>
-          My work spans web applications, data pipelines, APIs, and everything
-          in between. I believe great software comes from curiosity, clear
-          thinking, and a willingness to iterate.
+          My work centers on enterprise integration, secure identity systems, and
+          API architecture. I frequently operate in an architectural capacity —
+          owning system design, integration strategy, and technical direction.
+          More recently, I&apos;ve been leveraging agentic AI and MCP-based tooling
+          to accelerate development while raising the bar on testing and code
+          consistency.
         </p>
 
         <h2 className="text-xl font-semibold text-foreground mt-12 mb-4">

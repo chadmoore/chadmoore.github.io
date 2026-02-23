@@ -47,7 +47,7 @@ describe("Homepage", () => {
   it("renders the tagline", () => {
     render(<Home />);
     expect(
-      screen.getByText("Creative Data Driven Full Stack Software")
+      screen.getByText("Full-stack engineer. Enterprise systems. Cloud to UI.")
     ).toBeInTheDocument();
   });
 
@@ -67,9 +67,9 @@ describe("Homepage", () => {
 
   it("renders the three feature cards", () => {
     render(<Home />);
-    expect(screen.getByText("Full Stack Development")).toBeInTheDocument();
-    expect(screen.getByText("Data Driven")).toBeInTheDocument();
-    expect(screen.getByText("Creative Solutions")).toBeInTheDocument();
+    expect(screen.getByText("Enterprise Integration")).toBeInTheDocument();
+    expect(screen.getByText("Secure Identity & APIs")).toBeInTheDocument();
+    expect(screen.getByText("Architecture & Technical Leadership")).toBeInTheDocument();
   });
 
   it("renders recent blog posts section when posts exist", () => {

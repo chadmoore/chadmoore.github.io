@@ -80,7 +80,7 @@ describe("AboutPage", () => {
   it("renders the About intro paragraphs", () => {
     render(<AboutPage />);
     expect(
-      screen.getByText(/full-stack software developer/)
+      screen.getByText(/nearly three decades/)
     ).toBeInTheDocument();
   });
 });

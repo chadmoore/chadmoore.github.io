@@ -75,34 +75,37 @@ export default function Home() {
           <div className="space-y-3">
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m-8 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </div>
-            <h3 className="font-semibold">Full Stack Development</h3>
+            <h3 className="font-semibold">Enterprise Integration</h3>
             <p className="text-sm text-muted">
-              Building end-to-end solutions from database design to polished user interfaces.
+              Connecting systems that weren&apos;t designed to talk to each other — from
+              legacy terminals to modern cloud platforms.
             </p>
           </div>
           <div className="space-y-3">
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
             </div>
-            <h3 className="font-semibold">Data Driven</h3>
+            <h3 className="font-semibold">Secure Identity &amp; APIs</h3>
             <p className="text-sm text-muted">
-              Turning complex data into actionable insights and intelligent applications.
+              Deep expertise in OAuth, SAML, OIDC, and SSO — designing
+              authentication and authorization systems at scale.
             </p>
           </div>
           <div className="space-y-3">
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
-            <h3 className="font-semibold">Creative Solutions</h3>
+            <h3 className="font-semibold">Architecture &amp; Technical Leadership</h3>
             <p className="text-sm text-muted">
-              Approaching problems with creativity and pragmatic engineering.
+              Owning system design and technical direction across complex
+              enterprise engagements for Fortune 50 organizations.
             </p>
           </div>
         </div>
