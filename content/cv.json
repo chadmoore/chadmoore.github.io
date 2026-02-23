@@ -1,0 +1,63 @@
+{
+  "name": "Chad Moore",
+  "location": "Northampton, Massachusetts, United States",
+  "headline": "Senior / Staff Full‑Stack Engineer",
+  "summary": "Senior full‑stack engineer with nearly three decades of experience designing and delivering complex enterprise systems across financial services, telecommunications, government, healthcare, and manufacturing. Deep expertise in frontend architecture, API design, cloud infrastructure, and secure identity systems. Frequently operating in an architectural capacity — owning system design, integration strategy, and technical direction across client engagements. Actively leveraging agentic AI, MCP‑based tooling, and AI‑assisted workflows to accelerate development while raising the bar on testing, documentation, and code consistency. Proven track record leading high‑stakes implementations for Fortune 50 organizations, federal agencies, and national service providers — translating complex technical problems into clear solutions for clients, cross‑functional teams, and executive stakeholders.",
+  "specialties": [
+    "Enterprise Systems",
+    "Cloud & Infrastructure",
+    "API Architecture",
+    "AI‑Augmented Development",
+    "Secure Identity"
+  ],
+  "experience": [
+    {
+      "title": "Senior / Staff Full‑Stack Engineer",
+      "company": "Your Company",
+      "location": "Remote",
+      "startDate": "2023-01",
+      "endDate": null,
+      "description": "Description of your role and key accomplishments.",
+      "highlights": [
+        "Highlight or accomplishment 1",
+        "Highlight or accomplishment 2"
+      ]
+    },
+    {
+      "title": "Previous Role Title",
+      "company": "Previous Company",
+      "location": "Location",
+      "startDate": "2020-01",
+      "endDate": "2022-12",
+      "description": "Description of your role.",
+      "highlights": [
+        "Highlight 1",
+        "Highlight 2"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Your Degree",
+      "institution": "Your University",
+      "location": "Location",
+      "startDate": "Year",
+      "endDate": "Year",
+      "description": ""
+    }
+  ],
+  "skills": {
+    "Frontend": ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML/CSS"],
+    "Backend": ["Node.js", "Python", "REST APIs", "GraphQL"],
+    "Cloud & Infrastructure": ["AWS", "Azure", "Docker", "CI/CD"],
+    "Identity & Security": ["OAuth 2.0", "OIDC", "SAML", "SSO"],
+    "Data": ["PostgreSQL", "SQL Server", "Redis"],
+    "AI & Tooling": ["Agentic AI", "MCP Tooling", "AI‑Assisted Workflows"]
+  },
+  "certifications": [],
+  "links": {
+    "email": "chad@chadmoore.info",
+    "github": "https://github.com/chadmoore",
+    "linkedin": "https://www.linkedin.com/in/chad-moore-info"
+  }
+}

@@ -1,0 +1,152 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+interface Repo {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  language: string | null;
+  stargazers_count: number;
+  fork: boolean;
+  topics: string[];
+  updated_at: string;
+}
+
+const LANGUAGE_COLORS: Record<string, string> = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f1e05a",
+  Python: "#3572A5",
+  Rust: "#dea584",
+  Go: "#00ADD8",
+  Java: "#b07219",
+  "C#": "#178600",
+  Ruby: "#701516",
+  PHP: "#4F5D95",
+  Shell: "#89e051",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  Dart: "#00B4AB",
+  Swift: "#F05138",
+  Kotlin: "#A97BFF",
+};
+
+export default function ProjectsList() {
+  const [repos, setRepos] = useState<Repo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchRepos() {
+      try {
+        const res = await fetch(
+          "https://api.github.com/users/chadmoore/repos?sort=updated&per_page=30&type=owner"
+        );
+        if (!res.ok) throw new Error("Failed to fetch repositories");
+        const data: Repo[] = await res.json();
+        // Filter out forks and sort by stars then updated
+        const filtered = data
+          .filter((r) => !r.fork)
+          .sort((a, b) => b.stargazers_count - a.stargazers_count);
+        setRepos(filtered);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchRepos();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="grid md:grid-cols-2 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="border border-border rounded-xl p-6 animate-pulse"
+          >
+            <div className="h-5 bg-surface rounded w-1/3 mb-3" />
+            <div className="h-4 bg-surface rounded w-full mb-2" />
+            <div className="h-4 bg-surface rounded w-2/3" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="border border-red-500/30 bg-red-500/5 rounded-xl p-6 text-center">
+        <p className="text-red-400">{error}</p>
+        <p className="text-sm text-muted mt-2">
+          Check back later or visit{" "}
+          <a
+            href="https://github.com/chadmoore"
+            className="text-accent hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            my GitHub profile
+          </a>{" "}
+          directly.
+        </p>
+      </div>
+    );
+  }
+
+  if (repos.length === 0) {
+    return (
+      <p className="text-muted text-center py-12">No repositories found.</p>
+    );
+  }
+
+  return (
+    <div className="grid md:grid-cols-2 gap-4">
+      {repos.map((repo) => (
+        <a
+          key={repo.id}
+          href={repo.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group border border-border rounded-xl p-6 hover:border-accent/50 hover:bg-surface-hover transition-all"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="font-semibold group-hover:text-accent transition-colors truncate">
+              {repo.name}
+            </h3>
+            {repo.stargazers_count > 0 && (
+              <span className="text-xs text-muted flex items-center gap-1 shrink-0 ml-2">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                {repo.stargazers_count}
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-muted line-clamp-2 mb-4">
+            {repo.description || "No description"}
+          </p>
+          <div className="flex items-center gap-3 text-xs text-muted">
+            {repo.language && (
+              <span className="flex items-center gap-1.5">
+                <span
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{
+                    backgroundColor:
+                      LANGUAGE_COLORS[repo.language] || "#6b7280",
+                  }}
+                />
+                {repo.language}
+              </span>
+            )}
+            <span>
+              Updated {new Date(repo.updated_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+}
