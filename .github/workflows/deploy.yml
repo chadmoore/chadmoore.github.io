@@ -31,7 +31,9 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: |
+          rm -rf src/app/api
+          STATIC_EXPORT=1 npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

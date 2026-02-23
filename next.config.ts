@@ -3,6 +3,8 @@
  *
  * output: "export"  — Generates a fully static site into ./out
  *                      so we can deploy to GitHub Pages without a server.
+ *                      Only enabled for production builds (STATIC_EXPORT=1)
+ *                      so that API routes work during local development.
  *
  * reactCompiler     — Enables the React Compiler for automatic memoization.
  *                      Because life's too short for manual useMemo.
@@ -13,7 +15,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",
+  output: process.env.STATIC_EXPORT === "1" ? "export" : undefined,
   reactCompiler: true,
   images: {
     unoptimized: true,
