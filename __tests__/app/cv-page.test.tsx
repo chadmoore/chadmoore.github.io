@@ -73,8 +73,8 @@ describe("CVPage", () => {
       // Category names may also appear as specialty pills
       expect(screen.getAllByText(category).length).toBeGreaterThanOrEqual(1);
       for (const skill of skills) {
-        // Some skills may appear in multiple places, just verify at least one
-        expect(screen.getAllByText(skill).length).toBeGreaterThanOrEqual(1);
+        // Skills are now objects with a name property
+        expect(screen.getAllByText(skill.name).length).toBeGreaterThanOrEqual(1);
       }
     }
   });

@@ -23,6 +23,7 @@
 import type { Metadata } from "next";
 import cvData from "@/../content/cv.json";
 import { formatDateRange } from "@/lib/dates";
+import { sortSkills, getSkillClasses, type Skill } from "@/lib/skills";
 
 /** Education entries may be empty but TypeScript needs the shape. */
 interface Education {
@@ -180,29 +181,33 @@ export default function CVPage() {
         </section>
       )}
 
-      {/* Skills */}
+      {/* Skills — sorted by preference/proficiency/status, styled by tags */}
       <section className="mb-12">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
           Skills
         </h2>
         <div className="space-y-4">
-          {Object.entries(cvData.skills).map(([category, items]) => (
-            <div key={category}>
-              <h3 className="text-sm font-medium text-foreground mb-2">
-                {category}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {items.map((skill) => (
-                  <span
-                    key={skill}
-                    className="text-xs bg-surface border border-border px-3 py-1.5 rounded-lg hover:border-accent/50 transition-colors"
-                  >
-                    {skill}
-                  </span>
-                ))}
+          {Object.entries(cvData.skills).map(([category, items]) => {
+            const sorted = sortSkills(items as Skill[]);
+            return (
+              <div key={category}>
+                <h3 className="text-sm font-medium text-foreground mb-2">
+                  {category}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {sorted.map((skill) => (
+                    <span
+                      key={skill.name}
+                      title={`${skill.proficiency}${skill.preference === "preferred" ? " · preferred" : ""}${skill.status === "legacy" ? " · legacy" : ""}`}
+                      className={`text-xs bg-surface border px-3 py-1.5 rounded-lg hover:border-accent/50 transition-colors ${getSkillClasses(skill)}`}
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

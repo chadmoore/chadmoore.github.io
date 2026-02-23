@@ -97,34 +97,71 @@ describe("cv.json skills (organized from LinkedIn Skills)", () => {
     expect(categories.length).toBeGreaterThanOrEqual(6);
   });
 
-  it("has arrays of strings in each skill category", () => {
+  it("has arrays of skill objects in each category", () => {
     for (const [, skills] of Object.entries(cvData.skills)) {
       expect(Array.isArray(skills)).toBe(true);
       expect(skills.length).toBeGreaterThan(0);
       for (const skill of skills) {
-        expect(typeof skill).toBe("string");
+        expect(typeof skill).toBe("object");
+        expect(typeof skill.name).toBe("string");
+        expect(["expert", "proficient", "familiar"]).toContain(
+          skill.proficiency
+        );
+      }
+    }
+  });
+
+  it("accepts optional preference and status fields with valid values", () => {
+    const allSkills = Object.values(cvData.skills).flat();
+    for (const skill of allSkills) {
+      if (skill.preference !== undefined) {
+        expect(["preferred", "neutral"]).toContain(skill.preference);
+      }
+      if (skill.status !== undefined) {
+        expect(["active", "legacy"]).toContain(skill.status);
       }
     }
   });
 
   it("includes key skills from LinkedIn endorsements", () => {
-    const allSkills = Object.values(cvData.skills).flat();
-    // These are heavily endorsed skills from the LinkedIn export
+    const allNames = Object.values(cvData.skills)
+      .flat()
+      .map((s) => s.name);
     const keySkills = [
       "JavaScript", "React", "TypeScript", "Node.js",
       "Ruby", "SQL", "Java", "C#", "Linux",
       "REST APIs", "Git", "Agile Methodologies",
     ];
     for (const skill of keySkills) {
-      expect(allSkills).toContain(skill);
+      expect(allNames).toContain(skill);
     }
   });
 
   it("includes modern skills not yet endorsed but listed on LinkedIn", () => {
+    const allNames = Object.values(cvData.skills)
+      .flat()
+      .map((s) => s.name);
+    expect(allNames).toContain("Agentic AI");
+    expect(allNames).toContain("SSO");
+    expect(allNames).toContain("SAML");
+  });
+
+  it("has at least some preferred skills", () => {
     const allSkills = Object.values(cvData.skills).flat();
-    expect(allSkills).toContain("Agentic AI");
-    expect(allSkills).toContain("SSO");
-    expect(allSkills).toContain("SAML");
+    const preferred = allSkills.filter((s) => s.preference === "preferred");
+    expect(preferred.length).toBeGreaterThanOrEqual(10);
+  });
+
+  it("has at least some legacy skills", () => {
+    const allSkills = Object.values(cvData.skills).flat();
+    const legacy = allSkills.filter((s) => s.status === "legacy");
+    expect(legacy.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it("has at least some expert-level skills", () => {
+    const allSkills = Object.values(cvData.skills).flat();
+    const experts = allSkills.filter((s) => s.proficiency === "expert");
+    expect(experts.length).toBeGreaterThanOrEqual(5);
   });
 });
 

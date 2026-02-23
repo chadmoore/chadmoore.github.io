@@ -14,6 +14,7 @@
  */
 import type { Metadata } from "next";
 import cvData from "@/../content/cv.json";
+import { sortSkills, getSkillClasses, type Skill } from "@/lib/skills";
 
 export const metadata: Metadata = {
   title: "About | Chad Moore",
@@ -46,26 +47,30 @@ export default function AboutPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Object.entries(cvData.skills).map(([category, skills]) => (
-            <div key={category} className="space-y-3">
-              {/* Category header: icon + title side by side */}
-              <div className="flex items-center gap-2">
-                <SkillIcon category={category} />
-                <h3 className="text-sm font-semibold text-foreground">{category}</h3>
+          {Object.entries(cvData.skills).map(([category, skills]) => {
+            const sorted = sortSkills(skills as Skill[]);
+            return (
+              <div key={category} className="space-y-3">
+                {/* Category header: icon + title side by side */}
+                <div className="flex items-center gap-2">
+                  <SkillIcon category={category} />
+                  <h3 className="text-sm font-semibold text-foreground">{category}</h3>
+                </div>
+                {/* Skill pills */}
+                <div className="flex flex-wrap gap-2">
+                  {sorted.map((skill) => (
+                    <span
+                      key={skill.name}
+                      title={`${skill.proficiency}${skill.preference === "preferred" ? " · preferred" : ""}${skill.status === "legacy" ? " · legacy" : ""}`}
+                      className={`bg-surface border rounded-lg px-3 py-1.5 text-xs hover:border-accent/50 transition-colors ${getSkillClasses(skill)}`}
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
               </div>
-              {/* Skill pills */}
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="bg-surface border border-border rounded-lg px-3 py-1.5 text-xs hover:border-accent/50 transition-colors"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <h2 className="text-xl font-semibold text-foreground mt-12 mb-4">

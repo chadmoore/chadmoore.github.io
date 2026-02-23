@@ -88,12 +88,64 @@
   ],
   "education": [],
   "skills": {
-    "Frontend": ["React", "Next.js", "TypeScript", "JavaScript", "AngularJS", "HTML5", "CSS", "Tailwind CSS", "User Interface Design"],
-    "Backend": ["Node.js", "Ruby", "Ruby on Rails", "C#", ".NET", "Java", "Python", "PHP", "REST APIs", "SQL"],
-    "Cloud & Infrastructure": ["AWS", "Azure", "Docker", "Kubernetes", "Linux", "Unix", "Apache", "nginx", "IIS", "CI/CD", "DevOps", "Git"],
-    "Identity & Security": ["OAuth 2.0", "OIDC", "SAML", "SSO", "JWT", "Authorization"],
-    "Data": ["PostgreSQL", "SQL Server", "MySQL", "Redis", "Data Visualization"],
-    "AI & Tooling": ["Agentic AI", "MCP Tooling", "AI‑Assisted Workflows", "Agile Methodologies"]
+    "Frontend": [
+      { "name": "React", "proficiency": "expert", "preference": "preferred" },
+      { "name": "Next.js", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "TypeScript", "proficiency": "expert", "preference": "preferred" },
+      { "name": "JavaScript", "proficiency": "expert", "preference": "preferred" },
+      { "name": "HTML5", "proficiency": "expert" },
+      { "name": "CSS", "proficiency": "proficient" },
+      { "name": "Tailwind CSS", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "User Interface Design", "proficiency": "proficient" },
+      { "name": "AngularJS", "proficiency": "proficient", "status": "legacy" }
+    ],
+    "Backend": [
+      { "name": "Node.js", "proficiency": "expert", "preference": "preferred" },
+      { "name": "Ruby", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "REST APIs", "proficiency": "expert" },
+      { "name": "SQL", "proficiency": "expert" },
+      { "name": "Python", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "Ruby on Rails", "proficiency": "proficient", "status": "legacy" },
+      { "name": "C#", "proficiency": "proficient", "status": "legacy" },
+      { "name": ".NET", "proficiency": "proficient", "status": "legacy" },
+      { "name": "Java", "proficiency": "proficient", "status": "legacy" },
+      { "name": "PHP", "proficiency": "familiar", "status": "legacy" }
+    ],
+    "Cloud & Infrastructure": [
+      { "name": "Linux", "proficiency": "expert", "preference": "preferred" },
+      { "name": "Git", "proficiency": "expert", "preference": "preferred" },
+      { "name": "AWS", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "Docker", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "CI/CD", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "Azure", "proficiency": "proficient" },
+      { "name": "nginx", "proficiency": "proficient" },
+      { "name": "DevOps", "proficiency": "proficient" },
+      { "name": "Kubernetes", "proficiency": "familiar" },
+      { "name": "Unix", "proficiency": "proficient", "status": "legacy" },
+      { "name": "Apache", "proficiency": "proficient", "status": "legacy" },
+      { "name": "IIS", "proficiency": "proficient", "status": "legacy" }
+    ],
+    "Identity & Security": [
+      { "name": "OAuth 2.0", "proficiency": "expert", "preference": "preferred" },
+      { "name": "OIDC", "proficiency": "expert", "preference": "preferred" },
+      { "name": "SSO", "proficiency": "expert", "preference": "preferred" },
+      { "name": "SAML", "proficiency": "expert" },
+      { "name": "JWT", "proficiency": "proficient" },
+      { "name": "Authorization", "proficiency": "proficient" }
+    ],
+    "Data": [
+      { "name": "PostgreSQL", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "Redis", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "Data Visualization", "proficiency": "proficient" },
+      { "name": "SQL Server", "proficiency": "proficient", "status": "legacy" },
+      { "name": "MySQL", "proficiency": "proficient", "status": "legacy" }
+    ],
+    "AI & Tooling": [
+      { "name": "Agentic AI", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "MCP Tooling", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "AI\u2011Assisted Workflows", "proficiency": "proficient", "preference": "preferred" },
+      { "name": "Agile Methodologies", "proficiency": "expert" }
+    ]
   },
   "certifications": [],
   "links": {

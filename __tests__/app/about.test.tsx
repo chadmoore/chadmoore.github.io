@@ -49,7 +49,8 @@ describe("AboutPage", () => {
     render(<AboutPage />);
     const allSkills = Object.values(cvData.skills).flat();
     for (const skill of allSkills) {
-      expect(screen.getByText(skill)).toBeInTheDocument();
+      // Skills are now objects with a name property
+      expect(screen.getByText(skill.name)).toBeInTheDocument();
     }
   });
 
