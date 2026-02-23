@@ -16,7 +16,7 @@
  *    A "View all" link takes visitors to the full blog index.
  *
  * // Confession: I spent more time choosing the hero font size
- * // than writing most of the blog posts. Priorities.
+ * // than writing most of the blog posts. ✨Priorities✨
  */
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";

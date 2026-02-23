@@ -22,25 +22,12 @@
  */
 import type { Metadata } from "next";
 import cvData from "@/../content/cv.json";
+import { formatDateRange } from "@/lib/dates";
 
 export const metadata: Metadata = {
   title: "CV | Chad Moore",
   description: cvData.headline,
 };
-
-/**
- * Converts a "YYYY-MM" start/end pair into a display-friendly date range.
- * Handles year-only strings and null end dates ("Present").
- */
-function formatDateRange(start: string, end: string | null): string {
-  const fmt = (d: string) => {
-    const [year, month] = d.split("-");
-    if (!month) return year;                  // year-only fallback
-    const date = new Date(Number(year), Number(month) - 1);
-    return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
-  };
-  return `${fmt(start)} — ${end ? fmt(end) : "Present"}`;
-}
 
 export default function CVPage() {
   return (
