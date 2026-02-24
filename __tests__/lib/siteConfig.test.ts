@@ -30,7 +30,7 @@ describe("siteConfig", () => {
   it("has consistent current values", () => {
     // These reflect the intended production config
     expect(siteConfig.sections.about).toBe(true);
-    expect(siteConfig.sections.projects).toBe(false);
+    expect(siteConfig.sections.projects).toBe(true);
     expect(siteConfig.sections.blog).toBe(true);
     expect(siteConfig.sections.cv).toBe(true);
   });

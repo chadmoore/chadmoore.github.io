@@ -12,7 +12,7 @@ const mockContentData = {
   site: {
     name: "Chad Moore",
     tagline: "Senior / Staff Full‑Stack Engineer",
-    sections: { about: true, projects: false, blog: true, cv: true },
+    sections: { about: true, projects: true, blog: true, cv: true },
     links: {
       email: "chad@chadmoore.info",
       github: "https://github.com/chadmoore",

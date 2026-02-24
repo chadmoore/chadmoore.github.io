@@ -78,8 +78,8 @@ describe("Homepage", () => {
     expect(screen.getByText("Test Post")).toBeInTheDocument();
   });
 
-  it('does not render "View Projects" when projects section is disabled', () => {
+  it('renders "View Projects" link when projects section is enabled', () => {
     render(<Home />);
-    expect(screen.queryByText("View Projects")).not.toBeInTheDocument();
+    expect(screen.getByText("View Projects")).toBeInTheDocument();
   });
 });

@@ -39,7 +39,7 @@ const sampleContent = {
   site: {
     name: "Chad Moore",
     tagline: "A tagline",
-    sections: { about: true, projects: false, blog: true, cv: true },
+    sections: { about: true, projects: true, blog: true, cv: true },
     links: { email: "chad@chadmoore.info", github: "https://github.com/chadmoore", linkedin: "https://www.linkedin.com/in/chad-moore-info" },
   },
   home: { greeting: "Hi, I'm", featureCards: [] },
