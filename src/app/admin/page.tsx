@@ -538,7 +538,7 @@ export default function AdminPage() {
             <button
               onClick={save}
               disabled={saving || !contentDirty}
-              className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm"
+              className={`px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm${contentDirty && !saving ? " animate-pulse" : ""}`}
             >
               {saving ? "Saving…" : "Save"}
             </button>
