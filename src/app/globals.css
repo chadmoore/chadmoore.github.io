@@ -1,32 +1,36 @@
 /*
  * chadmoore.info — Global Styles
  *
- * Design philosophy: dark, minimal, and fast.
- * All colors are defined as Tailwind v4 theme tokens so they
- * cascade through every utility class automatically.
+ * Design philosophy: minimal and fast, with automatic dark / light
+ * theming driven by the visitor's OS preference.
  *
- * If you're reading this, you probably care about CSS.
- * Respect. Pull up a chair. The tokens are below.
+ * All colors are defined as CSS custom properties so Tailwind v4's
+ * @theme inline block picks them up automatically — every utility
+ * class (bg-background, text-muted, etc.) just works.
+ *
+ * Light tokens are the default; dark tokens override inside
+ * @media (prefers-color-scheme: dark).
  */
 
 @import "tailwindcss";
 
+/* ── Light theme (default) ─────────────────────────────────────── */
 @theme inline {
   /* --- Color System ---
-   * background  : the void (page bg)
+   * background  : page bg
    * surface     : elevated cards and containers
    * border      : subtle dividers
    * muted       : secondary text
    * accent      : interactive / highlight blue
    */
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
-  --color-muted: #888888;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
-  --color-surface: #141414;
-  --color-surface-hover: #1e1e1e;
-  --color-border: #262626;
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-muted: #6b7280;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-surface: #f5f5f5;
+  --color-surface-hover: #e5e5e5;
+  --color-border: #e5e5e5;
 
   /* --- Typography ---
    * Geist Sans + Geist Mono — loaded via next/font in layout.tsx
@@ -34,6 +38,20 @@
    */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* ── Dark theme (OS preference) ────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  @theme inline {
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-muted: #888888;
+    --color-accent: #3b82f6;
+    --color-accent-hover: #60a5fa;
+    --color-surface: #141414;
+    --color-surface-hover: #1e1e1e;
+    --color-border: #262626;
+  }
 }
 
 body {

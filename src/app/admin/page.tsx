@@ -61,7 +61,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-const inputClass = "w-full bg-background border border-border rounded px-2 py-1 text-sm";
+const inputClass = "w-full bg-background border border-border rounded px-2 py-1 text-sm [color-scheme:light] dark:[color-scheme:dark]";
 
 // ─── Component ──────────────────────────────────────────────────────
 
@@ -480,7 +480,7 @@ export default function AdminPage() {
               {saving ? "Saving…" : "Save"}
             </button>
             {message && (
-              <span className={`text-sm ${message.includes("Saved") ? "text-green-400" : message.includes("No changes") ? "text-muted" : "text-red-400"}`}>
+              <span className={`text-sm ${message.includes("Saved") ? "text-green-600 dark:text-green-400" : message.includes("No changes") ? "text-muted" : "text-red-600 dark:text-red-400"}`}>
                 {message}
               </span>
             )}
@@ -495,7 +495,7 @@ export default function AdminPage() {
             {publishing ? "Publishing…" : "Publish"}
           </button>
           {publishMessage && (
-            <span className={`text-sm ${publishMessage.includes("Published") ? "text-green-400" : publishMessage.includes("Nothing") ? "text-muted" : "text-red-400"}`}>
+            <span className={`text-sm ${publishMessage.includes("Published") ? "text-green-600 dark:text-green-400" : publishMessage.includes("Nothing") ? "text-muted" : "text-red-600 dark:text-red-400"}`}>
               {publishMessage}
             </span>
           )}
@@ -618,7 +618,7 @@ export default function AdminPage() {
                   <span className="text-xs text-muted">Card {index + 1}</span>
                   <button
                     onClick={() => removeCard(index)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300"
                     title="Remove card"
                   >
                     ✕
@@ -711,7 +711,7 @@ export default function AdminPage() {
                   <span className="text-xs text-muted">Paragraph {index + 1}</span>
                   <button
                     onClick={() => removeIntroParagraph(index)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300"
                     title="Remove paragraph"
                   >
                     ✕
@@ -790,7 +790,7 @@ export default function AdminPage() {
                       specialties: cv.specialties.filter((_, i) => i !== index),
                     }))
                   }
-                  className="text-red-400 hover:text-red-300 text-sm px-1"
+                  className="text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 text-sm px-1"
                   title="Remove"
                 >
                   ✕
@@ -847,7 +847,7 @@ export default function AdminPage() {
                   <h3 className="font-medium">{category}</h3>
                   <button
                     onClick={() => removeCategory(category)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300"
                     title="Remove category"
                   >
                     ✕
@@ -917,7 +917,7 @@ export default function AdminPage() {
 
                       <button
                         onClick={() => removeSkill(category, i)}
-                        className="text-red-400 hover:text-red-300 text-sm px-1"
+                        className="text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 text-sm px-1"
                         title="Remove skill"
                       >
                         ✕
@@ -959,7 +959,7 @@ export default function AdminPage() {
           </div>
 
           {blogMessage && (
-            <p className={`mb-4 text-sm ${blogMessage.includes("Saved") || blogMessage.includes("Deleted") ? "text-green-400" : "text-red-400"}`}>
+            <p className={`mb-4 text-sm ${blogMessage.includes("Saved") || blogMessage.includes("Deleted") ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
               {blogMessage}
             </p>
           )}
@@ -1103,7 +1103,7 @@ export default function AdminPage() {
                     </button>
                     <button
                       onClick={() => deletePost(post.slug)}
-                      className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                      className="text-xs text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 transition-colors"
                     >
                       Delete
                     </button>

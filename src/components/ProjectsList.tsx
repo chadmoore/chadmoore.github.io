@@ -105,8 +105,8 @@ export default function ProjectsList() {
 
   if (error) {
     return (
-      <div className="border border-red-500/30 bg-red-500/5 rounded-xl p-6 text-center">
-        <p className="text-red-400">{error}</p>
+      <div className="border border-red-500/30 bg-red-500/10 dark:bg-red-500/5 rounded-xl p-6 text-center">
+        <p className="text-red-600 dark:text-red-400">{error}</p>
         <p className="text-sm text-muted mt-2">
           Check back later or visit{" "}
           <a
