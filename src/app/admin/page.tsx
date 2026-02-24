@@ -32,7 +32,7 @@ interface BlogPostFull extends BlogPostMeta {
   content: string;
 }
 
-type Tab = "site" | "home" | "about" | "projects" | "cv" | "skills" | "blog";
+type Tab = "site" | "home" | "about" | "projects" | "cv" | "skills" | "blog" | "import";
 
 const TAB_LABELS: Record<Tab, string> = {
   site: "Site",
@@ -42,6 +42,7 @@ const TAB_LABELS: Record<Tab, string> = {
   cv: "CV",
   skills: "Skills",
   blog: "Blog",
+  import: "Import",
 };
 
 // ─── Constants ──────────────────────────────────────────────────────
@@ -84,6 +85,12 @@ export default function AdminPage() {
   const lastSavedBlog = useRef<string>("");
   const [blogMessage, setBlogMessage] = useState("");
   const [initialEditSlug, setInitialEditSlug] = useState<string | null>(null);
+
+  // ─── Import state ─────────────────────────────────────────────
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importPreview, setImportPreview] = useState<ContentData | null>(null);
+  const [importMessage, setImportMessage] = useState("");
 
   // ─── Drag-to-reorder tab state ────────────────────────────────
   const [dragTab, setDragTab] = useState<Tab | null>(null);
@@ -452,13 +459,55 @@ export default function AdminPage() {
     }
   }, []);
 
+  // ─── LinkedIn Import ──────────────────────────────────────────
+
+  const handleLinkedInImport = useCallback(async () => {
+    if (!importFile) return;
+    setImporting(true);
+    setImportMessage("");
+    setImportPreview(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", importFile);
+      const res = await fetch("/api/admin/linkedin", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Import failed");
+      }
+      const result = await res.json();
+      setImportPreview(result);
+      setImportMessage(
+        "Parsed successfully — review the summary below, then click Apply to load into the editor.",
+      );
+    } catch (err) {
+      setImportMessage(err instanceof Error ? err.message : "Import failed.");
+    } finally {
+      setImporting(false);
+    }
+  }, [importFile]);
+
+  const applyLinkedInImport = useCallback(() => {
+    if (!importPreview) return;
+    setData(importPreview);
+    setImportPreview(null);
+    setImportFile(null);
+    setImportMessage(
+      "Applied! Review and edit across the other tabs, then Save when ready.",
+    );
+    // Mark content dirty so Save becomes active
+    // (setData already triggers the contentDirty check)
+  }, [importPreview]);
+
   // ─── Render ───────────────────────────────────────────────────────
 
   const contentDirty = data ? JSON.stringify(data) !== lastSavedContent.current : false;
 
   /** Tab order: "site" pinned first, then in navOrder from content data. */
   /** Tabs that are pinned (not draggable, don't affect nav order). */
-  const PINNED_TABS = useMemo<Set<Tab>>(() => new Set(["site", "skills"]), []);
+  const PINNED_TABS = useMemo<Set<Tab>>(() => new Set(["site", "skills", "import"]), []); // "import" is dev-only, keep out of nav order
 
   const tabOrder: Tab[] = useMemo(() => {
     const order: Tab[] = ["site"];
@@ -467,7 +516,7 @@ export default function AdminPage() {
       if (key in TAB_LABELS && !PINNED_TABS.has(key as Tab)) order.push(key as Tab);
     }
     // Append pinned non-site tabs after nav tabs
-    order.push("skills");
+    order.push("skills", "import");
     // Safety: append any remaining tabs missing from navOrder
     for (const key of Object.keys(TAB_LABELS) as Tab[]) {
       if (!order.includes(key)) order.push(key);
@@ -541,7 +590,7 @@ export default function AdminPage() {
 
       {/* ─── Global Action Bar ─────────────────────────────────── */}
       <div className="flex items-center gap-3 mb-6">
-        {tab !== "blog" && (
+        {tab !== "blog" && tab !== "import" && (
           <>
             <button
               onClick={save}
@@ -1245,6 +1294,100 @@ export default function AdminPage() {
             </div>
           )}
         </>
+      )}
+
+      {/* ─── Import Tab ────────────────────────────────────────── */}
+      {tab === "import" && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold">Import from LinkedIn</h2>
+            <p className="text-sm text-muted mt-1">
+              Upload a LinkedIn data export ZIP to bootstrap your CV data.
+              Download it from{" "}
+              <strong>Settings &amp; Privacy → Data Privacy → Get a copy of your data</strong>{" "}
+              (select <em>Want something in particular?</em> and check at minimum
+              Profile, Positions, Education, and Skills).
+            </p>
+          </div>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+            <div className="space-y-2">
+              <label className="block text-xs text-muted">
+                LinkedIn data export (.zip)
+              </label>
+              <input
+                type="file"
+                accept=".zip"
+                aria-label="LinkedIn export zip"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] ?? null;
+                  setImportFile(file);
+                  setImportPreview(null);
+                  setImportMessage("");
+                }}
+                className="block w-full text-sm text-muted file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:bg-accent/10 file:text-accent hover:file:bg-accent/20 cursor-pointer"
+              />
+            </div>
+
+            <button
+              onClick={handleLinkedInImport}
+              disabled={!importFile || importing}
+              className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm"
+            >
+              {importing ? "Parsing…" : "Parse ZIP"}
+            </button>
+
+            {importMessage && (
+              <p
+                className={`text-sm ${
+                  importMessage.startsWith("Parsed") || importMessage.startsWith("Applied")
+                    ? "text-green-600 dark:text-green-400"
+                    : "text-red-600 dark:text-red-400"
+                }`}
+              >
+                {importMessage}
+              </p>
+            )}
+          </div>
+
+          {importPreview && (
+            <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+              <h3 className="font-medium">Preview</h3>
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                <dt className="text-muted">Name</dt>
+                <dd>{importPreview.site.name || <em className="text-muted">—</em>}</dd>
+                <dt className="text-muted">Headline</dt>
+                <dd>{importPreview.cv.headline || <em className="text-muted">—</em>}</dd>
+                <dt className="text-muted">Location</dt>
+                <dd>{importPreview.cv.location || <em className="text-muted">—</em>}</dd>
+                <dt className="text-muted">Positions</dt>
+                <dd>{importPreview.cv.experience.length}</dd>
+                <dt className="text-muted">Education</dt>
+                <dd>{importPreview.cv.education.length}</dd>
+                <dt className="text-muted">Skills</dt>
+                <dd>
+                  {Object.values(importPreview.cv.skills).reduce(
+                    (sum, list) => sum + list.length,
+                    0,
+                  )}
+                </dd>
+              </dl>
+
+              <p className="text-xs text-muted">
+                Non-CV sections (site links, homepage content, about copy) are
+                preserved from your existing content. Only the CV section will
+                be replaced.
+              </p>
+
+              <button
+                onClick={applyLinkedInImport}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors text-sm"
+              >
+                Apply to Editor
+              </button>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
