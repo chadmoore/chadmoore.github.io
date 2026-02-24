@@ -143,6 +143,5 @@ export function publishChanges(message: string): string {
   execSync(`git commit -m ${JSON.stringify(message)}`, opts);
   execSync("git push", opts);
 
-  const hash = execSync("git rev-parse --short HEAD", opts).trim();
-  return hash;
+  return execSync("git rev-parse --short HEAD", opts).trim();
 }
