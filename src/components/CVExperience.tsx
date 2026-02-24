@@ -13,7 +13,8 @@
  *
  * Sort modes:
  *   date       — reverse-chronological order (default, matches JSON order)
- *   relevance  — entries with the most matching highlights float to top
+ *   relevance  — entries with the highest skill-weight density per bullet
+ *                float to the top (quality over quantity)
  */
 "use client";
 
@@ -24,13 +25,14 @@ import {
   resolveSkill,
   filterSkills,
   toggleInSet,
+  type ResolvedSkill,
   type Skill,
   type SkillFilters,
   type Proficiency,
   type Preference,
   type Status,
 } from "@/lib/skills";
-import type { Experience } from "@/lib/contentData";
+import type { Experience, Highlight } from "@/lib/contentData";
 
 interface CVExperienceProps {
   experience: Experience[];
@@ -38,6 +40,46 @@ interface CVExperienceProps {
 }
 
 type SortMode = "date" | "relevance";
+
+// ─── Relevance scoring ──────────────────────────────────────────────
+
+// Weight tables — module-level constants to avoid re-creation on every render.
+const PROF_SCORE: Record<Proficiency, number> = { expert: 3, proficient: 2, familiar: 1 };
+const PREF_SCORE: Record<Preference, number> = { preferred: 2, neutral: 1 };
+const STAT_SCORE: Record<Status, number> = { active: 2, legacy: 1 };
+
+/**
+ * Compute skill-density score: total weight of visible skills divided by the
+ * number of highlights that carry at least one skill tag.
+ *
+ * Using a density (average per tagged highlight) rather than a raw sum means
+ * entries with fewer but richer bullets beat entries that simply have more
+ * bullets — producing a meaningfully different order from date sort.
+ *
+ * Expert + preferred + active  → per-skill weight 12
+ * Familiar + neutral + legacy  → per-skill weight  1
+ * Entry with no tagged highlights → 0 (sinks to bottom)
+ */
+function computeRelevanceScore(
+  highlights: Highlight[],
+  visibleSkillNames: Set<string>,
+  skillMap: Map<string, ResolvedSkill>,
+): number {
+  let total = 0;
+  let taggedCount = 0;
+
+  for (const h of highlights) {
+    if (h.skills.length === 0) continue;
+    taggedCount++;
+    for (const sName of h.skills) {
+      if (!visibleSkillNames.has(sName)) continue;
+      const r = skillMap.get(sName);
+      if (r) total += PROF_SCORE[r.proficiency] * PREF_SCORE[r.preference] * STAT_SCORE[r.status];
+    }
+  }
+
+  return taggedCount === 0 ? 0 : total / taggedCount;
+}
 
 // ─── Component ───────────────────────────────────────────────────────
 
@@ -65,21 +107,32 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
     return new Set(filterSkills(allSkills, filters).map((s) => s.name));
   }, [skills, filters]);
 
-  // Process experience: attach visible highlights and match count
+  // Build a name→ResolvedSkill lookup once per skills-prop change
+  const skillMap = useMemo(
+    () => new Map(Object.values(skills).flat().map((s) => [s.name, resolveSkill(s)])),
+    [skills],
+  );
+
+  // Process experience: attach visible highlights, match count, and relevance score
   const processed = useMemo(() => {
     const entries = experience.map((job) => {
       const visibleHighlights = job.highlights.filter(
         (h) =>
           h.skills.length === 0 || h.skills.some((s) => visibleSkillNames.has(s)),
       );
-      return { job, visibleHighlights, matchCount: visibleHighlights.length };
+      const relevanceScore = computeRelevanceScore(
+        job.highlights,
+        visibleSkillNames,
+        skillMap,
+      );
+      return { job, visibleHighlights, matchCount: visibleHighlights.length, relevanceScore };
     });
 
     if (sortMode === "relevance") {
-      entries.sort((a, b) => b.matchCount - a.matchCount);
+      entries.sort((a, b) => b.relevanceScore - a.relevanceScore);
     }
     return entries;
-  }, [experience, visibleSkillNames, sortMode]);
+  }, [experience, visibleSkillNames, skillMap, sortMode]);
 
   // ── Toggle handlers ──────────────────────────────────────────────
   const toggleProficiency = useCallback(
@@ -98,7 +151,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
   return (
     <div className="space-y-6">
       {/* ── Filter + sort bar ──────────────────────────────────── */}
-      <div className="space-y-2 pb-4 border-b border-border">
+      <div className="sticky top-14 z-10 bg-surface space-y-2 pt-3 pb-4 border-b border-border">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
           <span className="text-muted font-medium uppercase tracking-wider text-[10px]">
             Show

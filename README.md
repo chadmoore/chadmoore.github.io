@@ -42,7 +42,7 @@ sections: {
 
 ### Filterable CV Experience
 
-The CV page's work history is interactive. Filter toggles at the top of the Experience section control which highlight bullets are visible by cross-referencing each bullet's skill tags against the skills dictionary (where every skill carries proficiency, preference, and status). A bullet with no skill tags is always shown. A role whose every bullet is filtered out dims rather than disappears — the job title and company stay visible so the timeline stays readable. A **relevance** sort mode floats the entries with the most matching highlights to the top; **date** (default) preserves the original reverse-chronological order.
+The CV page's work history is interactive. Filter toggles at the top of the Experience section control which highlight bullets are visible by cross-referencing each bullet's skill tags against the skills dictionary (where every skill carries proficiency, preference, and status). A bullet with no skill tags is always shown. A role whose every bullet is filtered out dims rather than disappears — the job title and company stay visible so the timeline stays readable. A **relevance** sort mode surfaces entries by skill density — the average quality-weight of skills per highlight bullet — so roles where every point demonstrates high-value skills float above roles that simply have more bullets. **date** (default) preserves the original reverse-chronological order.
 
 ### Three-Dimensional Skill System
 
