@@ -3,6 +3,7 @@
  */
 import { render, screen, fireEvent } from "@testing-library/react";
 import Header from "@/components/Header";
+import { siteConfig } from "@/lib/siteConfig";
 
 // Configurable pathname mock for testing active states
 let currentPathname = "/";
@@ -58,8 +59,14 @@ describe("Header", () => {
     // The first <ul> is the desktop nav
     const desktopItems = lists[0]?.querySelectorAll("li");
     const labels = Array.from(desktopItems ?? []).map((li) => li.textContent);
-    // Should match the navOrder from content.json (filtered to page routes)
-    expect(labels).toEqual(["Home", "About", "CV", "Blog", "Projects"]);
+    // Derive expected order from siteConfig.navOrder (same logic as Header)
+    const labelFor: Record<string, string> = {
+      home: "Home", about: "About", projects: "Projects", blog: "Blog", cv: "CV",
+    };
+    const expected = siteConfig.navOrder
+      .filter((key) => key in labelFor)
+      .map((key) => labelFor[key]);
+    expect(labels).toEqual(expected);
   });
 
   it("omits nav links when a section is disabled in siteConfig", () => {
