@@ -1,7 +1,9 @@
 ---
 title: Iteration with agents can be exhilarating
-date: '2026-02-24'
-excerpt: How I use a structured copilot-instructions file and conversational TDD to build features at speed with AI agents.
+date: '2026-02-23'
+excerpt: >-
+  How I use a structured copilot-instructions file and conversational TDD to
+  build features at speed with AI agents.
 tags:
   - meta
   - agentic workflows
@@ -73,4 +75,4 @@ I think the reason this workflow is effective comes down to a few things:
 
 **The codebase stays clean.** This is the part that surprised me most. Because the agent follows the instructions file, the code doesn't accumulate the kind of debt you'd expect from rapid iteration. It refactors as it goes. It extracts shared logic. It writes comments that explain *why*, not *what*.
 
-If you're interested in the setup, the [[hello-world]] post has more detail on the blog engine, and the full source is [on GitHub](https://github.com/chadmoore/chadmoore.github.io/).
+If you're interested seeing that change in action, check out the [[hello-world]] post. It has more detail on the blog engine, and the full source is [on GitHub](https://github.com/chadmoore/chadmoore.github.io/).

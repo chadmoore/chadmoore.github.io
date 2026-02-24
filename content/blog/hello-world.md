@@ -1,6 +1,6 @@
 ---
 title: Hello World
-date: '2026-02-23'
+date: '2026-02-22'
 excerpt: Welcome to my blog! This is the first post on my new site.
 tags:
   - meta
