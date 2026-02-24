@@ -531,6 +531,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.site.name}
                 onChange={(e) => updateField("site", (site) => ({ ...site, name: e.target.value }))}
+                aria-label="Name"
                 className={inputClass}
               />
             </Field>
@@ -540,6 +541,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.site.tagline}
                 onChange={(e) => updateField("site", (site) => ({ ...site, tagline: e.target.value }))}
+                aria-label="Tagline"
                 className={inputClass}
               />
             </Field>
@@ -552,6 +554,7 @@ export default function AdminPage() {
                 type="email"
                 value={data.site.links.email}
                 onChange={(e) => updateField("site", (site) => ({ ...site, links: { ...site.links, email: e.target.value } }))}
+                aria-label="Email"
                 className={inputClass}
               />
             </Field>
@@ -560,6 +563,7 @@ export default function AdminPage() {
                 type="url"
                 value={data.site.links.github}
                 onChange={(e) => updateField("site", (site) => ({ ...site, links: { ...site.links, github: e.target.value } }))}
+                aria-label="GitHub URL"
                 className={inputClass}
               />
             </Field>
@@ -568,6 +572,7 @@ export default function AdminPage() {
                 type="url"
                 value={data.site.links.linkedin}
                 onChange={(e) => updateField("site", (site) => ({ ...site, links: { ...site.links, linkedin: e.target.value } }))}
+                aria-label="LinkedIn URL"
                 className={inputClass}
               />
             </Field>
@@ -606,6 +611,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.home.greeting}
                 onChange={(e) => updateField("home", (home) => ({ ...home, greeting: e.target.value }))}
+                aria-label="Greeting"
                 className={inputClass}
               />
             </Field>
@@ -630,6 +636,7 @@ export default function AdminPage() {
                     type="text"
                     value={card.title}
                     onChange={(e) => updateCard(index, "title", e.target.value)}
+                    aria-label="Card title"
                     className={inputClass}
                   />
                 </Field>
@@ -638,6 +645,7 @@ export default function AdminPage() {
                     value={card.description}
                     onChange={(e) => updateCard(index, "description", e.target.value)}
                     rows={2}
+                    aria-label="Card description"
                     className={inputClass + " resize-y"}
                   />
                 </Field>
@@ -645,6 +653,7 @@ export default function AdminPage() {
                   <select
                     value={card.icon}
                     onChange={(e) => updateCard(index, "icon", e.target.value)}
+                    aria-label="Card icon"
                     className={inputClass}
                   >
                     {ICON_OPTIONS.map((opt) => (
@@ -675,6 +684,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.about.heading}
                 onChange={(e) => updateField("about", (about) => ({ ...about, heading: e.target.value }))}
+                aria-label="Page Heading"
                 className={inputClass}
               />
             </Field>
@@ -683,6 +693,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.about.skillsHeading}
                 onChange={(e) => updateField("about", (about) => ({ ...about, skillsHeading: e.target.value }))}
+                aria-label="Skills Section Heading"
                 className={inputClass}
               />
             </Field>
@@ -691,6 +702,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.about.contactHeading}
                 onChange={(e) => updateField("about", (about) => ({ ...about, contactHeading: e.target.value }))}
+                aria-label="Contact Section Heading"
                 className={inputClass}
               />
             </Field>
@@ -699,6 +711,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.about.contactText}
                 onChange={(e) => updateField("about", (about) => ({ ...about, contactText: e.target.value }))}
+                aria-label="Contact Text"
                 className={inputClass}
               />
             </Field>
@@ -722,6 +735,7 @@ export default function AdminPage() {
                   value={paragraph}
                   onChange={(e) => updateIntroParagraph(index, e.target.value)}
                   rows={4}
+                  aria-label={`Intro paragraph ${index + 1}`}
                   className={inputClass + " resize-y"}
                 />
               </div>
@@ -747,6 +761,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.projects.heading}
                 onChange={(e) => updateField("projects", (projects) => ({ ...projects, heading: e.target.value }))}
+                aria-label="Projects Heading"
                 className={inputClass}
               />
             </Field>
@@ -755,6 +770,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.projects.description}
                 onChange={(e) => updateField("projects", (projects) => ({ ...projects, description: e.target.value }))}
+                aria-label="Projects Description"
                 className={inputClass}
               />
             </Field>
@@ -773,6 +789,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.cv.headline}
                 onChange={(e) => updateField("cv", (cv) => ({ ...cv, headline: e.target.value }))}
+                aria-label="Headline"
                 className={inputClass}
               />
             </Field>
@@ -781,6 +798,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.cv.location}
                 onChange={(e) => updateField("cv", (cv) => ({ ...cv, location: e.target.value }))}
+                aria-label="Location"
                 className={inputClass}
               />
             </Field>
@@ -789,6 +807,7 @@ export default function AdminPage() {
                 value={data.cv.summary}
                 onChange={(e) => updateField("cv", (cv) => ({ ...cv, summary: e.target.value }))}
                 rows={6}
+                aria-label="Summary"
                 className={inputClass + " resize-y"}
               />
             </Field>
@@ -808,6 +827,7 @@ export default function AdminPage() {
                       return { ...cv, specialties };
                     })
                   }
+                  aria-label={`Specialty ${index + 1}`}
                   className={inputClass}
                 />
                 <button
@@ -844,6 +864,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.blog.heading}
                 onChange={(e) => updateField("blog", (blog) => ({ ...blog, heading: e.target.value }))}
+                aria-label="Blog Heading"
                 className={inputClass}
               />
             </Field>
@@ -852,6 +873,7 @@ export default function AdminPage() {
                 type="text"
                 value={data.blog.description}
                 onChange={(e) => updateField("blog", (blog) => ({ ...blog, description: e.target.value }))}
+                aria-label="Blog Description"
                 className={inputClass}
               />
             </Field>
