@@ -7,9 +7,11 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { execSync } from "child_process";
 
 jest.mock("fs");
 jest.mock("gray-matter");
+jest.mock("child_process");
 
 import {
   readCvData,
@@ -19,12 +21,14 @@ import {
   createBlogPost,
   updateBlogPost,
   deleteBlogPost,
+  publishChanges,
 } from "../../src/lib/admin";
 
 const mockedFs = fs as jest.Mocked<typeof fs>;
 const mockedMatter = matter as jest.MockedFunction<typeof matter> & {
   stringify: jest.MockedFunction<typeof matter.stringify>;
 };
+const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
 
 const CV_PATH = path.resolve(process.cwd(), "content/cv.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
@@ -207,5 +211,42 @@ describe("deleteBlogPost", () => {
     deleteBlogPost("old");
 
     expect(mockedFs.unlinkSync).toHaveBeenCalledWith(path.join(BLOG_DIR, "old.md"));
+  });
+});
+
+describe("publishChanges", () => {
+  beforeEach(() => {
+    mockedExecSync.mockReset();
+  });
+
+  it("stages, commits, and pushes changes", () => {
+    mockedExecSync
+      .mockReturnValueOnce("") // git add -A
+      .mockReturnValueOnce(" M content/cv.json\n") // git status --porcelain
+      .mockReturnValueOnce("") // git commit
+      .mockReturnValueOnce("") // git push
+      .mockReturnValueOnce("abc1234\n"); // git rev-parse --short HEAD
+
+    const hash = publishChanges("test commit");
+
+    expect(mockedExecSync).toHaveBeenCalledWith("git add -A", expect.objectContaining({ cwd: process.cwd() }));
+    expect(mockedExecSync).toHaveBeenCalledWith(
+      expect.stringContaining("git commit"),
+      expect.objectContaining({ cwd: process.cwd() }),
+    );
+    expect(mockedExecSync).toHaveBeenCalledWith("git push", expect.objectContaining({ cwd: process.cwd() }));
+    expect(hash).toBe("abc1234");
+  });
+
+  it("returns 'no-changes' when working tree is clean", () => {
+    mockedExecSync
+      .mockReturnValueOnce("") // git add -A
+      .mockReturnValueOnce(""); // git status --porcelain (empty)
+
+    const hash = publishChanges("nothing to do");
+
+    expect(hash).toBe("no-changes");
+    // Should NOT have called commit or push
+    expect(mockedExecSync).toHaveBeenCalledTimes(2);
   });
 });

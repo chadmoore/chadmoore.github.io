@@ -11,6 +11,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { execSync } from "child_process";
 
 const CV_PATH = path.resolve(process.cwd(), "content/cv.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
@@ -125,4 +126,24 @@ export function deleteBlogPost(slug: string): void {
     throw new Error(`Post "${slug}" not found`);
   }
   fs.unlinkSync(filePath);
+}
+
+// ─── Git Publish ────────────────────────────────────────────────────
+
+const REPO_ROOT = process.cwd();
+
+/** Stage, commit, and push content changes. Returns the commit hash. */
+export function publishChanges(message: string): string {
+  const opts = { cwd: REPO_ROOT, encoding: "utf-8" as const };
+  execSync("git add -A", opts);
+
+  // If there's nothing to commit, skip
+  const status = execSync("git status --porcelain", opts).trim();
+  if (!status) return "no-changes";
+
+  execSync(`git commit -m ${JSON.stringify(message)}`, opts);
+  execSync("git push", opts);
+
+  const hash = execSync("git rev-parse --short HEAD", opts).trim();
+  return hash;
 }

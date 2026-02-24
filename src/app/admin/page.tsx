@@ -12,7 +12,7 @@
  */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { Skill, Proficiency, Preference, Status } from "@/lib/skills";
 
 // ─── Types ──────────────────────────────────────────────────────────
@@ -55,8 +55,12 @@ const STATUS_OPTIONS: Status[] = ["active", "legacy"];
 export default function AdminPage() {
   const [tab, setTab] = useState<Tab>("skills");
   const [data, setData] = useState<CvData | null>(null);
+  const lastSavedCv = useRef<string>("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [hasUnpublished, setHasUnpublished] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [publishMessage, setPublishMessage] = useState("");
 
   // ─── Blog state ───────────────────────────────────────────────
   const [posts, setPosts] = useState<BlogPostMeta[]>([]);
@@ -79,7 +83,10 @@ export default function AdminPage() {
   useEffect(() => {
     fetch("/api/admin/cv")
       .then((res) => res.json())
-      .then((json) => setData(json))
+      .then((json) => {
+        setData(json);
+        lastSavedCv.current = JSON.stringify(json);
+      })
       .catch(() => setMessage("Failed to load CV data. Is the dev server running?"));
   }, []);
 
@@ -201,8 +208,17 @@ export default function AdminPage() {
         body: JSON.stringify(cleaned),
       });
       if (res.ok) {
-        setMessage("Saved!");
+        const cleanedJson = JSON.stringify(cleaned);
+        const changed = cleanedJson !== lastSavedCv.current;
+        lastSavedCv.current = cleanedJson;
         setData(cleaned);
+        if (changed) {
+          setMessage("Saved!");
+          setHasUnpublished(true);
+          setPublishMessage("");
+        } else {
+          setMessage("No changes to save.");
+        }
       } else {
         setMessage("Save failed.");
       }
@@ -273,6 +289,8 @@ export default function AdminPage() {
       setBlogMessage("Saved!");
       setEditingPost(null);
       setNewPost(false);
+      setHasUnpublished(true);
+      setPublishMessage("");
       fetchPosts();
     } catch (err) {
       setBlogMessage(err instanceof Error ? err.message : "Save failed.");
@@ -289,6 +307,8 @@ export default function AdminPage() {
       if (!res.ok) throw new Error();
       fetchPosts();
       setBlogMessage("Deleted.");
+      setHasUnpublished(true);
+      setPublishMessage("");
     } catch {
       setBlogMessage("Delete failed.");
     }
@@ -300,6 +320,32 @@ export default function AdminPage() {
     },
     [],
   );
+
+  // ─── Publish ──────────────────────────────────────────────────
+
+  const publish = useCallback(async () => {
+    setPublishing(true);
+    setPublishMessage("");
+    try {
+      const res = await fetch("/api/admin/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "Update content via admin" }),
+      });
+      if (!res.ok) throw new Error("Publish failed");
+      const { hash } = await res.json();
+      if (hash === "no-changes") {
+        setPublishMessage("Nothing to publish.");
+      } else {
+        setPublishMessage(`Published (${hash})`);
+        setHasUnpublished(false);
+      }
+    } catch {
+      setPublishMessage("Publish failed.");
+    } finally {
+      setPublishing(false);
+    }
+  }, []);
 
   // ─── Render ───────────────────────────────────────────────────────
 
@@ -318,6 +364,22 @@ export default function AdminPage() {
         <p className="text-sm text-muted mt-1">
           Development only — edits content on disk
         </p>
+      </div>
+
+      {/* ─── Publish Bar ───────────────────────────────────────── */}
+      <div className="flex items-center gap-3 mb-6">
+        <button
+          onClick={publish}
+          disabled={!hasUnpublished || publishing}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm"
+        >
+          {publishing ? "Publishing…" : "Publish"}
+        </button>
+        {publishMessage && (
+          <span className={`text-sm ${publishMessage.includes("Published") ? "text-green-400" : publishMessage.includes("Nothing") ? "text-muted" : "text-red-400"}`}>
+            {publishMessage}
+          </span>
+        )}
       </div>
 
       {/* ─── Tabs ──────────────────────────────────────────────── */}
