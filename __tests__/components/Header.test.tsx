@@ -59,7 +59,7 @@ describe("Header", () => {
     const desktopItems = lists[0]?.querySelectorAll("li");
     const labels = Array.from(desktopItems ?? []).map((li) => li.textContent);
     // Should match the navOrder from content.json (filtered to page routes)
-    expect(labels).toEqual(["Home", "About", "Blog", "CV", "Projects"]);
+    expect(labels).toEqual(["Home", "About", "CV", "Blog", "Projects"]);
   });
 
   it("omits nav links when a section is disabled in siteConfig", () => {

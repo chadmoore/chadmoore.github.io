@@ -457,44 +457,52 @@ export default function AdminPage() {
   const contentDirty = data ? JSON.stringify(data) !== lastSavedContent.current : false;
 
   /** Tab order: "site" pinned first, then in navOrder from content data. */
+  /** Tabs that are pinned (not draggable, don't affect nav order). */
+  const PINNED_TABS = useMemo<Set<Tab>>(() => new Set(["site", "skills"]), []);
+
   const tabOrder: Tab[] = useMemo(() => {
     const order: Tab[] = ["site"];
-    const navOrder = data?.site.navOrder ?? ["home", "about", "projects", "blog", "cv", "skills"];
+    const navOrder = data?.site.navOrder ?? ["home", "about", "projects", "blog", "cv"];
     for (const key of navOrder) {
-      if (key in TAB_LABELS) order.push(key as Tab);
+      if (key in TAB_LABELS && !PINNED_TABS.has(key as Tab)) order.push(key as Tab);
     }
-    // Safety: append any tabs missing from navOrder
+    // Append pinned non-site tabs after nav tabs
+    order.push("skills");
+    // Safety: append any remaining tabs missing from navOrder
     for (const key of Object.keys(TAB_LABELS) as Tab[]) {
       if (!order.includes(key)) order.push(key);
     }
     return order;
-  }, [data?.site.navOrder]);
+  }, [data?.site.navOrder, PINNED_TABS]);
 
   // ─── Drag-to-reorder handlers ─────────────────────────────────
 
   const handleDragStart = useCallback(
     (tab: Tab) => (e: React.DragEvent) => {
+      if (PINNED_TABS.has(tab)) return;
       setDragTab(tab);
       e.dataTransfer.effectAllowed = "move";
     },
-    [],
+    [PINNED_TABS],
   );
 
   const handleDragOver = useCallback(
     (tab: Tab) => (e: React.DragEvent) => {
+      if (PINNED_TABS.has(tab)) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
       setDragOverTab(tab);
     },
-    [],
+    [PINNED_TABS],
   );
 
   const handleDrop = useCallback(
     (targetTab: Tab) => (e: React.DragEvent) => {
       e.preventDefault();
       if (!dragTab || dragTab === targetTab || !data) return;
+      if (PINNED_TABS.has(targetTab) || PINNED_TABS.has(dragTab)) return;
 
-      const navOrder = [...(data.site.navOrder ?? ["home", "about", "projects", "blog", "cv", "skills"])];
+      const navOrder = [...(data.site.navOrder ?? ["home", "about", "projects", "blog", "cv"])];
       const fromIndex = navOrder.indexOf(dragTab);
       const toIndex = navOrder.indexOf(targetTab);
       if (fromIndex === -1 || toIndex === -1) return;
@@ -506,7 +514,7 @@ export default function AdminPage() {
       setDragTab(null);
       setDragOverTab(null);
     },
-    [dragTab, data, updateField],
+    [dragTab, data, updateField, PINNED_TABS],
   );
 
   const handleDragEnd = useCallback(() => {
@@ -568,24 +576,24 @@ export default function AdminPage() {
       {/* ─── Tabs ──────────────────────────────────────────────── */}
       <div className="flex gap-4 border-b border-border mb-8">
         {tabOrder.map((t) => {
-          const isSite = t === "site";
+          const isPinned = PINNED_TABS.has(t);
           const isDragging = dragTab === t;
           const isDragOver = dragOverTab === t && dragTab !== t;
           return (
             <button
               key={t}
               onClick={() => setTab(t)}
-              draggable={!isSite}
-              onDragStart={isSite ? undefined : handleDragStart(t)}
-              onDragOver={isSite ? undefined : handleDragOver(t)}
-              onDrop={isSite ? undefined : handleDrop(t)}
+              draggable={!isPinned}
+              onDragStart={isPinned ? undefined : handleDragStart(t)}
+              onDragOver={isPinned ? undefined : handleDragOver(t)}
+              onDrop={isPinned ? undefined : handleDrop(t)}
               onDragEnd={handleDragEnd}
               onDragLeave={() => setDragOverTab(null)}
               className={`pb-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
                 tab === t
                   ? "border-accent text-accent"
                   : "border-transparent text-muted hover:text-foreground"
-              }${!isSite ? " cursor-grab active:cursor-grabbing" : ""}${
+              }${!isPinned ? " cursor-grab active:cursor-grabbing" : ""}${
                 isDragging ? " opacity-30" : ""
               }${isDragOver ? " border-accent/50!" : ""}`}
             >

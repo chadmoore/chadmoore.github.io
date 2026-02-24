@@ -18,7 +18,7 @@ const mockContentData = {
       github: "https://github.com/chadmoore",
       linkedin: "https://www.linkedin.com/in/chad-moore-info",
     },
-    navOrder: ["home", "about", "projects", "blog", "cv", "skills"],
+    navOrder: ["home", "about", "projects", "blog", "cv"],
   },
   home: {
     greeting: "Hi, I'm",
@@ -180,12 +180,15 @@ describe("AdminPage", () => {
     expect(tabs.map((btn) => btn.textContent)).toEqual(tabLabels);
   });
 
-  it("makes non-site tabs draggable", async () => {
+  it("makes non-site tabs draggable except skills", async () => {
     render(<AdminPage />);
     await waitFor(() => screen.getByText("Site Settings"));
 
     const siteTab = screen.getByRole("button", { name: /^site$/i });
     expect(siteTab).not.toHaveAttribute("draggable", "true");
+
+    const skillsTab = screen.getByRole("button", { name: /^skills$/i });
+    expect(skillsTab).not.toHaveAttribute("draggable", "true");
 
     const homeTab = screen.getByRole("button", { name: /^home$/i });
     expect(homeTab).toHaveAttribute("draggable", "true");
