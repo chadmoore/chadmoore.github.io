@@ -21,6 +21,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
+import DevEditLink from "@/components/DevEditLink";
 
 export const metadata: Metadata = {
   title: "Blog | Chad Moore",
@@ -54,9 +55,12 @@ export default function BlogPage() {
               className="group block py-6 border-b border-border hover:bg-surface-hover -mx-4 px-4 rounded-lg transition-colors"
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-2">
-                <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
-                  {post.title}
-                </h2>
+                <div className="flex items-baseline gap-2">
+                  <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
+                    {post.title}
+                  </h2>
+                  <DevEditLink slug={post.slug} />
+                </div>
                 <time className="text-sm text-muted shrink-0 font-mono">
                   {new Date(post.date).toLocaleDateString("en-US", {
                     year: "numeric",

@@ -1,12 +1,11 @@
 /**
- * Admin Page — Local development skill & CV management.
+ * Admin Page — Local development CV & blog management.
  *
- * Client component that talks to /api/admin/cv to read and write
- * cv.json. Only functional when running `next dev` — the API
+ * Client component that talks to /api/admin/* to read and write
+ * content files. Only functional when running `next dev` — the API
  * routes don't exist in the static export.
  *
- * This is intentionally no-frills. It's a dev tool, not a product.
- * KISS: one page, one fetch, one save button.
+ * Two sections: Skills editor and Blog manager, toggled via tabs.
  *
  * // If you're reading this code and thinking "this should use
  * // a form library" — you're probably right, but it ships today.
@@ -31,6 +30,20 @@ interface CvData {
   links: Record<string, string>;
 }
 
+interface BlogPostMeta {
+  slug: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  tags: string[];
+}
+
+interface BlogPostFull extends BlogPostMeta {
+  content: string;
+}
+
+type Tab = "skills" | "blog";
+
 // ─── Constants ──────────────────────────────────────────────────────
 
 const PROFICIENCY_OPTIONS: Proficiency[] = ["expert", "proficient", "familiar"];
@@ -40,9 +53,27 @@ const STATUS_OPTIONS: Status[] = ["active", "legacy"];
 // ─── Component ──────────────────────────────────────────────────────
 
 export default function AdminPage() {
+  const [tab, setTab] = useState<Tab>("skills");
   const [data, setData] = useState<CvData | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+
+  // ─── Blog state ───────────────────────────────────────────────
+  const [posts, setPosts] = useState<BlogPostMeta[]>([]);
+  const [editingPost, setEditingPost] = useState<BlogPostFull | null>(null);
+  const [newPost, setNewPost] = useState(false);
+  const [blogMessage, setBlogMessage] = useState("");
+  const [initialEditSlug, setInitialEditSlug] = useState<string | null>(null);
+
+  // Read URL params on mount (for deep-link from DevEditLink)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "blog") {
+      setTab("blog");
+      const editSlug = params.get("edit");
+      if (editSlug) setInitialEditSlug(editSlug);
+    }
+  }, []);
 
   // Fetch cv data on mount
   useEffect(() => {
@@ -51,6 +82,29 @@ export default function AdminPage() {
       .then((json) => setData(json))
       .catch(() => setMessage("Failed to load CV data. Is the dev server running?"));
   }, []);
+
+  // Fetch blog posts on mount
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = useCallback(() => {
+    fetch("/api/admin/blog")
+      .then((res) => res.json())
+      .then((json) => {
+        if (Array.isArray(json)) setPosts(json);
+      })
+      .catch(() => setBlogMessage("Failed to load blog posts."));
+  }, []);
+
+  // Auto-open editor when deep-linked from a blog page
+  useEffect(() => {
+    if (initialEditSlug && posts.length > 0) {
+      openEditor(initialEditSlug);
+      setInitialEditSlug(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialEditSlug, posts]);
 
   // ─── Skill Mutations ─────────────────────────────────────────────
 
@@ -159,6 +213,94 @@ export default function AdminPage() {
     }
   }, [data]);
 
+  // ─── Blog Handlers ─────────────────────────────────────────────
+
+  const openEditor = useCallback(async (slug: string) => {
+    setBlogMessage("");
+    try {
+      const res = await fetch(`/api/admin/blog/${slug}`);
+      if (!res.ok) throw new Error();
+      const post = await res.json();
+      setEditingPost(post);
+      setNewPost(false);
+    } catch {
+      setBlogMessage("Failed to load post.");
+    }
+  }, []);
+
+  const startNewPost = useCallback(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    setEditingPost({
+      slug: "",
+      title: "",
+      date: today,
+      excerpt: "",
+      tags: [],
+      content: "",
+    });
+    setNewPost(true);
+    setBlogMessage("");
+  }, []);
+
+  const saveBlogPost = useCallback(async () => {
+    if (!editingPost) return;
+    setSaving(true);
+    setBlogMessage("");
+    try {
+      if (newPost) {
+        if (!editingPost.slug.trim()) {
+          setBlogMessage("Slug is required.");
+          setSaving(false);
+          return;
+        }
+        const res = await fetch("/api/admin/blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(editingPost),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || "Create failed");
+        }
+      } else {
+        const res = await fetch(`/api/admin/blog/${editingPost.slug}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(editingPost),
+        });
+        if (!res.ok) throw new Error("Update failed");
+      }
+      setBlogMessage("Saved!");
+      setEditingPost(null);
+      setNewPost(false);
+      fetchPosts();
+    } catch (err) {
+      setBlogMessage(err instanceof Error ? err.message : "Save failed.");
+    } finally {
+      setSaving(false);
+    }
+  }, [editingPost, newPost, fetchPosts]);
+
+  const deletePost = useCallback(async (slug: string) => {
+    if (!confirm(`Delete "${slug}"? This cannot be undone.`)) return;
+    setBlogMessage("");
+    try {
+      const res = await fetch(`/api/admin/blog/${slug}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      fetchPosts();
+      setBlogMessage("Deleted.");
+    } catch {
+      setBlogMessage("Delete failed.");
+    }
+  }, [fetchPosts]);
+
+  const updateEditingPost = useCallback(
+    (field: keyof BlogPostFull, value: string | string[]) => {
+      setEditingPost((prev) => (prev ? { ...prev, [field]: value } : prev));
+    },
+    [],
+  );
+
   // ─── Render ───────────────────────────────────────────────────────
 
   if (!data) {
@@ -171,43 +313,50 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold">Admin — CV Editor</h1>
-          <p className="text-sm text-muted mt-1">
-            Development only — edits cv.json on disk
-          </p>
-        </div>
-        <button
-          onClick={save}
-          disabled={saving}
-          className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50"
-        >
-          {saving ? "Saving…" : "Save"}
-        </button>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold">Admin</h1>
+        <p className="text-sm text-muted mt-1">
+          Development only — edits content on disk
+        </p>
       </div>
 
-      {message && (
-        <p
-          className={`mb-6 text-sm ${
-            message.includes("Saved") ? "text-green-400" : "text-red-400"
-          }`}
-        >
-          {message}
-        </p>
-      )}
-
-      {/* ─── Skills Editor ─────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Skills</h2>
+      {/* ─── Tabs ──────────────────────────────────────────────── */}
+      <div className="flex gap-4 border-b border-border mb-8">
+        {(["skills", "blog"] as Tab[]).map((t) => (
           <button
-            onClick={addCategory}
-            className="text-xs text-accent hover:text-accent-hover transition-colors"
+            key={t}
+            onClick={() => setTab(t)}
+            className={`pb-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
+              tab === t
+                ? "border-accent text-accent"
+                : "border-transparent text-muted hover:text-foreground"
+            }`}
           >
-            + Add Category
+            {t}
           </button>
-        </div>
+        ))}
+      </div>
+
+      {/* ─── Skills Tab ────────────────────────────────────────── */}
+      {tab === "skills" && (
+        <>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold">Skills</h2>
+            <div className="flex items-center gap-3">
+              {message && (
+                <span className={`text-sm ${message.includes("Saved") ? "text-green-400" : "text-red-400"}`}>
+                  {message}
+                </span>
+              )}
+              <button
+                onClick={save}
+                disabled={saving}
+                className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50"
+              >
+                {saving ? "Saving…" : "Save"}
+              </button>
+            </div>
+          </div>
 
         <div className="space-y-8">
           {Object.entries(data.skills).map(([category, skills]) => (
@@ -309,7 +458,181 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
-      </section>
+
+          <button
+            onClick={addCategory}
+            className="mt-4 text-xs text-accent hover:text-accent-hover transition-colors"
+          >
+            + Add Category
+          </button>
+        </>
+      )}
+
+      {/* ─── Blog Tab ──────────────────────────────────────────── */}
+      {tab === "blog" && (
+        <>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold">Blog Posts</h2>
+            <button
+              onClick={startNewPost}
+              className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors text-sm"
+            >
+              + New Post
+            </button>
+          </div>
+
+          {blogMessage && (
+            <p className={`mb-4 text-sm ${blogMessage.includes("Saved") || blogMessage.includes("Deleted") ? "text-green-400" : "text-red-400"}`}>
+              {blogMessage}
+            </p>
+          )}
+
+          {/* Post editor */}
+          {editingPost && (
+            <div className="bg-surface border border-border rounded-lg p-4 mb-6 space-y-4">
+              <h3 className="font-medium">
+                {newPost ? "New Post" : `Editing: ${editingPost.slug}`}
+              </h3>
+
+              {newPost && (
+                <div>
+                  <label className="block text-xs text-muted mb-1">Slug (filename)</label>
+                  <input
+                    type="text"
+                    value={editingPost.slug}
+                    onChange={(e) => updateEditingPost("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                    placeholder="my-post-slug"
+                    className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs text-muted mb-1">Title</label>
+                <input
+                  type="text"
+                  value={editingPost.title}
+                  onChange={(e) => updateEditingPost("title", e.target.value)}
+                  placeholder="Post title"
+                  className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-xs text-muted mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={editingPost.date}
+                    onChange={(e) => updateEditingPost("date", e.target.value)}
+                    className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-xs text-muted mb-1">Tags (comma-separated)</label>
+                  <input
+                    type="text"
+                    value={editingPost.tags.join(", ")}
+                    onChange={(e) => updateEditingPost("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
+                    placeholder="tag1, tag2"
+                    className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs text-muted mb-1">Excerpt</label>
+                <input
+                  type="text"
+                  value={editingPost.excerpt}
+                  onChange={(e) => updateEditingPost("excerpt", e.target.value)}
+                  placeholder="Short description"
+                  className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-muted mb-1">Content (Markdown)</label>
+                <textarea
+                  value={editingPost.content}
+                  onChange={(e) => updateEditingPost("content", e.target.value)}
+                  placeholder="Write your post in Markdown..."
+                  rows={16}
+                  className="w-full bg-background border border-border rounded px-3 py-2 text-sm font-mono resize-y"
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={saveBlogPost}
+                  disabled={saving}
+                  className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm"
+                >
+                  {saving ? "Saving…" : newPost ? "Create" : "Save"}
+                </button>
+                <button
+                  onClick={() => { setEditingPost(null); setNewPost(false); }}
+                  className="px-4 py-2 border border-border rounded-lg text-muted hover:text-foreground transition-colors text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Post list */}
+          {posts.length === 0 ? (
+            <div className="border border-border rounded-xl p-12 text-center">
+              <p className="text-muted">No posts yet.</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {posts.map((post) => (
+                <div
+                  key={post.slug}
+                  className="flex items-center justify-between py-3 border-b border-border"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-medium truncate">{post.title}</span>
+                      <span className="text-xs text-muted font-mono shrink-0">{post.date}</span>
+                    </div>
+                    {post.tags.length > 0 && (
+                      <div className="flex gap-1.5 mt-1">
+                        {post.tags.map((tag) => (
+                          <span key={tag} className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-1.5 py-0.5 rounded-full">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <a
+                      href={`/blog/${post.slug}`}
+                      className="text-xs text-muted hover:text-accent transition-colors"
+                    >
+                      View
+                    </a>
+                    <button
+                      onClick={() => openEditor(post.slug)}
+                      className="text-xs text-accent hover:text-accent-hover transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deletePost(post.slug)}
+                      className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

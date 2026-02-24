@@ -2,9 +2,10 @@
  * Tests for the Admin page component.
  *
  * TDD: RED first. The admin page is a client component that
- * fetches cv.json via the API and provides editing controls.
+ * fetches cv.json and blog posts via the API and provides
+ * editing controls. Tabbed UI: Skills | Blog.
  */
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 
 // Mock fetch globally
 const mockCvData = {
@@ -33,10 +34,22 @@ const mockCvData = {
   },
 };
 
+const mockPosts = [
+  { slug: "hello-world", title: "Hello World", date: "2026-02-23", excerpt: "Welcome", tags: ["meta"] },
+];
+
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({
-    ok: true,
-    json: () => Promise.resolve(mockCvData),
+  global.fetch = jest.fn().mockImplementation((url: string) => {
+    if (url.includes("/api/admin/blog")) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockPosts),
+      });
+    }
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(mockCvData),
+    });
   }) as jest.Mock;
 });
 
@@ -52,6 +65,21 @@ describe("AdminPage", () => {
     render(<AdminPage />);
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith("/api/admin/cv");
+    });
+  });
+
+  it("fetches blog posts on mount", async () => {
+    render(<AdminPage />);
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith("/api/admin/blog");
+    });
+  });
+
+  it("renders tab buttons for skills and blog", async () => {
+    render(<AdminPage />);
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /skills/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /blog/i })).toBeInTheDocument();
     });
   });
 
@@ -102,6 +130,43 @@ describe("AdminPage", () => {
     render(<AdminPage />);
     await waitFor(() => {
       expect(screen.getByText(/development only/i)).toBeInTheDocument();
+    });
+  });
+
+  // ─── Blog tab tests ────────────────────────────────────────────
+
+  it("switches to blog tab when clicked", async () => {
+    render(<AdminPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Frontend")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /blog/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Blog Posts")).toBeInTheDocument();
+    });
+  });
+
+  it("shows blog posts in the blog tab", async () => {
+    render(<AdminPage />);
+    await waitFor(() => screen.getByText("Frontend"));
+
+    fireEvent.click(screen.getByRole("button", { name: /blog/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello World")).toBeInTheDocument();
+    });
+  });
+
+  it("shows new post button in blog tab", async () => {
+    render(<AdminPage />);
+    await waitFor(() => screen.getByText("Frontend"));
+
+    fireEvent.click(screen.getByRole("button", { name: /blog/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /new post/i })).toBeInTheDocument();
     });
   });
 });

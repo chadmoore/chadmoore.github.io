@@ -20,6 +20,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "@/components/Markdown";
+import DevEditLink from "@/components/DevEditLink";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -59,10 +60,13 @@ export default async function BlogPostPage({ params }: Props) {
 
       <article>
         <header className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-            {post.title}
-          </h1>
-          <time className="text-sm text-muted font-mono">
+          <div className="flex items-baseline gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+              {post.title}
+            </h1>
+            <DevEditLink slug={post.slug} />
+          </div>
+          <time className="text-sm text-muted font-mono mt-3 block">
             {new Date(post.date).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
