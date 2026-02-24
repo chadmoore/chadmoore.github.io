@@ -1,8 +1,11 @@
 /**
- * Tests for the About page component — verifies skills come from cv.json.
+ * Tests for the About page component — verifies skills come from content.json.
  */
 import { render, screen } from "@testing-library/react";
-import cvData from "../../content/cv.json";
+import rawContent from "../../content/content.json";
+import type { ContentData } from "../../src/lib/contentData";
+
+const content = rawContent as unknown as ContentData;
 
 // Mock next/link
 jest.mock("next/link", () => {
@@ -30,24 +33,24 @@ import AboutPage from "@/app/about/page";
 describe("AboutPage", () => {
   it("renders the About Me heading", () => {
     render(<AboutPage />);
-    expect(screen.getByText("About Me")).toBeInTheDocument();
+    expect(screen.getByText(content.about.heading)).toBeInTheDocument();
   });
 
-  it("renders the 'What I Work With' section", () => {
+  it("renders the skills section heading", () => {
     render(<AboutPage />);
-    expect(screen.getByText("What I Work With")).toBeInTheDocument();
+    expect(screen.getByText(content.about.skillsHeading)).toBeInTheDocument();
   });
 
-  it("renders all skill categories from cv.json", () => {
+  it("renders all skill categories from content.json", () => {
     render(<AboutPage />);
-    for (const category of Object.keys(cvData.skills)) {
+    for (const category of Object.keys(content.cv.skills)) {
       expect(screen.getByText(category)).toBeInTheDocument();
     }
   });
 
-  it("renders all individual skills from cv.json", () => {
+  it("renders all individual skills from content.json", () => {
     render(<AboutPage />);
-    const allSkills = Object.values(cvData.skills).flat();
+    const allSkills = Object.values(content.cv.skills).flat();
     for (const skill of allSkills) {
       // Skills are now objects with a name property
       expect(screen.getByText(skill.name)).toBeInTheDocument();
@@ -59,12 +62,12 @@ describe("AboutPage", () => {
     expect(screen.getByText("Get In Touch")).toBeInTheDocument();
 
     const emailLink = screen.getByText("email");
-    expect(emailLink.closest("a")).toHaveAttribute("href", "mailto:chad@chadmoore.info");
+    expect(emailLink.closest("a")).toHaveAttribute("href", `mailto:${content.site.links.email}`);
 
     const linkedInLink = screen.getByText("LinkedIn");
     expect(linkedInLink.closest("a")).toHaveAttribute(
       "href",
-      "https://www.linkedin.com/in/chad-moore-info"
+      content.site.links.linkedin
     );
   });
 
@@ -72,7 +75,7 @@ describe("AboutPage", () => {
     const { container } = render(<AboutPage />);
     // Each category card has an icon (SVG) + heading. Verify SVGs exist.
     const svgs = container.querySelectorAll("svg");
-    const categoryCount = Object.keys(cvData.skills).length;
+    const categoryCount = Object.keys(content.cv.skills).length;
     // There should be at least one SVG per category
     expect(svgs.length).toBeGreaterThanOrEqual(categoryCount);
   });

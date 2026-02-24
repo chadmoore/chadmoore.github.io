@@ -9,7 +9,7 @@ Personal homepage built with Next.js, React, and Tailwind CSS. Deployed to GitHu
 - **Home** — Hero intro with recent blog posts
 - **About** — Bio, interactive skills grid, and contact info
 - **Blog** — Markdown-based blog (posts in `content/blog/`)
-- **CV** — Resume powered by `content/cv.json` with AI-tagged skill highlights
+- **CV** — Resume powered by `content/content.json` with AI-tagged skill highlights
 - **Projects** — GitHub repos via API (currently soft-launched behind a feature flag)
 
 ## How It Works
@@ -54,19 +54,19 @@ These power an interactive `SkillsGrid` component with faceted filtering (toggle
 
 ### Content as Flat Files
 
-All content lives in `content/` — `cv.json` for structured resume data and `.md` files with YAML frontmatter for blog posts. Both are read at build time with `fs.readFileSync`. No database, no headless CMS, no API calls during the build (except GitHub for the projects page, which fetches client-side to avoid rate limits in CI).
+All content lives in `content/` — `content.json` for structured site and resume data and `.md` files with YAML frontmatter for blog posts. Both are read at build time with `fs.readFileSync`. No database, no headless CMS, no API calls during the build (except GitHub for the projects page, which fetches client-side to avoid rate limits in CI).
 
 ### Local-Only Admin Panel
 
-The `/admin` page is a tabbed editor for skills and blog posts that talks to local API routes which read/write files on disk. It features:
+The `/admin` page is a tabbed editor for site settings, homepage, about page, CV, skills, and blog posts that talks to local API routes which read/write files on disk. It features:
 
-- **Dirty tracking** — Save buttons are disabled until you actually change something. CV data and blog posts are each compared against a JSON snapshot taken on load.
+- **Dirty tracking** — Save buttons are disabled until you actually change something. Content data and blog posts are each compared against a JSON snapshot taken on load.
 - **Save/Publish separation** — Save writes to disk (local only). Publish stages, commits, and pushes to git (triggering the deploy pipeline). The Publish button stays disabled until you've saved real changes.
 - **Deep linking** — `DevEditLink` components on blog pages link to `/admin?tab=blog&edit={slug}`, auto-opening the editor for that post. These links are tree-shaken out of production builds.
 
 ### AI Skill Tagging
 
-`scripts/tag-skills.ts` is an offline pipeline that reads `cv.json`, sends each job's bullet points + the full skill vocabulary to OpenAI (`gpt-4o-mini`), and writes back enriched highlights like `{ text: "Built OAuth integration", skills: ["OAuth 2.0", "REST APIs"] }`. It's idempotent — re-running re-tags from scratch.
+`scripts/tag-skills.ts` is an offline pipeline that reads `content.json`, sends each job's bullet points + the full skill vocabulary to OpenAI (`gpt-4o-mini`), and writes back enriched highlights like `{ text: "Built OAuth integration", skills: ["OAuth 2.0", "REST APIs"] }`. It's idempotent — re-running re-tags from scratch.
 
 ### Hand-Rolled Markdown
 

@@ -35,9 +35,8 @@ describe("siteConfig", () => {
     expect(siteConfig.sections.cv).toBe(true);
   });
 
-  it("is a const object (frozen shape)", () => {
-    // siteConfig is declared `as const`, so at runtime it's still a plain object
-    // but we can verify its shape is complete
+  it("has the expected shape", () => {
+    // siteConfig is derived from content.json, verify its shape is complete
     expect(Object.keys(siteConfig)).toEqual(
       expect.arrayContaining(["name", "tagline", "sections"])
     );

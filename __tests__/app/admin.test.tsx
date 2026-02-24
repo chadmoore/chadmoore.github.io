@@ -2,35 +2,53 @@
  * Tests for the Admin page component.
  *
  * TDD: RED first. The admin page is a client component that
- * fetches cv.json and blog posts via the API and provides
- * editing controls. Tabbed UI: Skills | Blog.
+ * fetches content.json and blog posts via the API and provides
+ * editing controls. Tabbed UI: Site | Home | About | CV | Skills | Blog.
  */
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 
 // Mock fetch globally
-const mockCvData = {
-  name: "Chad Moore",
-  headline: "Senior / Staff Full‑Stack Engineer",
-  location: "Northampton, Massachusetts, United States",
-  summary: "A summary.",
-  specialties: ["Enterprise Systems"],
-  experience: [],
-  education: [],
-  skills: {
-    Frontend: [
-      { name: "React", proficiency: "expert", preference: "preferred" },
-      { name: "AngularJS", proficiency: "proficient", status: "legacy" },
-    ],
-    Backend: [
-      { name: "Node.js", proficiency: "expert", preference: "preferred" },
-      { name: "PHP", proficiency: "familiar", status: "legacy" },
-    ],
+const mockContentData = {
+  site: {
+    name: "Chad Moore",
+    tagline: "Senior / Staff Full‑Stack Engineer",
+    sections: { about: true, projects: false, blog: true, cv: true },
+    links: {
+      email: "chad@chadmoore.info",
+      github: "https://github.com/chadmoore",
+      linkedin: "https://www.linkedin.com/in/chad-moore-info",
+    },
   },
-  certifications: [],
-  links: {
-    email: "chad@chadmoore.info",
-    github: "https://github.com/chadmoore",
-    linkedin: "https://www.linkedin.com/in/chad-moore-info",
+  home: {
+    greeting: "Hi, I'm",
+    featureCards: [{ title: "Card", description: "Desc", icon: "integration" }],
+  },
+  about: {
+    heading: "About Me",
+    intro: ["Intro paragraph."],
+    skillsHeading: "What I Work With",
+    contactHeading: "Get In Touch",
+    contactText: "I'm always open to discussing new opportunities.",
+  },
+  blog: { heading: "Blog", description: "Posts about engineering." },
+  cv: {
+    headline: "Senior / Staff Full‑Stack Engineer",
+    location: "Northampton, Massachusetts, United States",
+    summary: "A summary.",
+    specialties: ["Enterprise Systems"],
+    experience: [],
+    education: [],
+    skills: {
+      Frontend: [
+        { name: "React", proficiency: "expert", preference: "preferred" },
+        { name: "AngularJS", proficiency: "proficient", status: "legacy" },
+      ],
+      Backend: [
+        { name: "Node.js", proficiency: "expert", preference: "preferred" },
+        { name: "PHP", proficiency: "familiar", status: "legacy" },
+      ],
+    },
+    certifications: [],
   },
 };
 
@@ -48,7 +66,7 @@ beforeEach(() => {
     }
     return Promise.resolve({
       ok: true,
-      json: () => Promise.resolve(mockCvData),
+      json: () => Promise.resolve(mockContentData),
     });
   }) as jest.Mock;
 });
@@ -61,10 +79,10 @@ afterEach(() => {
 import AdminPage from "@/app/admin/page";
 
 describe("AdminPage", () => {
-  it("fetches cv data on mount", async () => {
+  it("fetches content data on mount", async () => {
     render(<AdminPage />);
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/api/admin/cv");
+      expect(global.fetch).toHaveBeenCalledWith("/api/admin/content");
     });
   });
 
@@ -75,16 +93,24 @@ describe("AdminPage", () => {
     });
   });
 
-  it("renders tab buttons for skills and blog", async () => {
+  it("renders tab buttons for all sections", async () => {
     render(<AdminPage />);
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /skills/i })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /blog/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^site$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^home$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^about$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^cv$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^skills$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^blog$/i })).toBeInTheDocument();
     });
   });
 
-  it("renders skill categories after loading", async () => {
+  it("renders skill categories after switching to skills tab", async () => {
     render(<AdminPage />);
+    await waitFor(() => screen.getByText("Site Settings"));
+
+    fireEvent.click(screen.getByRole("button", { name: /^skills$/i }));
+
     await waitFor(() => {
       expect(screen.getByText("Frontend")).toBeInTheDocument();
       expect(screen.getByText("Backend")).toBeInTheDocument();
@@ -93,6 +119,10 @@ describe("AdminPage", () => {
 
   it("renders individual skill names in inputs", async () => {
     render(<AdminPage />);
+    await waitFor(() => screen.getByText("Site Settings"));
+
+    fireEvent.click(screen.getByRole("button", { name: /^skills$/i }));
+
     await waitFor(() => {
       const inputs = screen.getAllByPlaceholderText("Skill name");
       const values = inputs.map((el) => (el as HTMLInputElement).value);
@@ -104,6 +134,10 @@ describe("AdminPage", () => {
 
   it("renders proficiency selectors for each skill", async () => {
     render(<AdminPage />);
+    await waitFor(() => screen.getByText("Site Settings"));
+
+    fireEvent.click(screen.getByRole("button", { name: /^skills$/i }));
+
     await waitFor(() => {
       // Each skill should have a proficiency dropdown
       const selects = screen.getAllByRole("combobox");
@@ -138,10 +172,10 @@ describe("AdminPage", () => {
   it("switches to blog tab when clicked", async () => {
     render(<AdminPage />);
     await waitFor(() => {
-      expect(screen.getByText("Frontend")).toBeInTheDocument();
+      expect(screen.getByText("Site Settings")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /blog/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^blog$/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Blog Posts")).toBeInTheDocument();
@@ -150,9 +184,9 @@ describe("AdminPage", () => {
 
   it("shows blog posts in the blog tab", async () => {
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
-    fireEvent.click(screen.getByRole("button", { name: /blog/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^blog$/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Hello World")).toBeInTheDocument();
@@ -161,9 +195,9 @@ describe("AdminPage", () => {
 
   it("shows new post button in blog tab", async () => {
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
-    fireEvent.click(screen.getByRole("button", { name: /blog/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^blog$/i }));
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /new post/i })).toBeInTheDocument();
@@ -187,38 +221,38 @@ describe("AdminPage", () => {
     });
   });
 
-  it("save button is disabled when no CV changes exist", async () => {
+  it("save button is disabled when no changes exist", async () => {
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
     const saveBtn = screen.getByRole("button", { name: /^save$/i });
     expect(saveBtn).toBeDisabled();
     expect(screen.getByRole("button", { name: /publish/i })).toBeDisabled();
   });
 
-  it("save button becomes enabled after modifying a skill", async () => {
+  it("save button becomes enabled after modifying a field", async () => {
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
     const saveBtn = screen.getByRole("button", { name: /^save$/i });
     expect(saveBtn).toBeDisabled();
 
-    // Modify a skill name
-    const inputs = screen.getAllByPlaceholderText("Skill name");
-    fireEvent.change(inputs[0], { target: { value: "Vue" } });
+    // Modify the site name
+    const nameInput = screen.getByDisplayValue("Chad Moore");
+    fireEvent.change(nameInput, { target: { value: "Test User" } });
 
     expect(saveBtn).not.toBeDisabled();
   });
 
-  it("publish button becomes enabled after a successful CV save with changes", async () => {
+  it("publish button becomes enabled after a successful save with changes", async () => {
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
-    // Modify a skill name so data differs from last-saved snapshot
-    const inputs = screen.getAllByPlaceholderText("Skill name");
-    fireEvent.change(inputs[0], { target: { value: "Vue" } });
+    // Modify the site name so data differs from last-saved snapshot
+    const nameInput = screen.getByDisplayValue("Chad Moore");
+    fireEvent.change(nameInput, { target: { value: "Test User" } });
 
-    // Click Save (CV)
+    // Click Save
     fireEvent.click(screen.getByRole("button", { name: /^save$/i }));
 
     await waitFor(() => {
@@ -228,7 +262,7 @@ describe("AdminPage", () => {
   });
 
   it("publish button becomes disabled again after successful publish", async () => {
-    // Mock responses: CV load, blog load, CV save, then publish
+    // Mock responses: content load, blog load, content save, then publish
     (global.fetch as jest.Mock).mockImplementation((url: string, opts?: RequestInit) => {
       if (opts?.method === "POST" && url.includes("/api/admin/publish")) {
         return Promise.resolve({
@@ -236,23 +270,23 @@ describe("AdminPage", () => {
           json: () => Promise.resolve({ hash: "abc1234" }),
         });
       }
-      if (opts?.method === "PUT" && url.includes("/api/admin/cv")) {
+      if (opts?.method === "PUT" && url.includes("/api/admin/content")) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ ok: true }) });
       }
       if (url.includes("/api/admin/blog")) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve(mockPosts) });
       }
-      return Promise.resolve({ ok: true, json: () => Promise.resolve(mockCvData) });
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(mockContentData) });
     });
 
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
     // Modify data so save detects a change
-    const inputs = screen.getAllByPlaceholderText("Skill name");
-    fireEvent.change(inputs[0], { target: { value: "Vue" } });
+    const nameInput = screen.getByDisplayValue("Chad Moore");
+    fireEvent.change(nameInput, { target: { value: "Test User" } });
 
-    // Save CV to enable publish
+    // Save to enable publish
     fireEvent.click(screen.getByRole("button", { name: /^save$/i }));
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /publish/i })).not.toBeDisabled();
@@ -274,21 +308,21 @@ describe("AdminPage", () => {
           json: () => Promise.resolve({ hash: "abc1234" }),
         });
       }
-      if (opts?.method === "PUT" && url.includes("/api/admin/cv")) {
+      if (opts?.method === "PUT" && url.includes("/api/admin/content")) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ ok: true }) });
       }
       if (url.includes("/api/admin/blog")) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve(mockPosts) });
       }
-      return Promise.resolve({ ok: true, json: () => Promise.resolve(mockCvData) });
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(mockContentData) });
     });
 
     render(<AdminPage />);
-    await waitFor(() => screen.getByText("Frontend"));
+    await waitFor(() => screen.getByText("Site Settings"));
 
     // Modify data so save detects a change
-    const inputs = screen.getAllByPlaceholderText("Skill name");
-    fireEvent.change(inputs[0], { target: { value: "Vue" } });
+    const nameInput = screen.getByDisplayValue("Chad Moore");
+    fireEvent.change(nameInput, { target: { value: "Test User" } });
 
     // Save then publish
     fireEvent.click(screen.getByRole("button", { name: /^save$/i }));

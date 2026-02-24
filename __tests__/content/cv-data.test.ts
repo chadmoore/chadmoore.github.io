@@ -1,11 +1,11 @@
 /**
- * Tests for content/cv.json — validates the CV data structure.
+ * Tests for content/content.json — validates the consolidated content structure.
  *
- * TDD: These tests encode the EXPECTED state of cv.json after
- * populating it with real LinkedIn export data. Write RED first,
- * then update cv.json to make them GREEN.
+ * TDD: These tests encode the EXPECTED state of content.json after
+ * populating it with real data. Write RED first,
+ * then update content.json to make them GREEN.
  */
-import rawCvData from "../../content/cv.json";
+import rawContent from "../../content/content.json";
 
 interface CvSkill {
   name: string;
@@ -29,34 +29,66 @@ interface CvExperience {
   highlights: CvHighlight[];
 }
 
-interface CvData {
-  name: string;
+interface CvSection {
   headline: string;
   location: string;
   summary: string;
   specialties: string[];
-  links: { email: string; github: string; linkedin: string };
   experience: CvExperience[];
   education: Array<{ degree: string; institution: string; location?: string }>;
   skills: Record<string, CvSkill[]>;
   certifications: unknown[];
 }
 
-const cvData = rawCvData as unknown as CvData;
+interface SiteSection {
+  name: string;
+  tagline: string;
+  sections: Record<string, boolean>;
+  links: { email: string; github: string; linkedin: string };
+}
 
-describe("cv.json data integrity", () => {
-  it("has required top-level fields", () => {
-    expect(cvData.name).toBe("Chad Moore");
+interface ContentData {
+  site: SiteSection;
+  home: unknown;
+  about: unknown;
+  blog: unknown;
+  cv: CvSection;
+}
+
+const content = rawContent as unknown as ContentData;
+const siteData = content.site;
+const cvData = content.cv;
+
+describe("content.json top-level structure", () => {
+  it("has all required top-level sections", () => {
+    expect(content.site).toBeDefined();
+    expect(content.home).toBeDefined();
+    expect(content.about).toBeDefined();
+    expect(content.blog).toBeDefined();
+    expect(content.cv).toBeDefined();
+  });
+});
+
+describe("content.json site data", () => {
+  it("has name and tagline", () => {
+    expect(siteData.name).toBe("Chad Moore");
+    expect(typeof siteData.tagline).toBe("string");
+    expect(siteData.tagline.length).toBeGreaterThan(0);
+  });
+
+  it("has links with email, github, and linkedin", () => {
+    expect(siteData.links.email).toBe("chad@chadmoore.info");
+    expect(siteData.links.github).toBe("https://github.com/chadmoore");
+    expect(siteData.links.linkedin).toBe("https://www.linkedin.com/in/chad-moore-info");
+  });
+});
+
+describe("content.json CV data integrity", () => {
+  it("has required CV fields", () => {
     expect(cvData.headline).toBe("Senior / Staff Full‑Stack Engineer");
     expect(cvData.location).toBe("Northampton, Massachusetts, United States");
     expect(typeof cvData.summary).toBe("string");
     expect(cvData.summary.length).toBeGreaterThan(100);
-  });
-
-  it("has links with email, github, and linkedin", () => {
-    expect(cvData.links.email).toBe("chad@chadmoore.info");
-    expect(cvData.links.github).toBe("https://github.com/chadmoore");
-    expect(cvData.links.linkedin).toBe("https://www.linkedin.com/in/chad-moore-info");
   });
 
   it("has specialties as an array of strings", () => {
@@ -68,7 +100,7 @@ describe("cv.json data integrity", () => {
   });
 });
 
-describe("cv.json experience (from LinkedIn Positions)", () => {
+describe("content.json experience (from LinkedIn Positions)", () => {
   it("has exactly 5 experience entries", () => {
     expect(cvData.experience).toHaveLength(5);
   });
@@ -149,7 +181,7 @@ describe("cv.json experience (from LinkedIn Positions)", () => {
   });
 });
 
-describe("cv.json skills (organized from LinkedIn Skills)", () => {
+describe("content.json skills (organized from LinkedIn Skills)", () => {
   it("has a skills object with at least 6 categories", () => {
     const categories = Object.keys(cvData.skills);
     expect(categories.length).toBeGreaterThanOrEqual(6);
@@ -223,7 +255,7 @@ describe("cv.json skills (organized from LinkedIn Skills)", () => {
   });
 });
 
-describe("cv.json education", () => {
+describe("content.json education", () => {
   it("has an education array", () => {
     expect(Array.isArray(cvData.education)).toBe(true);
   });

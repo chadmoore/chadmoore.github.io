@@ -1,35 +1,25 @@
 /**
  * Tests for src/app/cv/page.tsx — CV page rendering.
  *
- * Verifies all sections render from cv.json data.
+ * Verifies all sections render from content.json data.
  */
 import { render, screen } from "@testing-library/react";
-import rawCvData from "../../content/cv.json";
+import rawContent from "../../content/content.json";
+import type { ContentData } from "../../src/lib/contentData";
 
-interface CvData {
-  name: string;
-  headline: string;
-  location: string;
-  summary: string;
-  specialties: string[];
-  links: { email: string; github: string; linkedin: string };
-  experience: Array<{ title: string; company: string; location: string; dates: string; description: string }>;
-  education: Array<{ degree: string; institution: string; location?: string }>;
-  skills: Record<string, Array<{ name: string; proficiency: string; preference?: string; status?: string }>>;
-  certifications: unknown[];
-}
-
-const cvData = rawCvData as unknown as CvData;
+const content = rawContent as unknown as ContentData;
+const cvData = content.cv;
+const siteData = content.site;
 
 // No Link mock needed — CV page doesn't use next/link
 import CVPage from "@/app/cv/page";
 
 describe("CVPage", () => {
-  it("renders the name from cv.json", () => {
+  it("renders the name from content.json", () => {
     render(<CVPage />);
     // Name appears in the header h1
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      cvData.name
+      siteData.name
     );
   });
 
@@ -99,19 +89,19 @@ describe("CVPage", () => {
     const emailLink = screen.getByText("Email");
     expect(emailLink.closest("a")).toHaveAttribute(
       "href",
-      `mailto:${cvData.links.email}`
+      `mailto:${siteData.links.email}`
     );
 
     const linkedInLink = screen.getByText("LinkedIn");
     expect(linkedInLink.closest("a")).toHaveAttribute(
       "href",
-      cvData.links.linkedin
+      siteData.links.linkedin
     );
 
     const githubLink = screen.getByText("GitHub");
     expect(githubLink.closest("a")).toHaveAttribute(
       "href",
-      cvData.links.github
+      siteData.links.github
     );
   });
 

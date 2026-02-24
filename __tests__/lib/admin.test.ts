@@ -1,5 +1,5 @@
 /**
- * Tests for src/lib/admin.ts — CV data and blog post helpers.
+ * Tests for src/lib/admin.ts — content data and blog post helpers.
  *
  * TDD: RED first. These test the server-side logic for the
  * admin interface that reads and writes content files.
@@ -14,8 +14,8 @@ jest.mock("gray-matter");
 jest.mock("child_process");
 
 import {
-  readCvData,
-  writeCvData,
+  readContentData,
+  writeContentData,
   listBlogPosts,
   readBlogPost,
   createBlogPost,
@@ -30,28 +30,45 @@ const mockedMatter = matter as jest.MockedFunction<typeof matter> & {
 };
 const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
 
-const CV_PATH = path.resolve(process.cwd(), "content/cv.json");
+const CONTENT_PATH = path.resolve(process.cwd(), "content/content.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
 
-import type { CvData } from "../../src/lib/cvData";
+import type { ContentData } from "../../src/lib/contentData";
 
-const sampleCv = {
-  name: "Chad Moore",
-  skills: {
-    Frontend: [
-      { name: "React", proficiency: "expert", preference: "preferred" },
-    ],
+const sampleContent = {
+  site: {
+    name: "Chad Moore",
+    tagline: "A tagline",
+    sections: { about: true, projects: false, blog: true, cv: true },
+    links: { email: "chad@chadmoore.info", github: "https://github.com/chadmoore", linkedin: "https://www.linkedin.com/in/chad-moore-info" },
   },
-} as unknown as CvData;
+  home: { greeting: "Hi, I'm", featureCards: [] },
+  about: { heading: "About Me", intro: [], skillsHeading: "Skills", contactHeading: "Contact", contactText: "" },
+  blog: { heading: "Blog", description: "" },
+  cv: {
+    headline: "Engineer",
+    location: "Northampton",
+    summary: "A summary.",
+    specialties: [],
+    experience: [],
+    education: [],
+    skills: {
+      Frontend: [
+        { name: "React", proficiency: "expert", preference: "preferred" },
+      ],
+    },
+    certifications: [],
+  },
+} as unknown as ContentData;
 
-describe("readCvData", () => {
-  it("reads and parses cv.json from the content directory", () => {
-    (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify(sampleCv));
+describe("readContentData", () => {
+  it("reads and parses content.json from the content directory", () => {
+    (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify(sampleContent));
 
-    const data = readCvData();
+    const data = readContentData();
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(CV_PATH, "utf-8");
-    expect(data).toEqual(sampleCv);
+    expect(fs.readFileSync).toHaveBeenCalledWith(CONTENT_PATH, "utf-8");
+    expect(data).toEqual(sampleContent);
   });
 
   it("throws if the file cannot be read", () => {
@@ -59,19 +76,19 @@ describe("readCvData", () => {
       throw new Error("ENOENT");
     });
 
-    expect(() => readCvData()).toThrow("ENOENT");
+    expect(() => readContentData()).toThrow("ENOENT");
   });
 });
 
-describe("writeCvData", () => {
-  it("writes formatted JSON to cv.json", () => {
+describe("writeContentData", () => {
+  it("writes formatted JSON to content.json", () => {
     (fs.writeFileSync as jest.Mock).mockImplementation(() => {});
 
-    writeCvData(sampleCv);
+    writeContentData(sampleContent);
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
-      CV_PATH,
-      JSON.stringify(sampleCv, null, 2) + "\n",
+      CONTENT_PATH,
+      JSON.stringify(sampleContent, null, 2) + "\n",
       "utf-8"
     );
   });
@@ -81,7 +98,7 @@ describe("writeCvData", () => {
       throw new Error("EACCES");
     });
 
-    expect(() => writeCvData(sampleCv)).toThrow("EACCES");
+    expect(() => writeContentData(sampleContent)).toThrow("EACCES");
   });
 });
 
@@ -224,7 +241,7 @@ describe("publishChanges", () => {
   it("stages, commits, and pushes changes", () => {
     mockedExecSync
       .mockReturnValueOnce("") // git add -A
-      .mockReturnValueOnce(" M content/cv.json\n") // git status --porcelain
+      .mockReturnValueOnce(" M content/content.json\n") // git status --porcelain
       .mockReturnValueOnce("") // git commit
       .mockReturnValueOnce("") // git push
       .mockReturnValueOnce("abc1234\n"); // git rev-parse --short HEAD
