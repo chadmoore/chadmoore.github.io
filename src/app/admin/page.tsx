@@ -504,7 +504,7 @@ export default function AdminPage() {
       </div>
 
       {/* ─── Tabs ──────────────────────────────────────────────── */}
-      <div className="flex gap-4 border-b border-border mb-8 overflow-x-auto">
+      <div className="flex gap-4 border-b border-border mb-8">
         {(Object.keys(TAB_LABELS) as Tab[]).map((t) => (
           <button
             key={t}
