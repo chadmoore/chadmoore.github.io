@@ -42,7 +42,7 @@
 
 /* ── Dark theme (OS preference) ────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
-  @theme inline {
+  :root {
     --color-background: #0a0a0a;
     --color-foreground: #ededed;
     --color-muted: #888888;
