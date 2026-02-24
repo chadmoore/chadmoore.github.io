@@ -13,7 +13,14 @@
       "github": "https://github.com/chadmoore",
       "linkedin": "https://www.linkedin.com/in/chad-moore-info"
     },
-    "navOrder": ["home", "about", "projects", "blog", "cv", "skills"]
+    "navOrder": [
+      "home",
+      "about",
+      "cv",
+      "projects",
+      "blog",
+      "skills"
+    ]
   },
   "home": {
     "greeting": "Hi, I'm",
