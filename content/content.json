@@ -4,7 +4,7 @@
     "tagline": "Full-stack engineer. Enterprise systems. Cloud to UI.",
     "sections": {
       "about": true,
-      "projects": false,
+      "projects": true,
       "blog": true,
       "cv": true
     },
