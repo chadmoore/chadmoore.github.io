@@ -19,7 +19,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import siteConfig, { type SectionKey } from "@/lib/siteConfig";
+import { siteConfig, type SectionKey } from "@/lib/siteConfig";
 
 /**
  * Master list of all possible nav links.

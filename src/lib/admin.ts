@@ -12,6 +12,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { execSync } from "child_process";
+import type { CvData } from "@/lib/cvData";
 
 const CV_PATH = path.resolve(process.cwd(), "content/cv.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
@@ -19,15 +20,13 @@ const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
 // ─── CV Helpers ─────────────────────────────────────────────────────
 
 /** Read and parse cv.json. Throws if the file is missing or corrupt. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function readCvData(): Record<string, any> {
+export function readCvData(): CvData {
   const raw = fs.readFileSync(CV_PATH, "utf-8");
   return JSON.parse(raw);
 }
 
 /** Write data back to cv.json with pretty-printing. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function writeCvData(data: Record<string, any>): void {
+export function writeCvData(data: CvData): void {
   fs.writeFileSync(CV_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
 }
 
@@ -49,7 +48,7 @@ export function listBlogPosts(): Omit<AdminBlogPost, "content">[] {
 
   return fs
     .readdirSync(BLOG_DIR)
-    .filter((f) => f.endsWith(".md"))
+    .filter((filename) => filename.endsWith(".md"))
     .map((filename) => {
       const slug = filename.replace(/\.md$/, "");
       const raw = fs.readFileSync(path.join(BLOG_DIR, filename), "utf-8");

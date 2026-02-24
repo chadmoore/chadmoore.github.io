@@ -5,11 +5,8 @@
  * In `next dev` it's "development"; in the static export it's
  * "production" — so this link never appears on the live site.
  *
- * Client component because we want this to render in the browser
- * (server components in dev mode would also work, but this is
- * simpler to reason about and test).
+ * Server component — no client-side state or effects needed.
  */
-"use client";
 
 interface DevEditLinkProps {
   /** The slug for the admin editor, e.g. "hello-world" */

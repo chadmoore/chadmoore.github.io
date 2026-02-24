@@ -21,27 +21,12 @@
  * // You're welcome, ATS robots.
  */
 import type { Metadata } from "next";
-import cvData from "@/../content/cv.json";
+import rawCvData from "@/../content/cv.json";
 import { formatDateRange } from "@/lib/dates";
-import { type Skill } from "@/lib/skills";
+import type { CvData } from "@/lib/cvData";
 import SkillsGrid from "@/components/SkillsGrid";
 
-/** Education entries may be empty but TypeScript needs the shape. */
-interface Education {
-  degree: string;
-  institution: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-}
-const education = cvData.education as Education[];
-
-/** Highlights are now objects with text and tagged skill names. */
-interface Highlight {
-  text: string;
-  skills: string[];
-}
+const cvData = rawCvData as unknown as CvData;
 
 export const metadata: Metadata = {
   title: "CV | Chad Moore",
@@ -98,12 +83,12 @@ export default function CVPage() {
         <p className="text-muted leading-relaxed">{cvData.summary}</p>
         {cvData.specialties.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-4">
-            {cvData.specialties.map((s) => (
+            {cvData.specialties.map((specialty) => (
               <span
-                key={s}
+                key={specialty}
                 className="text-xs bg-accent/10 text-accent px-3 py-1 rounded-full"
               >
-                {s}
+                {specialty}
               </span>
             ))}
           </div>
@@ -140,15 +125,15 @@ export default function CVPage() {
                 )}
                 {job.highlights.length > 0 && (
                   <ul className="space-y-3">
-                    {(job.highlights as unknown as Highlight[]).map((h, j) => (
+                    {job.highlights.map((highlight, j) => (
                       <li key={j} className="text-sm text-muted">
                         <div className="flex gap-2">
                           <span className="text-accent mt-1 shrink-0">•</span>
-                          <span>{h.text}</span>
+                          <span>{highlight.text}</span>
                         </div>
-                        {h.skills.length > 0 && (
+                        {highlight.skills.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
-                            {h.skills.map((skill) => (
+                            {highlight.skills.map((skill) => (
                               <span
                                 key={skill}
                                 className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
@@ -169,13 +154,13 @@ export default function CVPage() {
       )}
 
       {/* Education */}
-      {education.length > 0 && (
+      {cvData.education.length > 0 && (
         <section className="mb-12">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
             Education
           </h2>
           <div className="space-y-6">
-            {education.map((edu, i) => (
+            {cvData.education.map((edu, i) => (
               <div
                 key={i}
                 className="relative pl-6 border-l-2 border-border"
@@ -207,7 +192,7 @@ export default function CVPage() {
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
           Skills
         </h2>
-        <SkillsGrid skills={cvData.skills as Record<string, Skill[]>} />
+        <SkillsGrid skills={cvData.skills} />
       </section>
 
       {/* Certifications */}

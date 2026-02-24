@@ -14,21 +14,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { Skill, Proficiency, Preference, Status } from "@/lib/skills";
+import type { CvData } from "@/lib/cvData";
 
 // ─── Types ──────────────────────────────────────────────────────────
-
-interface CvData {
-  name: string;
-  headline: string;
-  location: string;
-  summary: string;
-  specialties: string[];
-  experience: Record<string, unknown>[];
-  education: Record<string, unknown>[];
-  skills: Record<string, Skill[]>;
-  certifications: Record<string, unknown>[];
-  links: Record<string, string>;
-}
 
 interface BlogPostMeta {
   slug: string;
@@ -199,7 +187,7 @@ export default function AdminPage() {
         skills: Object.fromEntries(
           Object.entries(data.skills).map(([cat, skills]) => [
             cat,
-            skills.filter((s) => s.name.trim() !== ""),
+            skills.filter((skill) => skill.name.trim() !== ""),
           ])
         ),
       };

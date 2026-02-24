@@ -137,7 +137,7 @@ describe("BlogPage", () => {
       {
         slug: "dated-post",
         title: "Dated Post",
-        date: "2026-02-23T12:00:00",
+        date: "2026-02-23",
         excerpt: "Excerpt",
         content: "Content",
         tags: [],

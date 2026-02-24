@@ -22,6 +22,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import DevEditLink from "@/components/DevEditLink";
+import { formatPostDate } from "@/lib/dates";
 
 export const metadata: Metadata = {
   title: "Blog | Chad Moore",
@@ -62,11 +63,7 @@ export default function BlogPage() {
                   <DevEditLink slug={post.slug} />
                 </div>
                 <time className="text-sm text-muted shrink-0 font-mono">
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {formatPostDate(post.date)}
                 </time>
               </div>
               <p className="text-sm text-muted line-clamp-2">{post.excerpt}</p>

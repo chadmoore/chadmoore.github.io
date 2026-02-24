@@ -33,6 +33,8 @@ const mockedExecSync = execSync as jest.MockedFunction<typeof execSync>;
 const CV_PATH = path.resolve(process.cwd(), "content/cv.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
 
+import type { CvData } from "../../src/lib/cvData";
+
 const sampleCv = {
   name: "Chad Moore",
   skills: {
@@ -40,7 +42,7 @@ const sampleCv = {
       { name: "React", proficiency: "expert", preference: "preferred" },
     ],
   },
-};
+} as unknown as CvData;
 
 describe("readCvData", () => {
   it("reads and parses cv.json from the content directory", () => {

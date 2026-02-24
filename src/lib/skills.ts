@@ -176,9 +176,9 @@ export function filterSkills(
   filters: SkillFilters,
 ): ResolvedSkill[] {
   return skills.filter(
-    (s) =>
-      filters.proficiency.has(s.proficiency) &&
-      filters.preference.has(s.preference) &&
-      filters.status.has(s.status),
+    (skill) =>
+      filters.proficiency.has(skill.proficiency) &&
+      filters.preference.has(skill.preference) &&
+      filters.status.has(skill.status),
   );
 }

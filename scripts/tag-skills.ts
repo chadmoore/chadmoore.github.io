@@ -27,12 +27,18 @@ import { resolve } from "path";
 
 // ─── Types ──────────────────────────────────────────────────────────
 
+/**
+ * RawHighlight and ScriptExperience are script-local because the
+ * script handles BOTH pre-tagged (string) and post-tagged (object)
+ * highlight formats — unlike the shared CvData which assumes
+ * highlights are already tagged.
+ */
 interface RawHighlight {
   text: string;
   skills: string[];
 }
 
-interface Experience {
+interface ScriptExperience {
   title: string;
   company: string;
   location: string;
@@ -42,13 +48,13 @@ interface Experience {
   highlights: (string | RawHighlight)[];
 }
 
-interface CvData {
+interface ScriptCvData {
   name: string;
   location: string;
   headline: string;
   summary: string;
   specialties: string[];
-  experience: Experience[];
+  experience: ScriptExperience[];
   education: unknown[];
   skills: Record<string, { name: string; proficiency: string; preference?: string; status?: string }[]>;
   certifications: string[];
@@ -58,22 +64,22 @@ interface CvData {
 // ─── Helpers ────────────────────────────────────────────────────────
 
 /** Extract plain text from a highlight, whether string or object. */
-function highlightText(h: string | RawHighlight): string {
-  return typeof h === "string" ? h : h.text;
+function highlightText(highlight: string | RawHighlight): string {
+  return typeof highlight === "string" ? highlight : highlight.text;
 }
 
 /** Collect every skill name from all categories. */
-function allSkillNames(skills: CvData["skills"]): string[] {
+function allSkillNames(skills: ScriptCvData["skills"]): string[] {
   return Object.values(skills)
     .flat()
-    .map((s) => s.name);
+    .map((skill) => skill.name);
 }
 
 // ─── Main ───────────────────────────────────────────────────────────
 
 async function main() {
   const cvPath = resolve(__dirname, "..", "content", "cv.json");
-  const cvData: CvData = JSON.parse(readFileSync(cvPath, "utf-8"));
+  const cvData: ScriptCvData = JSON.parse(readFileSync(cvPath, "utf-8"));
   const skillNames = allSkillNames(cvData.skills);
 
   console.log(`Loaded ${cvData.experience.length} experience entries`);
@@ -98,7 +104,7 @@ SKILL NAMES:
 ${JSON.stringify(skillNames)}
 
 BULLET POINTS:
-${bulletTexts.map((b, i) => `${i}. ${b}`).join("\n")}`;
+${bulletTexts.map((bullet, i) => `${i}. ${bullet}`).join("\n")}`;
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
@@ -129,7 +135,7 @@ ${bulletTexts.map((b, i) => `${i}. ${b}`).join("\n")}`;
     const validNames = new Set(skillNames);
     job.highlights = bulletTexts.map((text, i) => ({
       text,
-      skills: (taggedSkills[i] || []).filter((s) => validNames.has(s)),
+      skills: (taggedSkills[i] || []).filter((skillName) => validNames.has(skillName)),
     }));
 
     const totalTags = job.highlights.reduce((sum, h) => sum + (h as RawHighlight).skills.length, 0);

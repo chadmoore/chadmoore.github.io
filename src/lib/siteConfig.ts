@@ -14,7 +14,7 @@
  * // TODO: add a "uses" page for the /uses crowd
  * // TODO: add dark/light theme toggle (currently dark-only because taste)
  */
-const siteConfig = {
+export const siteConfig = {
   /** Display name used in the hero, nav, and footer */
   name: "Chad Moore",
 
@@ -36,5 +36,3 @@ const siteConfig = {
 
 /** Union type of all toggleable section keys — keeps the Header type-safe. */
 export type SectionKey = keyof typeof siteConfig.sections;
-
-export default siteConfig;

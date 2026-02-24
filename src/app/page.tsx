@@ -20,7 +20,8 @@
  */
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
-import siteConfig from "@/lib/siteConfig";
+import { siteConfig } from "@/lib/siteConfig";
+import { formatPostDate } from "@/lib/dates";
 
 export default function Home() {
   // Only fetch posts if the blog is enabled — no wasted I/O
@@ -134,11 +135,7 @@ export default function Home() {
                   {post.title}
                 </span>
                 <time className="text-sm text-muted shrink-0 font-mono">
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {formatPostDate(post.date)}
                 </time>
               </Link>
             ))}

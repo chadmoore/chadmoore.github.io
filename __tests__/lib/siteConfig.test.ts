@@ -1,7 +1,7 @@
 /**
  * Tests for src/lib/siteConfig.ts — site configuration.
  */
-import siteConfig from "@/lib/siteConfig";
+import { siteConfig } from "@/lib/siteConfig";
 
 describe("siteConfig", () => {
   it("exports a name string", () => {

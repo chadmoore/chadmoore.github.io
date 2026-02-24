@@ -4,7 +4,7 @@
  * Previously this tested a reimplemented copy, which is an anti-pattern.
  * Now it imports the actual function from the source.
  */
-import { formatDateRange } from "@/lib/dates";
+import { formatDateRange, formatPostDate } from "@/lib/dates";
 
 describe("formatDateRange", () => {
   it("formats a full YYYY-MM to YYYY-MM range", () => {
@@ -49,5 +49,35 @@ describe("formatDateRange", () => {
     const result = formatDateRange("2020-01", "2020-02");
     expect(result).toContain("Jan");
     expect(result).toContain("Feb");
+  });
+});
+
+describe("formatPostDate", () => {
+  it("formats a date in short style by default", () => {
+    const result = formatPostDate("2025-01-15");
+    expect(result).toContain("Jan");
+    expect(result).toContain("15");
+    expect(result).toContain("2025");
+  });
+
+  it("formats a date in long style when specified", () => {
+    const result = formatPostDate("2025-01-15", "long");
+    expect(result).toContain("January");
+    expect(result).toContain("15");
+    expect(result).toContain("2025");
+  });
+
+  it("defaults to short style", () => {
+    const short = formatPostDate("2025-06-01");
+    expect(short).toContain("Jun");
+    // Should NOT contain the full month name
+    expect(short).not.toContain("June");
+  });
+
+  it("handles dates that already include a time component", () => {
+    const result = formatPostDate("2025-03-10T08:30:00");
+    expect(result).toContain("Mar");
+    expect(result).toContain("10");
+    expect(result).toContain("2025");
   });
 });

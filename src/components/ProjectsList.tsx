@@ -74,7 +74,7 @@ export default function ProjectsList() {
         const data: Repo[] = await res.json();
         // Filter out forks and sort by stars then updated
         const filtered = data
-          .filter((r) => !r.fork)
+          .filter((repo) => !repo.fork)
           .sort((a, b) => b.stargazers_count - a.stargazers_count);
         setRepos(filtered);
       } catch (err) {

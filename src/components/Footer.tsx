@@ -2,11 +2,17 @@
  * Footer — The bottom of the page, the end of the scroll.
  *
  * Minimal by design: copyright, a few links, nothing more.
+ * Links come from cv.json (single source of truth — DRY).
  * The year auto-updates via Date() so this never goes stale.
  *
  * If you're reading this in 2030 and the site still says the
  * right year, you're welcome.
  */
+import rawCvData from "@/../content/cv.json";
+import type { CvData } from "@/lib/cvData";
+
+const cvData = rawCvData as unknown as CvData;
+
 export default function Footer() {
   return (
     <footer className="border-t border-border py-8 mt-16">
@@ -15,13 +21,13 @@ export default function Footer() {
         <p>&copy; {new Date().getFullYear()} Chad Moore. All rights reserved.</p>
         <div className="flex gap-6">
           <a
-            href="mailto:chad@chadmoore.info"
+            href={`mailto:${cvData.links.email}`}
             className="hover:text-accent transition-colors"
           >
             Email
           </a>
           <a
-            href="https://www.linkedin.com/in/chad-moore-info"
+            href={cvData.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-accent transition-colors"
@@ -29,7 +35,7 @@ export default function Footer() {
             LinkedIn
           </a>
           <a
-            href="https://github.com/chadmoore"
+            href={cvData.links.github}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-accent transition-colors"

@@ -13,9 +13,11 @@
  * // about page, we should probably be friends. chad@chadmoore.info
  */
 import type { Metadata } from "next";
-import cvData from "@/../content/cv.json";
-import { type Skill } from "@/lib/skills";
+import rawCvData from "@/../content/cv.json";
+import type { CvData } from "@/lib/cvData";
 import SkillsGrid from "@/components/SkillsGrid";
+
+const cvData = rawCvData as unknown as CvData;
 
 export const metadata: Metadata = {
   title: "About | Chad Moore",
@@ -51,7 +53,7 @@ export default function AboutPage() {
           What I Work With
         </h2>
 
-        <SkillsGrid skills={cvData.skills as Record<string, Skill[]>} showIcons />
+        <SkillsGrid skills={cvData.skills} showIcons />
 
         <h2 className="text-xl font-semibold text-foreground mt-12 mb-4">
           Get In Touch

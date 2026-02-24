@@ -21,6 +21,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "@/components/Markdown";
 import DevEditLink from "@/components/DevEditLink";
+import { formatPostDate } from "@/lib/dates";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -67,11 +68,7 @@ export default async function BlogPostPage({ params }: Props) {
             <DevEditLink slug={post.slug} />
           </div>
           <time className="text-sm text-muted font-mono mt-3 block">
-            {new Date(post.date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            {formatPostDate(post.date, "long")}
           </time>
           {post.tags.length > 0 && (
             <div className="flex gap-2 mt-4">
