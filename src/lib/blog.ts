@@ -62,6 +62,9 @@ function buildTitleMap(): Map<string, string> {
  *   [[slug]]             → [Post Title](/blog/slug)
  *   [[slug|custom text]] → [custom text](/blog/slug)
  *
+ * Wiki-links inside backtick code spans or fenced code blocks are
+ * left untouched — they're meant to be displayed as literal text.
+ *
  * If the target post doesn't exist, the link text falls back to the slug.
  * This runs at build time so we have full filesystem access.
  */
@@ -70,7 +73,25 @@ export function resolveWikiLinks(content: string, titleMap?: Map<string, string>
   if (!/\[\[/.test(content)) return content;
   const titles = titleMap ?? buildTitleMap();
 
-  return content.replace(
+  // Protect code blocks and inline code from wiki-link replacement.
+  // Stash them as numbered placeholders, resolve links, then restore.
+  const stash: string[] = [];
+  const placeholder = (index: number) => `\x00CODE${index}\x00`;
+
+  const protected_ = content
+    // Fenced code blocks first (greedy, multiline)
+    .replace(/```[\s\S]*?```/g, (match) => {
+      stash.push(match);
+      return placeholder(stash.length - 1);
+    })
+    // Then inline code spans
+    .replace(/`[^`]+`/g, (match) => {
+      stash.push(match);
+      return placeholder(stash.length - 1);
+    });
+
+  // Now resolve wiki-links in the unprotected text
+  const resolved = protected_.replace(
     /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
     (_match, slug: string, customText?: string) => {
       const trimmedSlug = slug.trim();
@@ -78,6 +99,9 @@ export function resolveWikiLinks(content: string, titleMap?: Map<string, string>
       return `[${displayText}](/blog/${trimmedSlug})`;
     }
   );
+
+  // Restore stashed code blocks
+  return resolved.replace(/\x00CODE(\d+)\x00/g, (_match, index) => stash[Number(index)]);
 }
 
 /**

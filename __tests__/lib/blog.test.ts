@@ -207,4 +207,21 @@ describe("resolveWikiLinks", () => {
     const result = resolveWikiLinks("See [[ hello-world | a post ]] here.", titleMap);
     expect(result).toBe("See [a post](/blog/hello-world) here.");
   });
+
+  it("does not resolve wiki-links inside inline code spans", () => {
+    const result = resolveWikiLinks("Use `[[hello-world]]` to link.", titleMap);
+    expect(result).toBe("Use `[[hello-world]]` to link.");
+  });
+
+  it("does not resolve wiki-links inside fenced code blocks", () => {
+    const content = "Before\n```\n[[hello-world]]\n```\nAfter [[second-post]]";
+    const result = resolveWikiLinks(content, titleMap);
+    expect(result).toBe("Before\n```\n[[hello-world]]\n```\nAfter [My Second Post](/blog/second-post)");
+  });
+
+  it("handles inline code and wiki-links in the same line", () => {
+    const content = "Use `[[slug]]` syntax to link to [[hello-world]].";
+    const result = resolveWikiLinks(content, titleMap);
+    expect(result).toBe("Use `[[slug]]` syntax to link to [Hello World!](/blog/hello-world).");
+  });
 });
