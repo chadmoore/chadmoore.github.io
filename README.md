@@ -92,7 +92,7 @@ Content here...
 ```bash
 npm install
 npm run dev       # http://localhost:3000 (with admin panel + API routes)
-npm test          # 193 tests across 19 suites
+npm test          # 219 tests across 19 suites
 npm run build     # static export to ./out
 ```
 
@@ -102,7 +102,7 @@ Pushes to `main` auto-deploy via GitHub Actions to GitHub Pages. The workflow de
 
 ## Testing
 
-Jest + React Testing Library with 193 tests mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link` and `next/navigation` mocked in component tests. Tests assert current feature-flag values to catch accidental flips.
+Jest + React Testing Library with 219 tests mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link` and `next/navigation` mocked in component tests. Tests assert current feature-flag values to catch accidental flips.
 
 ## Tech Stack
 
