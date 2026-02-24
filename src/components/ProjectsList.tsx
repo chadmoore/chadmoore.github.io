@@ -42,21 +42,21 @@ interface Repo {
  * See: https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
  */
 const LANGUAGE_COLORS: Record<string, string> = {
-  TypeScript: "#3178c6",
-  JavaScript: "#f1e05a",
-  Python: "#3572A5",
-  Rust: "#dea584",
-  Go: "#00ADD8",
-  Java: "#b07219",
-  "C#": "#178600",
-  Ruby: "#701516",
-  PHP: "#4F5D95",
-  Shell: "#89e051",
-  HTML: "#e34c26",
-  CSS: "#563d7c",
-  Dart: "#00B4AB",
-  Swift: "#F05138",
-  Kotlin: "#A97BFF",
+  TypeScript: "bg-[#3178c6]",
+  JavaScript: "bg-[#f1e05a]",
+  Python: "bg-[#3572A5]",
+  Rust: "bg-[#dea584]",
+  Go: "bg-[#00ADD8]",
+  Java: "bg-[#b07219]",
+  "C#": "bg-[#178600]",
+  Ruby: "bg-[#701516]",
+  PHP: "bg-[#4F5D95]",
+  Shell: "bg-[#89e051]",
+  HTML: "bg-[#e34c26]",
+  CSS: "bg-[#563d7c]",
+  Dart: "bg-[#00B4AB]",
+  Swift: "bg-[#F05138]",
+  Kotlin: "bg-[#A97BFF]",
 };
 
 export default function ProjectsList() {
@@ -159,11 +159,7 @@ export default function ProjectsList() {
             {repo.language && (
               <span className="flex items-center gap-1.5">
                 <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{
-                    backgroundColor:
-                      LANGUAGE_COLORS[repo.language] || "#6b7280",
-                  }}
+                  className={`w-2.5 h-2.5 rounded-full ${LANGUAGE_COLORS[repo.language] || "bg-[#6b7280]"}`}
                 />
                 {repo.language}
               </span>
