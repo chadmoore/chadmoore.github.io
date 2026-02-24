@@ -1,6 +1,6 @@
 ---
 title: Iteration with agents can be exhilarating
-date: '2026-02-23'
+date: '2026-02-22'
 excerpt: >-
   How I use a structured copilot-instructions file and conversational TDD to
   build features at speed with AI agents.

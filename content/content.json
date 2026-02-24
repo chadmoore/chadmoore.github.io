@@ -44,6 +44,10 @@
     "contactHeading": "Get In Touch",
     "contactText": "I'm always open to interesting conversations and collaborations."
   },
+  "projects": {
+    "heading": "Projects",
+    "description": "A selection of my public repositories on GitHub. These are pulled live from the GitHub API."
+  },
   "blog": {
     "heading": "Blog",
     "description": "Thoughts on software, data, and building things."

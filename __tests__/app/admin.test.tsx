@@ -31,6 +31,7 @@ const mockContentData = {
     contactText: "I'm always open to discussing new opportunities.",
   },
   blog: { heading: "Blog", description: "Posts about engineering." },
+  projects: { heading: "Projects", description: "Public repos on GitHub." },
   cv: {
     headline: "Senior / Staff Full‑Stack Engineer",
     location: "Northampton, Massachusetts, United States",
@@ -99,6 +100,7 @@ describe("AdminPage", () => {
       expect(screen.getByRole("button", { name: /^site$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^home$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^about$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^projects$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^cv$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^skills$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^blog$/i })).toBeInTheDocument();
@@ -164,6 +166,21 @@ describe("AdminPage", () => {
     render(<AdminPage />);
     await waitFor(() => {
       expect(screen.getByText(/development only/i)).toBeInTheDocument();
+    });
+  });
+
+  // ─── Projects tab tests ───────────────────────────────────────
+
+  it("renders projects tab with heading and description fields", async () => {
+    render(<AdminPage />);
+    await waitFor(() => screen.getByText("Site Settings"));
+
+    fireEvent.click(screen.getByRole("button", { name: /^projects$/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Projects Page")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Projects")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Public repos on GitHub.")).toBeInTheDocument();
     });
   });
 

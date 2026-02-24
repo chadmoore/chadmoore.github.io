@@ -32,12 +32,13 @@ interface BlogPostFull extends BlogPostMeta {
   content: string;
 }
 
-type Tab = "site" | "home" | "about" | "cv" | "skills" | "blog";
+type Tab = "site" | "home" | "about" | "projects" | "cv" | "skills" | "blog";
 
 const TAB_LABELS: Record<Tab, string> = {
   site: "Site",
   home: "Home",
   about: "About",
+  projects: "Projects",
   cv: "CV",
   skills: "Skills",
   blog: "Blog",
@@ -731,6 +732,32 @@ export default function AdminPage() {
             >
               + Add Paragraph
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Projects Tab ─────────────────────────────────────── */}
+      {tab === "projects" && (
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">Projects Page</h2>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+            <Field label="Page Heading">
+              <input
+                type="text"
+                value={data.projects.heading}
+                onChange={(e) => updateField("projects", (projects) => ({ ...projects, heading: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Description">
+              <input
+                type="text"
+                value={data.projects.description}
+                onChange={(e) => updateField("projects", (projects) => ({ ...projects, description: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
           </div>
         </div>
       )}

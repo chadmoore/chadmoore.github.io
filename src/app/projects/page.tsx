@@ -11,10 +11,14 @@
  */
 import type { Metadata } from "next";
 import ProjectsList from "@/components/ProjectsList";
+import rawContent from "@/../content/content.json";
+import type { ContentData } from "@/lib/contentData";
+
+const content = rawContent as unknown as ContentData;
 
 export const metadata: Metadata = {
-  title: "Projects | Chad Moore",
-  description: "Open source projects and repositories by Chad Moore",
+  title: `${content.projects.heading} | ${content.site.name}`,
+  description: content.projects.description,
 };
 
 export default function ProjectsPage() {
@@ -22,11 +26,10 @@ export default function ProjectsPage() {
     <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
       <div className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-          Projects
+          {content.projects.heading}
         </h1>
         <p className="text-muted max-w-2xl">
-          A selection of my public repositories on GitHub. These are pulled
-          live from the GitHub API.
+          {content.projects.description}
         </p>
       </div>
       <ProjectsList />

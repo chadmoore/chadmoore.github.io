@@ -77,6 +77,12 @@ export interface AboutSection {
   contactText: string;
 }
 
+/** Projects page content. */
+export interface ProjectsSection {
+  heading: string;
+  description: string;
+}
+
 /** Blog index content. */
 export interface BlogSection {
   heading: string;
@@ -102,6 +108,7 @@ export interface ContentData {
   site: SiteSection;
   home: HomeSection;
   about: AboutSection;
+  projects: ProjectsSection;
   blog: BlogSection;
   cv: CvSection;
 }
