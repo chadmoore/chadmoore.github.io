@@ -50,10 +50,17 @@ export default function Markdown({ content }: MarkdownProps) {
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     // Italic: *text*
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
-    // Links: [text](url) — all external links open in a new tab
+    // Links: [text](url)
+    // Internal /blog/ links stay in the same tab; external links open in a new tab
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" class="text-accent hover:text-accent-hover underline underline-offset-4 transition-colors" target="_blank" rel="noopener noreferrer">$1</a>'
+      (_match: string, text: string, url: string) => {
+        const isInternal = url.startsWith("/");
+        if (isInternal) {
+          return `<a href="${url}" class="text-accent hover:text-accent-hover underline underline-offset-4 transition-colors">${text}</a>`;
+        }
+        return `<a href="${url}" class="text-accent hover:text-accent-hover underline underline-offset-4 transition-colors" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      }
     )
     // Unordered lists: - item
     .replace(/^- (.+)$/gm, '<li class="ml-4 list-disc text-muted">$1</li>')

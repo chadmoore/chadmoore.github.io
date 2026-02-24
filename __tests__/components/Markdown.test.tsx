@@ -38,6 +38,17 @@ describe("Markdown", () => {
     expect(link).toHaveTextContent("Google");
   });
 
+  it("renders internal links without target=_blank", () => {
+    const { container } = render(
+      <Markdown content="[Other Post](/blog/other-post)" />
+    );
+    const link = container.querySelector("a");
+    expect(link).toHaveAttribute("href", "/blog/other-post");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("rel");
+    expect(link).toHaveTextContent("Other Post");
+  });
+
   it("renders inline code", () => {
     const { container } = render(<Markdown content="Use `npm install` here" />);
     const code = container.querySelector("code");

@@ -11,7 +11,7 @@ jest.mock("gray-matter");
 
 import fs from "fs";
 import matter from "gray-matter";
-import { getAllPosts, getPostBySlug, type BlogPost } from "@/lib/blog";
+import { getAllPosts, getPostBySlug, resolveWikiLinks, type BlogPost } from "@/lib/blog";
 
 const mockedFs = fs as jest.Mocked<typeof fs>;
 const mockedMatter = matter as jest.MockedFunction<typeof matter>;
@@ -169,5 +169,42 @@ describe("getPostBySlug", () => {
     expect(post!.title).toBe("Hello");
     expect(post!.tags).toEqual(["test"]);
     expect(post!.content).toBe("Hello world");
+  });
+});
+
+describe("resolveWikiLinks", () => {
+  const titleMap = new Map([
+    ["hello-world", "Hello World!"],
+    ["second-post", "My Second Post"],
+  ]);
+
+  it("returns content unchanged when no wiki-links are present", () => {
+    const content = "Just a normal paragraph with no links.";
+    expect(resolveWikiLinks(content, titleMap)).toBe(content);
+  });
+
+  it("resolves [[slug]] to a markdown link with the post title", () => {
+    const result = resolveWikiLinks("Check out [[hello-world]] for more.", titleMap);
+    expect(result).toBe("Check out [Hello World!](/blog/hello-world) for more.");
+  });
+
+  it("resolves [[slug|custom text]] to a markdown link with custom text", () => {
+    const result = resolveWikiLinks("See [[hello-world|my first post]] here.", titleMap);
+    expect(result).toBe("See [my first post](/blog/hello-world) here.");
+  });
+
+  it("falls back to the slug when the target post does not exist", () => {
+    const result = resolveWikiLinks("Link to [[unknown-post]] here.", titleMap);
+    expect(result).toBe("Link to [unknown-post](/blog/unknown-post) here.");
+  });
+
+  it("handles multiple wiki-links in one string", () => {
+    const result = resolveWikiLinks("Read [[hello-world]] and [[second-post]].", titleMap);
+    expect(result).toBe("Read [Hello World!](/blog/hello-world) and [My Second Post](/blog/second-post).");
+  });
+
+  it("trims whitespace in slugs and custom text", () => {
+    const result = resolveWikiLinks("See [[ hello-world | a post ]] here.", titleMap);
+    expect(result).toBe("See [a post](/blog/hello-world) here.");
   });
 });

@@ -40,10 +40,51 @@ export interface BlogPost {
 const POSTS_DIR = path.join(process.cwd(), "content", "blog");
 
 /**
+ * Builds a slug→title map by reading frontmatter from all post files.
+ * Separate from parsePost to avoid circular calls with resolveWikiLinks.
+ */
+function buildTitleMap(): Map<string, string> {
+  if (!fs.existsSync(POSTS_DIR)) return new Map();
+  const titles = new Map<string, string>();
+  for (const filename of fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"))) {
+    const slug = filename.replace(/\.md$/, "");
+    const raw = fs.readFileSync(path.join(POSTS_DIR, filename), "utf-8");
+    const { data } = matter(raw);
+    titles.set(slug, (data.title as string) || slug);
+  }
+  return titles;
+}
+
+/**
+ * Resolves wiki-style links in markdown content.
+ *
+ * Supported syntax:
+ *   [[slug]]             → [Post Title](/blog/slug)
+ *   [[slug|custom text]] → [custom text](/blog/slug)
+ *
+ * If the target post doesn't exist, the link text falls back to the slug.
+ * This runs at build time so we have full filesystem access.
+ */
+export function resolveWikiLinks(content: string, titleMap?: Map<string, string>): string {
+  // Lazy-build the map only if the content actually has wiki-links
+  if (!/\[\[/.test(content)) return content;
+  const titles = titleMap ?? buildTitleMap();
+
+  return content.replace(
+    /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
+    (_match, slug: string, customText?: string) => {
+      const trimmedSlug = slug.trim();
+      const displayText = customText?.trim() || titles.get(trimmedSlug) || trimmedSlug;
+      return `[${displayText}](/blog/${trimmedSlug})`;
+    }
+  );
+}
+
+/**
  * Parses a single .md file into a BlogPost.
  * Extracted to keep getAllPosts and getPostBySlug DRY.
  */
-function parsePost(filename: string): BlogPost {
+function parsePost(filename: string, titleMap?: Map<string, string>): BlogPost {
   const slug = filename.replace(/\.md$/, "");
   const filePath = path.join(POSTS_DIR, filename);
   const fileContent = fs.readFileSync(filePath, "utf-8");
@@ -54,7 +95,7 @@ function parsePost(filename: string): BlogPost {
     title: (data.title as string) || slug,
     date: (data.date as string) || "",
     excerpt: (data.excerpt as string) || content.slice(0, 160).trim() + "...",
-    content,
+    content: resolveWikiLinks(content, titleMap),
     tags: (data.tags as string[]) || [],
   };
 }
@@ -66,10 +107,11 @@ function parsePost(filename: string): BlogPost {
 export function getAllPosts(): BlogPost[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
 
+  const titleMap = buildTitleMap();
   return fs
     .readdirSync(POSTS_DIR)
     .filter((f) => f.endsWith(".md"))
-    .map(parsePost)
+    .map((f) => parsePost(f, titleMap))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
