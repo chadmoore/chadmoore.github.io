@@ -66,6 +66,7 @@ export default function AdminPage() {
   const [posts, setPosts] = useState<BlogPostMeta[]>([]);
   const [editingPost, setEditingPost] = useState<BlogPostFull | null>(null);
   const [newPost, setNewPost] = useState(false);
+  const lastSavedBlog = useRef<string>("");
   const [blogMessage, setBlogMessage] = useState("");
   const [initialEditSlug, setInitialEditSlug] = useState<string | null>(null);
 
@@ -237,6 +238,7 @@ export default function AdminPage() {
       const res = await fetch(`/api/admin/blog/${slug}`);
       if (!res.ok) throw new Error();
       const post = await res.json();
+      lastSavedBlog.current = JSON.stringify(post);
       setEditingPost(post);
       setNewPost(false);
     } catch {
@@ -255,6 +257,7 @@ export default function AdminPage() {
       content: "",
     });
     setNewPost(true);
+    lastSavedBlog.current = "";
     setBlogMessage("");
   }, []);
 
@@ -627,7 +630,7 @@ export default function AdminPage() {
               <div className="flex gap-2">
                 <button
                   onClick={saveBlogPost}
-                  disabled={saving}
+                  disabled={saving || (!newPost && editingPost !== null && JSON.stringify(editingPost) === lastSavedBlog.current)}
                   className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm"
                 >
                   {saving ? "Saving…" : newPost ? "Create" : "Save"}
