@@ -23,7 +23,8 @@
 import type { Metadata } from "next";
 import cvData from "@/../content/cv.json";
 import { formatDateRange } from "@/lib/dates";
-import { sortSkills, getSkillClasses, type Skill } from "@/lib/skills";
+import { type Skill } from "@/lib/skills";
+import SkillsGrid from "@/components/SkillsGrid";
 
 /** Education entries may be empty but TypeScript needs the shape. */
 interface Education {
@@ -35,6 +36,12 @@ interface Education {
   description: string;
 }
 const education = cvData.education as Education[];
+
+/** Highlights are now objects with text and tagged skill names. */
+interface Highlight {
+  text: string;
+  skills: string[];
+}
 
 export const metadata: Metadata = {
   title: "CV | Chad Moore",
@@ -132,11 +139,25 @@ export default function CVPage() {
                   <p className="text-sm text-muted mb-2">{job.description}</p>
                 )}
                 {job.highlights.length > 0 && (
-                  <ul className="space-y-1">
-                    {job.highlights.map((h, j) => (
-                      <li key={j} className="text-sm text-muted flex gap-2">
-                        <span className="text-accent mt-1 shrink-0">•</span>
-                        {h}
+                  <ul className="space-y-3">
+                    {(job.highlights as unknown as Highlight[]).map((h, j) => (
+                      <li key={j} className="text-sm text-muted">
+                        <div className="flex gap-2">
+                          <span className="text-accent mt-1 shrink-0">•</span>
+                          <span>{h.text}</span>
+                        </div>
+                        {h.skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
+                            {h.skills.map((skill) => (
+                              <span
+                                key={skill}
+                                className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -186,29 +207,7 @@ export default function CVPage() {
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
           Skills
         </h2>
-        <div className="space-y-4">
-          {Object.entries(cvData.skills).map(([category, items]) => {
-            const sorted = sortSkills(items as Skill[]);
-            return (
-              <div key={category}>
-                <h3 className="text-sm font-medium text-foreground mb-2">
-                  {category}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {sorted.map((skill) => (
-                    <span
-                      key={skill.name}
-                      title={`${skill.proficiency}${skill.preference === "preferred" ? " · preferred" : ""}${skill.status === "legacy" ? " · legacy" : ""}`}
-                      className={`text-xs bg-surface border px-3 py-1.5 rounded-lg hover:border-accent/50 transition-colors ${getSkillClasses(skill)}`}
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <SkillsGrid skills={cvData.skills as Record<string, Skill[]>} />
       </section>
 
       {/* Certifications */}

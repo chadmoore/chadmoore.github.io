@@ -111,3 +111,74 @@ export function getSkillClasses(skill: ResolvedSkill): string {
 
   return classes.join(" ");
 }
+
+// ─── Sort Modes ─────────────────────────────────────────────────────
+
+/**
+ * Sort modes for the interactive skill grid.
+ *
+ *   default     — status → preference → proficiency (the original sort)
+ *   proficiency — expert → proficient → familiar
+ *   preference  — preferred → neutral
+ *   status      — active → legacy
+ */
+export type SortMode = "default" | "proficiency" | "preference" | "status";
+
+export function sortSkillsBy(
+  skills: Skill[],
+  mode: SortMode,
+): ResolvedSkill[] {
+  const resolved = skills.map(resolveSkill);
+
+  if (mode === "default") {
+    // Reuse the existing multi-key sort
+    return sortSkills(skills);
+  }
+
+  return resolved.sort((a, b) => {
+    switch (mode) {
+      case "proficiency":
+        return (
+          PROFICIENCY_WEIGHT[a.proficiency] -
+          PROFICIENCY_WEIGHT[b.proficiency]
+        );
+      case "preference":
+        return (
+          PREFERENCE_WEIGHT[a.preference] - PREFERENCE_WEIGHT[b.preference]
+        );
+      case "status":
+        return STATUS_WEIGHT[a.status] - STATUS_WEIGHT[b.status];
+    }
+  });
+}
+
+// ─── Filtering ──────────────────────────────────────────────────────
+
+export interface SkillFilters {
+  proficiency: Set<Proficiency>;
+  preference: Set<Preference>;
+  status: Set<Status>;
+}
+
+/** Default: everything visible. */
+export const DEFAULT_FILTERS: SkillFilters = {
+  proficiency: new Set<Proficiency>(["expert", "proficient", "familiar"]),
+  preference: new Set<Preference>(["preferred", "neutral"]),
+  status: new Set<Status>(["active", "legacy"]),
+};
+
+/**
+ * Filter resolved skills by the active toggles.
+ * Returns only skills whose tags are in every active set.
+ */
+export function filterSkills(
+  skills: ResolvedSkill[],
+  filters: SkillFilters,
+): ResolvedSkill[] {
+  return skills.filter(
+    (s) =>
+      filters.proficiency.has(s.proficiency) &&
+      filters.preference.has(s.preference) &&
+      filters.status.has(s.status),
+  );
+}

@@ -19,15 +19,15 @@
       "endDate": "2026-02",
       "description": "Operated in an architectural capacity across complex enterprise client engagements — owning system design, API integration strategy, and technical direction.",
       "highlights": [
-        "Designed and implemented secure, scalable API integration layers connecting enterprise systems to cloud analytics platforms using OAuth, SAML, and JWT",
-        "Became the go‑to escalation point for complex API integration issues — consistently resolving problems that had stalled client teams and internal engineers",
-        "Architected frontend solutions using React, Next.js, and TypeScript, deployed on AWS, Azure, and Kubernetes/Docker infrastructure",
-        "Built rich data visualization and embedded analytics experiences on Qlik Sense Enterprise & SaaS, supporting tens of thousands of end users",
-        "Guided enterprise engineering teams through complex authentication and authorization implementations as technical authority on identity architecture",
-        "Drove full‑stack performance optimization across client engagements, improving platform responsiveness and reliability under high‑load conditions",
-        "Integrated agentic AI and MCP‑based tooling into development workflows — accelerating code generation, test coverage, documentation, and review cycles",
-        "Served as client‑facing technical architect on high‑stakes enterprise deployments for Fortune 50 organizations, federal agencies, and national service providers",
-        "Mentored enterprise engineering teams, elevating capability on authentication architecture, frontend patterns, and delivery best practices"
+        { "text": "Designed and implemented secure, scalable API integration layers connecting enterprise systems to cloud analytics platforms using OAuth, SAML, and JWT", "skills": ["REST APIs", "OAuth 2.0", "SAML", "JWT", "AWS", "Azure"] },
+        { "text": "Became the go‑to escalation point for complex API integration issues — consistently resolving problems that had stalled client teams and internal engineers", "skills": ["REST APIs"] },
+        { "text": "Architected frontend solutions using React, Next.js, and TypeScript, deployed on AWS, Azure, and Kubernetes/Docker infrastructure", "skills": ["React", "Next.js", "TypeScript", "AWS", "Azure", "Kubernetes", "Docker"] },
+        { "text": "Built rich data visualization and embedded analytics experiences on Qlik Sense Enterprise & SaaS, supporting tens of thousands of end users", "skills": ["JavaScript", "Data Visualization"] },
+        { "text": "Guided enterprise engineering teams through complex authentication and authorization implementations as technical authority on identity architecture", "skills": ["OAuth 2.0", "OIDC", "SAML", "SSO", "Authorization"] },
+        { "text": "Drove full‑stack performance optimization across client engagements, improving platform responsiveness and reliability under high‑load conditions", "skills": ["React", "Node.js", "REST APIs"] },
+        { "text": "Integrated agentic AI and MCP‑based tooling into development workflows — accelerating code generation, test coverage, documentation, and review cycles", "skills": ["Agentic AI", "MCP Tooling", "AI‑Assisted Workflows"] },
+        { "text": "Served as client‑facing technical architect on high‑stakes enterprise deployments for Fortune 50 organizations, federal agencies, and national service providers", "skills": [] },
+        { "text": "Mentored enterprise engineering teams, elevating capability on authentication architecture, frontend patterns, and delivery best practices", "skills": ["OAuth 2.0", "OIDC", "SSO", "React", "Agile Methodologies"] }
       ]
     },
     {
@@ -38,11 +38,11 @@
       "endDate": "2020-03",
       "description": "Full‑stack developer owning consumer‑facing and internal web/mobile applications across the complete product lifecycle, from development through marketplace release and ongoing iteration.",
       "highlights": [
-        "Co‑designed and built a custom SAML Identity Provider integrating with numerous TV Everywhere content platforms — critical infrastructure enabling secure subscriber authentication across the organization's digital ecosystem",
-        "Owned and maintained Ubuntu‑based production infrastructure 24/7, handling provisioning, monitoring, deployment, and uptime — effectively operating as platform engineer for the team",
-        "Designed, developed, deployed, and supported consumer‑facing and internal web and mobile applications (RCN2Go, RCN Mobile, RCN.com)",
-        "Collaborated with a major media technology partner to develop a content discovery system, serving as primary technical point of contact across internal teams and external partners",
-        "Worked across the full stack using Ruby on Rails, JavaScript/jQuery, MySQL, Redis, and Linux‑based infrastructure (Apache, nginx)"
+        { "text": "Co‑designed and built a custom SAML Identity Provider integrating with numerous TV Everywhere content platforms — critical infrastructure enabling secure subscriber authentication across the organization's digital ecosystem", "skills": ["SAML", "SSO", "Authorization", "Ruby on Rails", "Linux"] },
+        { "text": "Owned and maintained Ubuntu‑based production infrastructure 24/7, handling provisioning, monitoring, deployment, and uptime — effectively operating as platform engineer for the team", "skills": ["Linux", "nginx", "Apache", "DevOps", "CI/CD"] },
+        { "text": "Designed, developed, deployed, and supported consumer‑facing and internal web and mobile applications (RCN2Go, RCN Mobile, RCN.com)", "skills": ["JavaScript", "Ruby on Rails", "HTML5", "CSS", "User Interface Design"] },
+        { "text": "Collaborated with a major media technology partner to develop a content discovery system, serving as primary technical point of contact across internal teams and external partners", "skills": ["REST APIs", "JavaScript", "Ruby"] },
+        { "text": "Worked across the full stack using Ruby on Rails, JavaScript/jQuery, MySQL, Redis, and Linux‑based infrastructure (Apache, nginx)", "skills": ["Ruby on Rails", "Ruby", "JavaScript", "MySQL", "Redis", "Linux", "Apache", "nginx"] }
       ]
     },
     {
@@ -53,10 +53,10 @@
       "endDate": "2012-01",
       "description": "Led a development team designing and building a sophisticated B2B print job integration platform using the PrintTalk XML standard — replacing manual processes with an end‑to‑end automated pipeline.",
       "highlights": [
-        "Architected a system enabling major digital publishing platforms, global e‑commerce organizations, and academic institutions to submit print jobs electronically",
-        "Designed and built production lifecycle management covering customer relationship tracking, cost and materials reporting, manufacturing workflow automation, and shipping coordination",
-        "Modernized how the organization received and processed work from enterprise clients, transforming a manual intake process into a fully automated, scalable integration platform",
-        "Partnered with prepress, print, and shipping managers to design software coordinating workflows across the organization"
+        { "text": "Architected a system enabling major digital publishing platforms, global e‑commerce organizations, and academic institutions to submit print jobs electronically", "skills": ["REST APIs", "SQL"] },
+        { "text": "Designed and built production lifecycle management covering customer relationship tracking, cost and materials reporting, manufacturing workflow automation, and shipping coordination", "skills": ["SQL", "User Interface Design"] },
+        { "text": "Modernized how the organization received and processed work from enterprise clients, transforming a manual intake process into a fully automated, scalable integration platform", "skills": ["REST APIs"] },
+        { "text": "Partnered with prepress, print, and shipping managers to design software coordinating workflows across the organization", "skills": ["Agile Methodologies"] }
       ]
     },
     {
@@ -67,10 +67,10 @@
       "endDate": "2006",
       "description": "Delivered custom integration solutions for enterprise clients across major national retailers, utility providers, and healthcare organizations — modernizing workflows without replacing critical legacy infrastructure.",
       "highlights": [
-        "Built modern software interfaces integrating seamlessly with legacy terminal systems (IBM 5250, 3270, VAX, VT100), bridging decades‑old infrastructure to contemporary platforms",
-        "Partnered directly with enterprise client teams to diagnose integration challenges, define technical requirements, and communicate solutions across technical and non‑technical audiences",
-        "Received a Macromedia Flex award for UI/UX excellence on a technically complex enterprise integration project",
-        "Delivered solutions for clients including LL Bean, Cinergy, Alliant Energy, Baltimore Gas & Electric, and Western Resources"
+        { "text": "Built modern software interfaces integrating seamlessly with legacy terminal systems (IBM 5250, 3270, VAX, VT100), bridging decades‑old infrastructure to contemporary platforms", "skills": ["Java", "C#", ".NET", "User Interface Design"] },
+        { "text": "Partnered directly with enterprise client teams to diagnose integration challenges, define technical requirements, and communicate solutions across technical and non‑technical audiences", "skills": ["REST APIs"] },
+        { "text": "Received a Macromedia Flex award for UI/UX excellence on a technically complex enterprise integration project", "skills": ["User Interface Design"] },
+        { "text": "Delivered solutions for clients including LL Bean, Cinergy, Alliant Energy, Baltimore Gas & Electric, and Western Resources", "skills": ["Java", "C#", ".NET"] }
       ]
     },
     {
@@ -81,8 +81,8 @@
       "endDate": "1998",
       "description": "Early career contributing code to enterprise logistics tracking products and delivering desktop and automation solutions for Fortune 50 organizations.",
       "highlights": [
-        "Built a DTMF phone interface enabling clients to retrieve logistics data via telephone — predating modern IVR systems",
-        "Delivered desktop and automation solutions for Fortune 50 pharmaceutical and industrial organizations, including work supporting C‑suite executive operations"
+        { "text": "Built a DTMF phone interface enabling clients to retrieve logistics data via telephone — predating modern IVR systems", "skills": ["SQL"] },
+        { "text": "Delivered desktop and automation solutions for Fortune 50 pharmaceutical and industrial organizations, including work supporting C‑suite executive operations", "skills": [] }
       ]
     }
   ],

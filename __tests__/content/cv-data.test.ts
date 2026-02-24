@@ -77,10 +77,31 @@ describe("cv.json experience (from LinkedIn Positions)", () => {
     expect(winthrop.endDate).toBe("1998");
   });
 
-  it("has highlights array on every experience entry", () => {
+  it("has highlights array of objects on every experience entry", () => {
     for (const entry of cvData.experience) {
       expect(Array.isArray(entry.highlights)).toBe(true);
       expect(entry.highlights.length).toBeGreaterThanOrEqual(1);
+      for (const h of entry.highlights) {
+        expect(typeof h).toBe("object");
+        expect(typeof h.text).toBe("string");
+        expect(h.text.length).toBeGreaterThan(0);
+        expect(Array.isArray(h.skills)).toBe(true);
+      }
+    }
+  });
+
+  it("has only valid skill names in highlight tags", () => {
+    const allNames = new Set(
+      Object.values(cvData.skills)
+        .flat()
+        .map((s) => s.name)
+    );
+    for (const entry of cvData.experience) {
+      for (const h of entry.highlights) {
+        for (const skill of h.skills) {
+          expect(allNames).toContain(skill);
+        }
+      }
     }
   });
 

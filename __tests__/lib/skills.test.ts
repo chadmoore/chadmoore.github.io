@@ -6,9 +6,13 @@
 import {
   resolveSkill,
   sortSkills,
+  sortSkillsBy,
+  filterSkills,
   getSkillClasses,
+  DEFAULT_FILTERS,
   type Skill,
   type ResolvedSkill,
+  type SkillFilters,
 } from "../../src/lib/skills";
 
 describe("resolveSkill", () => {
@@ -169,3 +173,106 @@ describe("getSkillClasses", () => {
     expect(getSkillClasses(familiar)).not.toContain("font-semibold");
   });
 });
+
+// ─── sortSkillsBy ───────────────────────────────────────────────────
+
+describe("sortSkillsBy", () => {
+  const skills: Skill[] = [
+    { name: "PHP", proficiency: "familiar", status: "legacy" },
+    { name: "React", proficiency: "expert", preference: "preferred" },
+    { name: "CSS", proficiency: "proficient" },
+    { name: "AngularJS", proficiency: "proficient", status: "legacy" },
+  ];
+
+  it("default mode matches sortSkills output", () => {
+    const byDefault = sortSkillsBy(skills, "default");
+    const original = sortSkills(skills);
+    expect(byDefault.map((s) => s.name)).toEqual(
+      original.map((s) => s.name),
+    );
+  });
+
+  it("proficiency mode: expert → proficient → familiar", () => {
+    const sorted = sortSkillsBy(skills, "proficiency");
+    expect(sorted[0].name).toBe("React");
+    // proficient should come before familiar
+    expect(sorted[sorted.length - 1].proficiency).toBe("familiar");
+  });
+
+  it("preference mode: preferred → neutral", () => {
+    const sorted = sortSkillsBy(skills, "preference");
+    expect(sorted[0].name).toBe("React"); // only preferred
+  });
+
+  it("status mode: active → legacy", () => {
+    const sorted = sortSkillsBy(skills, "status");
+    // Active skills first
+    const names = sorted.map((s) => s.name);
+    expect(names.indexOf("React")).toBeLessThan(names.indexOf("PHP"));
+    expect(names.indexOf("CSS")).toBeLessThan(names.indexOf("AngularJS"));
+  });
+});
+
+// ─── filterSkills ───────────────────────────────────────────────────
+
+describe("filterSkills", () => {
+  const resolved: ResolvedSkill[] = [
+    { name: "React", proficiency: "expert", preference: "preferred", status: "active" },
+    { name: "PHP", proficiency: "familiar", preference: "neutral", status: "legacy" },
+    { name: "CSS", proficiency: "proficient", preference: "neutral", status: "active" },
+    { name: "AngularJS", proficiency: "proficient", preference: "neutral", status: "legacy" },
+  ];
+
+  it("DEFAULT_FILTERS shows all skills", () => {
+    expect(filterSkills(resolved, DEFAULT_FILTERS)).toHaveLength(4);
+  });
+
+  it("filters out legacy skills when status only has active", () => {
+    const filters: SkillFilters = {
+      ...DEFAULT_FILTERS,
+      status: new Set(["active"]),
+    };
+    const result = filterSkills(resolved, filters);
+    expect(result.map((s) => s.name)).toEqual(["React", "CSS"]);
+  });
+
+  it("filters to preferred-only skills", () => {
+    const filters: SkillFilters = {
+      ...DEFAULT_FILTERS,
+      preference: new Set(["preferred"]),
+    };
+    const result = filterSkills(resolved, filters);
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe("React");
+  });
+
+  it("filters by proficiency level", () => {
+    const filters: SkillFilters = {
+      ...DEFAULT_FILTERS,
+      proficiency: new Set(["expert", "proficient"]),
+    };
+    const result = filterSkills(resolved, filters);
+    expect(result.map((s) => s.name)).toEqual(["React", "CSS", "AngularJS"]);
+  });
+
+  it("combines multiple filters", () => {
+    const filters: SkillFilters = {
+      proficiency: new Set(["proficient"]),
+      preference: new Set(["neutral"]),
+      status: new Set(["active"]),
+    };
+    const result = filterSkills(resolved, filters);
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe("CSS");
+  });
+
+  it("returns empty array when no skills match", () => {
+    const filters: SkillFilters = {
+      proficiency: new Set(["expert"]),
+      preference: new Set(["preferred"]),
+      status: new Set(["legacy"]),
+    };
+    expect(filterSkills(resolved, filters)).toHaveLength(0);
+  });
+});
+
