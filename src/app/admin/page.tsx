@@ -79,6 +79,7 @@ export default function AdminPage() {
   const [posts, setPosts] = useState<BlogPostMeta[]>([]);
   const [editingPost, setEditingPost] = useState<BlogPostFull | null>(null);
   const [newPost, setNewPost] = useState(false);
+  const [tagInput, setTagInput] = useState("");
   const lastSavedBlog = useRef<string>("");
   const [blogMessage, setBlogMessage] = useState("");
   const [initialEditSlug, setInitialEditSlug] = useState<string | null>(null);
@@ -329,6 +330,7 @@ export default function AdminPage() {
       const post = await res.json();
       lastSavedBlog.current = JSON.stringify(post);
       setEditingPost(post);
+      setTagInput(post.tags.join(", "));
       setNewPost(false);
     } catch {
       setBlogMessage("Failed to load post.");
@@ -345,6 +347,7 @@ export default function AdminPage() {
       tags: [],
       content: "",
     });
+    setTagInput("");
     setNewPost(true);
     lastSavedBlog.current = "";
     setBlogMessage("");
@@ -354,9 +357,14 @@ export default function AdminPage() {
     if (!editingPost) return;
     setSaving(true);
     setBlogMessage("");
+    // Parse the raw tag input into the tags array before saving
+    const postToSave = {
+      ...editingPost,
+      tags: tagInput.split(",").map((t) => t.trim()).filter(Boolean),
+    };
     try {
       if (newPost) {
-        if (!editingPost.slug.trim()) {
+        if (!postToSave.slug.trim()) {
           setBlogMessage("Slug is required.");
           setSaving(false);
           return;
@@ -364,17 +372,17 @@ export default function AdminPage() {
         const res = await fetch("/api/admin/blog", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editingPost),
+          body: JSON.stringify(postToSave),
         });
         if (!res.ok) {
           const err = await res.json();
           throw new Error(err.error || "Create failed");
         }
       } else {
-        const res = await fetch(`/api/admin/blog/${editingPost.slug}`, {
+        const res = await fetch(`/api/admin/blog/${postToSave.slug}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editingPost),
+          body: JSON.stringify(postToSave),
         });
         if (!res.ok) throw new Error("Update failed");
       }
@@ -389,7 +397,7 @@ export default function AdminPage() {
     } finally {
       setSaving(false);
     }
-  }, [editingPost, newPost, fetchPosts]);
+  }, [editingPost, newPost, tagInput, fetchPosts]);
 
   const deletePost = useCallback(async (slug: string) => {
     if (!confirm(`Delete "${slug}"? This cannot be undone.`)) return;
@@ -1001,8 +1009,8 @@ export default function AdminPage() {
                   <Field label="Tags (comma-separated)">
                     <input
                       type="text"
-                      value={editingPost.tags.join(", ")}
-                      onChange={(e) => updateEditingPost("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
                       placeholder="tag1, tag2"
                       className={inputClass}
                     />
