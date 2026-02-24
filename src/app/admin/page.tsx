@@ -14,7 +14,7 @@
  */
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import type { Skill, Proficiency, Preference, Status } from "@/lib/skills";
 import type { ContentData, FeatureCard } from "@/lib/contentData";
 
@@ -84,6 +84,10 @@ export default function AdminPage() {
   const lastSavedBlog = useRef<string>("");
   const [blogMessage, setBlogMessage] = useState("");
   const [initialEditSlug, setInitialEditSlug] = useState<string | null>(null);
+
+  // ─── Drag-to-reorder tab state ────────────────────────────────
+  const [dragTab, setDragTab] = useState<Tab | null>(null);
+  const [dragOverTab, setDragOverTab] = useState<Tab | null>(null);
 
   // Read URL params on mount (for deep-link from DevEditLink)
   useEffect(() => {
@@ -452,6 +456,64 @@ export default function AdminPage() {
 
   const contentDirty = data ? JSON.stringify(data) !== lastSavedContent.current : false;
 
+  /** Tab order: "site" pinned first, then in navOrder from content data. */
+  const tabOrder: Tab[] = useMemo(() => {
+    const order: Tab[] = ["site"];
+    const navOrder = data?.site.navOrder ?? ["home", "about", "projects", "blog", "cv", "skills"];
+    for (const key of navOrder) {
+      if (key in TAB_LABELS) order.push(key as Tab);
+    }
+    // Safety: append any tabs missing from navOrder
+    for (const key of Object.keys(TAB_LABELS) as Tab[]) {
+      if (!order.includes(key)) order.push(key);
+    }
+    return order;
+  }, [data?.site.navOrder]);
+
+  // ─── Drag-to-reorder handlers ─────────────────────────────────
+
+  const handleDragStart = useCallback(
+    (tab: Tab) => (e: React.DragEvent) => {
+      setDragTab(tab);
+      e.dataTransfer.effectAllowed = "move";
+    },
+    [],
+  );
+
+  const handleDragOver = useCallback(
+    (tab: Tab) => (e: React.DragEvent) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setDragOverTab(tab);
+    },
+    [],
+  );
+
+  const handleDrop = useCallback(
+    (targetTab: Tab) => (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!dragTab || dragTab === targetTab || !data) return;
+
+      const navOrder = [...(data.site.navOrder ?? ["home", "about", "projects", "blog", "cv", "skills"])];
+      const fromIndex = navOrder.indexOf(dragTab);
+      const toIndex = navOrder.indexOf(targetTab);
+      if (fromIndex === -1 || toIndex === -1) return;
+
+      navOrder.splice(fromIndex, 1);
+      navOrder.splice(toIndex, 0, dragTab);
+
+      updateField("site", (site) => ({ ...site, navOrder }));
+      setDragTab(null);
+      setDragOverTab(null);
+    },
+    [dragTab, data, updateField],
+  );
+
+  const handleDragEnd = useCallback(() => {
+    setDragTab(null);
+    setDragOverTab(null);
+  }, []);
+
   if (!data) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-16">
@@ -505,19 +567,32 @@ export default function AdminPage() {
 
       {/* ─── Tabs ──────────────────────────────────────────────── */}
       <div className="flex gap-4 border-b border-border mb-8">
-        {(Object.keys(TAB_LABELS) as Tab[]).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`pb-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
-              tab === t
-                ? "border-accent text-accent"
-                : "border-transparent text-muted hover:text-foreground"
-            }`}
-          >
-            {TAB_LABELS[t]}
-          </button>
-        ))}
+        {tabOrder.map((t) => {
+          const isSite = t === "site";
+          const isDragging = dragTab === t;
+          const isDragOver = dragOverTab === t && dragTab !== t;
+          return (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              draggable={!isSite}
+              onDragStart={isSite ? undefined : handleDragStart(t)}
+              onDragOver={isSite ? undefined : handleDragOver(t)}
+              onDrop={isSite ? undefined : handleDrop(t)}
+              onDragEnd={handleDragEnd}
+              onDragLeave={() => setDragOverTab(null)}
+              className={`pb-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
+                tab === t
+                  ? "border-accent text-accent"
+                  : "border-transparent text-muted hover:text-foreground"
+              }${!isSite ? " cursor-grab active:cursor-grabbing" : ""}${
+                isDragging ? " opacity-30" : ""
+              }${isDragOver ? " border-accent/50!" : ""}`}
+            >
+              {TAB_LABELS[t]}
+            </button>
+          );
+        })}
       </div>
 
       {/* ─── Site Tab ──────────────────────────────────────────── */}

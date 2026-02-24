@@ -20,10 +20,13 @@ import type { ContentData, SectionKey } from "@/lib/contentData";
 
 const content = rawContent as unknown as ContentData;
 
+const DEFAULT_NAV_ORDER = ["home", "about", "projects", "blog", "cv"];
+
 export const siteConfig = {
   name: content.site.name,
   tagline: content.site.tagline,
   sections: content.site.sections,
+  navOrder: content.site.navOrder ?? DEFAULT_NAV_ORDER,
 };
 
 export type { SectionKey };

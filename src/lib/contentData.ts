@@ -53,6 +53,7 @@ export interface SiteSection {
   tagline: string;
   sections: Record<SectionKey, boolean>;
   links: { email: string; github: string; linkedin: string };
+  navOrder: string[];
 }
 
 /** A homepage feature card. */

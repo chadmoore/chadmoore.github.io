@@ -12,7 +12,8 @@
       "email": "chad@chadmoore.info",
       "github": "https://github.com/chadmoore",
       "linkedin": "https://www.linkedin.com/in/chad-moore-info"
-    }
+    },
+    "navOrder": ["home", "about", "projects", "blog", "cv", "skills"]
   },
   "home": {
     "greeting": "Hi, I'm",

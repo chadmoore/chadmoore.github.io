@@ -38,22 +38,28 @@ function adminTabForPath(pathname: string): string {
 const isDev = process.env.NODE_ENV !== "production";
 
 /**
- * Master list of all possible nav links.
- * Each link optionally maps to a section key in siteConfig.
- * If the section is disabled, the link is filtered out.
+ * Lookup table for all possible nav entries.
+ * The render order comes from siteConfig.navOrder, not from
+ * this object's key order.
  */
-const allNavLinks: { href: string; label: string; section?: SectionKey }[] = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About", section: "about" },
-  { href: "/projects", label: "Projects", section: "projects" },
-  { href: "/blog", label: "Blog", section: "blog" },
-  { href: "/cv", label: "CV", section: "cv" },
-];
+const NAV_ENTRIES: Record<string, { href: string; label: string; section?: SectionKey }> = {
+  home:     { href: "/",          label: "Home" },
+  about:    { href: "/about",     label: "About",    section: "about" },
+  projects: { href: "/projects",  label: "Projects", section: "projects" },
+  blog:     { href: "/blog",      label: "Blog",     section: "blog" },
+  cv:       { href: "/cv",        label: "CV",       section: "cv" },
+};
 
-/** Filtered at module scope — only enabled sections make it to the DOM. */
-const navLinks = allNavLinks.filter(
-  (link) => !link.section || siteConfig.sections[link.section]
-);
+/**
+ * Nav links ordered by siteConfig.navOrder, filtered to only
+ * entries that have a page route and whose section is enabled.
+ */
+const navLinks = siteConfig.navOrder
+  .map((key) => NAV_ENTRIES[key])
+  .filter(
+    (entry): entry is { href: string; label: string; section?: SectionKey } =>
+      entry != null && (!entry.section || siteConfig.sections[entry.section]),
+  );
 
 export default function Header() {
   const pathname = usePathname();

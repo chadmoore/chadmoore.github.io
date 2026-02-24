@@ -51,6 +51,17 @@ describe("Header", () => {
     expect(screen.getAllByText("CV").length).toBeGreaterThanOrEqual(1);
   });
 
+  it("renders nav links in the order specified by navOrder", () => {
+    render(<Header />);
+    // Get desktop list items (inside the hidden md:flex container)
+    const lists = document.querySelectorAll("ul");
+    // The first <ul> is the desktop nav
+    const desktopItems = lists[0]?.querySelectorAll("li");
+    const labels = Array.from(desktopItems ?? []).map((li) => li.textContent);
+    // Should match the navOrder from content.json (filtered to page routes)
+    expect(labels).toEqual(["Home", "About", "Projects", "Blog", "CV"]);
+  });
+
   it("omits nav links when a section is disabled in siteConfig", () => {
     // All sections are currently enabled — this test documents the filtering behavior.
     // If a section were disabled, its nav link would not render.
