@@ -21,10 +21,12 @@
 
 import { useState, useCallback, useMemo } from "react";
 import SkillIcon from "@/components/SkillIcon";
+import TogglePill from "@/components/TogglePill";
 import {
   sortSkillsBy,
   filterSkills,
   getSkillClasses,
+  toggleInSet,
   type Skill,
   type SortMode,
   type SkillFilters,
@@ -36,44 +38,6 @@ import {
 interface SkillsGridProps {
   skills: Record<string, Skill[]>;
   showIcons?: boolean;
-}
-
-/** Toggle a value in a Set — returns a new Set. */
-function toggleInSet<T>(set: Set<T>, value: T): Set<T> {
-  const next = new Set(set);
-  if (next.has(value)) {
-    // Don't allow toggling off the last value — that hides everything
-    if (next.size > 1) next.delete(value);
-  } else {
-    next.add(value);
-  }
-  return next;
-}
-
-/** Pill button — highlighted when "on" (value is visible). */
-function TogglePill({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active ? "true" : "false"}
-      className={`px-2.5 py-0.5 rounded-full border text-xs transition-colors ${
-        active
-          ? "border-accent/60 text-accent bg-accent/10"
-          : "border-border text-muted/40 bg-surface line-through hover:border-accent/30 hover:text-muted"
-      }`}
-    >
-      {label}
-    </button>
-  );
 }
 
 export default function SkillsGrid({ skills, showIcons = false }: SkillsGridProps) {

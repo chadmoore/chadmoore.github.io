@@ -168,6 +168,20 @@ export const DEFAULT_FILTERS: SkillFilters = {
 };
 
 /**
+ * Toggle a value in a Set — returns a new Set.
+ * Refuses to remove the last member (keeps at least one value active).
+ */
+export function toggleInSet<T>(set: Set<T>, value: T): Set<T> {
+  const next = new Set(set);
+  if (next.has(value)) {
+    if (next.size > 1) next.delete(value);
+  } else {
+    next.add(value);
+  }
+  return next;
+}
+
+/**
  * Filter resolved skills by the active toggles.
  * Returns only skills whose tags are in every active set.
  */

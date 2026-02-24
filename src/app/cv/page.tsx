@@ -7,14 +7,12 @@
  *
  * Sections rendered (in order):
  *  1. Summary — one-paragraph elevator pitch
- *  2. Experience — reverse-chronological work history
+ *  2. Experience — reverse-chronological work history with skill filters
  *  3. Education — degrees and institutions
- *  4. Skills — grouped by category as tag pills
- *  5. Certifications — if any exist in the JSON
+ *  4. Certifications — if any exist in the JSON
  *
- * The formatDateRange helper parses "YYYY-MM" strings into
- * human-friendly "Mon YYYY — Mon YYYY" ranges. If there's no
- * end date, it shows "Present" because optimism.
+ * The CVExperience component handles date formatting and
+ * skill-based filtering of the work history.
  *
  * // If you're reading this because you're hiring:
  * // yes, the CV data is structured and machine-parseable.
@@ -22,9 +20,8 @@
  */
 import type { Metadata } from "next";
 import rawContent from "@/../content/content.json";
-import { formatDateRange } from "@/lib/dates";
 import type { ContentData } from "@/lib/contentData";
-import SkillsGrid from "@/components/SkillsGrid";
+import CVExperience from "@/components/CVExperience";
 
 const content = rawContent as unknown as ContentData;
 const cvData = content.cv;
@@ -103,55 +100,7 @@ export default function CVPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
             Experience
           </h2>
-          <div className="space-y-8">
-            {cvData.experience.map((job, i) => (
-              <div
-                key={i}
-                className="relative pl-6 border-l-2 border-border hover:border-accent/50 transition-colors"
-              >
-                <div className="absolute -left-1.75 top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
-                <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-1">
-                  <h3 className="font-semibold">{job.title}</h3>
-                  <span className="text-xs text-muted font-mono shrink-0">
-                    {formatDateRange(job.startDate, job.endDate)}
-                  </span>
-                </div>
-                <p className="text-sm text-accent mb-2">
-                  {job.company}
-                  {job.location && (
-                    <span className="text-muted"> · {job.location}</span>
-                  )}
-                </p>
-                {job.description && (
-                  <p className="text-sm text-muted mb-2">{job.description}</p>
-                )}
-                {job.highlights.length > 0 && (
-                  <ul className="space-y-3">
-                    {job.highlights.map((highlight, j) => (
-                      <li key={j} className="text-sm text-muted">
-                        <div className="flex gap-2">
-                          <span className="text-accent mt-1 shrink-0">•</span>
-                          <span>{highlight.text}</span>
-                        </div>
-                        {highlight.skills.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
-                            {highlight.skills.map((skill) => (
-                              <span
-                                key={skill}
-                                className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
-          </div>
+          <CVExperience experience={cvData.experience} skills={cvData.skills} />
         </section>
       )}
 
@@ -188,14 +137,6 @@ export default function CVPage() {
           </div>
         </section>
       )}
-
-      {/* Skills — sorted by preference/proficiency/status, styled by tags */}
-      <section className="mb-12">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
-          Skills
-        </h2>
-        <SkillsGrid skills={cvData.skills} />
-      </section>
 
       {/* Certifications */}
       {cvData.certifications.length > 0 && (

@@ -1,0 +1,198 @@
+/**
+ * CVExperience — filterable, sortable work history for the CV page.
+ *
+ * The filter toggles (proficiency / preference / status) control which
+ * highlight bullets are visible by cross-referencing the skill tags on
+ * each bullet against the full skills dictionary. A highlight with no
+ * skill tags is always shown. A highlight with skill tags is shown only
+ * when at least one of its skills passes all three active filters.
+ *
+ * Entries whose every highlight is filtered out are dimmed rather than
+ * removed — the job title and company always remain visible so the
+ * timeline reads coherently even in a narrow filter state.
+ *
+ * Sort modes:
+ *   date       — reverse-chronological order (default, matches JSON order)
+ *   relevance  — entries with the most matching highlights float to top
+ */
+"use client";
+
+import { useState, useMemo, useCallback } from "react";
+import { formatDateRange } from "@/lib/dates";
+import TogglePill from "@/components/TogglePill";
+import {
+  resolveSkill,
+  filterSkills,
+  toggleInSet,
+  type Skill,
+  type SkillFilters,
+  type Proficiency,
+  type Preference,
+  type Status,
+} from "@/lib/skills";
+import type { Experience } from "@/lib/contentData";
+
+interface CVExperienceProps {
+  experience: Experience[];
+  skills: Record<string, Skill[]>;
+}
+
+type SortMode = "date" | "relevance";
+
+// ─── Component ───────────────────────────────────────────────────────
+
+export default function CVExperience({ experience, skills }: CVExperienceProps) {
+  // ── Filter state ─────────────────────────────────────────────────
+  const [proficiency, setProficiency] = useState<Set<Proficiency>>(
+    new Set(["expert", "proficient", "familiar"]),
+  );
+  const [preference, setPreference] = useState<Set<Preference>>(
+    new Set(["preferred", "neutral"]),
+  );
+  const [status, setStatus] = useState<Set<Status>>(
+    new Set(["active", "legacy"]),
+  );
+  const [sortMode, setSortMode] = useState<SortMode>("date");
+
+  const filters: SkillFilters = useMemo(
+    () => ({ proficiency, preference, status }),
+    [proficiency, preference, status],
+  );
+
+  // Build a Set of skill names that survive the current filters
+  const visibleSkillNames = useMemo(() => {
+    const allSkills = Object.values(skills).flat().map(resolveSkill);
+    return new Set(filterSkills(allSkills, filters).map((s) => s.name));
+  }, [skills, filters]);
+
+  // Process experience: attach visible highlights and match count
+  const processed = useMemo(() => {
+    const entries = experience.map((job) => {
+      const visibleHighlights = job.highlights.filter(
+        (h) =>
+          h.skills.length === 0 || h.skills.some((s) => visibleSkillNames.has(s)),
+      );
+      return { job, visibleHighlights, matchCount: visibleHighlights.length };
+    });
+
+    if (sortMode === "relevance") {
+      entries.sort((a, b) => b.matchCount - a.matchCount);
+    }
+    return entries;
+  }, [experience, visibleSkillNames, sortMode]);
+
+  // ── Toggle handlers ──────────────────────────────────────────────
+  const toggleProficiency = useCallback(
+    (v: Proficiency) => setProficiency((s) => toggleInSet(s, v)),
+    [],
+  );
+  const togglePreference = useCallback(
+    (v: Preference) => setPreference((s) => toggleInSet(s, v)),
+    [],
+  );
+  const toggleStatus = useCallback(
+    (v: Status) => setStatus((s) => toggleInSet(s, v)),
+    [],
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* ── Filter + sort bar ──────────────────────────────────── */}
+      <div className="space-y-2 pb-4 border-b border-border">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
+          <span className="text-muted font-medium uppercase tracking-wider text-[10px]">
+            Show
+          </span>
+          <TogglePill label="Expert" active={proficiency.has("expert")} onClick={() => toggleProficiency("expert")} />
+          <TogglePill label="Proficient" active={proficiency.has("proficient")} onClick={() => toggleProficiency("proficient")} />
+          <TogglePill label="Familiar" active={proficiency.has("familiar")} onClick={() => toggleProficiency("familiar")} />
+          <span className="w-px h-3.5 bg-border" />
+          <TogglePill label="Preferred" active={preference.has("preferred")} onClick={() => togglePreference("preferred")} />
+          <TogglePill label="Neutral" active={preference.has("neutral")} onClick={() => togglePreference("neutral")} />
+          <span className="w-px h-3.5 bg-border" />
+          <TogglePill label="Active" active={status.has("active")} onClick={() => toggleStatus("active")} />
+          <TogglePill label="Legacy" active={status.has("legacy")} onClick={() => toggleStatus("legacy")} />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+          <span className="text-muted font-medium uppercase tracking-wider text-[10px]">
+            Sort
+          </span>
+          {(["date", "relevance"] as const).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setSortMode(mode)}
+              className={`px-2.5 py-0.5 rounded-full border text-xs transition-colors capitalize ${
+                sortMode === mode
+                  ? "border-accent/60 text-accent bg-accent/10"
+                  : "border-border text-muted bg-surface hover:border-accent/30"
+              }`}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Experience entries ──────────────────────────────────── */}
+      <div className="space-y-8">
+        {processed.map(({ job, visibleHighlights, matchCount }, i) => {
+          // Dim entries where all highlights were filtered out (but some exist)
+          const fullyFiltered = job.highlights.length > 0 && matchCount === 0;
+          return (
+            <div
+              key={i}
+              className={`relative pl-6 border-l-2 transition-colors ${
+                fullyFiltered
+                  ? "border-border/30 opacity-40"
+                  : "border-border hover:border-accent/50"
+              }`}
+            >
+              <div className="absolute -left-1.75 top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
+              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-1">
+                <h3 className="font-semibold">{job.title}</h3>
+                <span className="text-xs text-muted font-mono shrink-0">
+                  {formatDateRange(job.startDate, job.endDate)}
+                </span>
+              </div>
+              <p className="text-sm text-accent mb-2">
+                {job.company}
+                {job.location && (
+                  <span className="text-muted"> · {job.location}</span>
+                )}
+              </p>
+              {job.description && (
+                <p className="text-sm text-muted mb-2">{job.description}</p>
+              )}
+              {visibleHighlights.length > 0 && (
+                <ul className="space-y-3">
+                  {visibleHighlights.map((highlight, j) => (
+                    <li key={j} className="text-sm text-muted">
+                      <div className="flex gap-2">
+                        <span className="text-accent mt-1 shrink-0">•</span>
+                        <span>{highlight.text}</span>
+                      </div>
+                      {highlight.skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
+                          {highlight.skills.map((skill) => (
+                            <span
+                              key={skill}
+                              className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

@@ -71,17 +71,18 @@ describe("CVPage", () => {
     }
   });
 
-  it("renders all skill categories and individual skills", () => {
+  it("renders filter controls inside the Experience section", () => {
     render(<CVPage />);
-    expect(screen.getByText("Skills")).toBeInTheDocument();
-    for (const [category, skills] of Object.entries(cvData.skills)) {
-      // Category names may also appear as specialty pills
-      expect(screen.getAllByText(category).length).toBeGreaterThanOrEqual(1);
-      for (const skill of skills) {
-        // Skills are now objects with a name property
-        expect(screen.getAllByText(skill.name).length).toBeGreaterThanOrEqual(1);
-      }
-    }
+    // CVExperience renders toggle pills for skill dimensions
+    expect(screen.getByRole("button", { name: "Expert" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Legacy" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "date" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "relevance" })).toBeInTheDocument();
+  });
+
+  it("does not render a standalone Skills section", () => {
+    render(<CVPage />);
+    expect(screen.queryByText("Skills")).not.toBeInTheDocument();
   });
 
   it("renders contact links (Email, LinkedIn, GitHub)", () => {
