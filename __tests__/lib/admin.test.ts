@@ -102,23 +102,23 @@ describe("listBlogPosts", () => {
       "new.md" as unknown as ReturnType<typeof fs.readdirSync>[number],
     ]);
     mockedFs.readFileSync.mockReturnValue("frontmatter");
-    mockedMatter.mockImplementation((input: string | Buffer) => {
+    mockedMatter.mockImplementation((input) => {
       // Both calls return the same structure; we differentiate by call order
       return {
         data: { title: "Post", date: "2026-01-01", excerpt: "desc", tags: ["a"] },
         content: "body",
-      } as ReturnType<typeof matter>;
+      } as unknown as ReturnType<typeof matter>;
     });
     // Make the second post newer
     mockedMatter
       .mockReturnValueOnce({
         data: { title: "Old", date: "2025-01-01", excerpt: "old", tags: [] },
         content: "old body",
-      } as ReturnType<typeof matter>)
+      } as unknown as ReturnType<typeof matter>)
       .mockReturnValueOnce({
         data: { title: "New", date: "2026-02-01", excerpt: "new", tags: ["tag"] },
         content: "new body",
-      } as ReturnType<typeof matter>);
+      } as unknown as ReturnType<typeof matter>);
 
     const posts = listBlogPosts();
     expect(posts).toHaveLength(2);
@@ -141,7 +141,7 @@ describe("readBlogPost", () => {
     mockedMatter.mockReturnValue({
       data: { title: "Hello", date: "2026-01-01", excerpt: "hi", tags: ["a"] },
       content: "## Body",
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const post = readBlogPost("hello");
     expect(post).not.toBeNull();

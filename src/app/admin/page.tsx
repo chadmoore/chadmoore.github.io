@@ -92,10 +92,6 @@ export default function AdminPage() {
   }, []);
 
   // Fetch blog posts on mount
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
   const fetchPosts = useCallback(() => {
     fetch("/api/admin/blog")
       .then((res) => res.json())
@@ -104,6 +100,10 @@ export default function AdminPage() {
       })
       .catch(() => setBlogMessage("Failed to load blog posts."));
   }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   // Auto-open editor when deep-linked from a blog page
   useEffect(() => {
@@ -352,6 +352,8 @@ export default function AdminPage() {
 
   // ─── Render ───────────────────────────────────────────────────────
 
+  const cvDirty = data ? JSON.stringify(data) !== lastSavedCv.current : false;
+
   if (!data) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-16">
@@ -415,7 +417,7 @@ export default function AdminPage() {
               )}
               <button
                 onClick={save}
-                disabled={saving}
+                disabled={saving || !cvDirty}
                 className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50"
               >
                 {saving ? "Saving…" : "Save"}
@@ -454,7 +456,7 @@ export default function AdminPage() {
                         updateSkill(category, i, "name", e.target.value)
                       }
                       placeholder="Skill name"
-                      className="flex-1 min-w-[140px] bg-background border border-border rounded px-2 py-1 text-sm"
+                      className="flex-1 min-w-35 bg-background border border-border rounded px-2 py-1 text-sm"
                     />
 
                     {/* Proficiency */}
@@ -463,6 +465,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         updateSkill(category, i, "proficiency", e.target.value)
                       }
+                      aria-label="Proficiency"
                       className="bg-background border border-border rounded px-2 py-1 text-sm"
                     >
                       {PROFICIENCY_OPTIONS.map((opt) => (
@@ -478,6 +481,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         updateSkill(category, i, "preference", e.target.value)
                       }
+                      aria-label="Preference"
                       className="bg-background border border-border rounded px-2 py-1 text-sm"
                     >
                       {PREFERENCE_OPTIONS.map((opt) => (
@@ -493,6 +497,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         updateSkill(category, i, "status", e.target.value)
                       }
+                      aria-label="Status"
                       className="bg-background border border-border rounded px-2 py-1 text-sm"
                     >
                       {STATUS_OPTIONS.map((opt) => (
@@ -590,6 +595,7 @@ export default function AdminPage() {
                     type="date"
                     value={editingPost.date}
                     onChange={(e) => updateEditingPost("date", e.target.value)}
+                    title="Post date"
                     className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
                   />
                 </div>
@@ -630,7 +636,12 @@ export default function AdminPage() {
               <div className="flex gap-2">
                 <button
                   onClick={saveBlogPost}
-                  disabled={saving || (!newPost && editingPost !== null && JSON.stringify(editingPost) === lastSavedBlog.current)}
+                  disabled={
+                    saving ||
+                    (newPost
+                      ? !editingPost?.slug.trim() || !editingPost?.title.trim()
+                      : editingPost !== null && JSON.stringify(editingPost) === lastSavedBlog.current)
+                  }
                   className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm"
                 >
                   {saving ? "Saving…" : newPost ? "Create" : "Save"}

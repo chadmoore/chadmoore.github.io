@@ -187,17 +187,27 @@ describe("AdminPage", () => {
     });
   });
 
-  it("publish button stays disabled when saving without changes", async () => {
+  it("save button is disabled when no CV changes exist", async () => {
     render(<AdminPage />);
     await waitFor(() => screen.getByText("Frontend"));
 
-    // Click Save without modifying anything
-    fireEvent.click(screen.getByRole("button", { name: /^save$/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText(/no changes to save/i)).toBeInTheDocument();
-    });
+    const saveBtn = screen.getByRole("button", { name: /^save$/i });
+    expect(saveBtn).toBeDisabled();
     expect(screen.getByRole("button", { name: /publish/i })).toBeDisabled();
+  });
+
+  it("save button becomes enabled after modifying a skill", async () => {
+    render(<AdminPage />);
+    await waitFor(() => screen.getByText("Frontend"));
+
+    const saveBtn = screen.getByRole("button", { name: /^save$/i });
+    expect(saveBtn).toBeDisabled();
+
+    // Modify a skill name
+    const inputs = screen.getAllByPlaceholderText("Skill name");
+    fireEvent.change(inputs[0], { target: { value: "Vue" } });
+
+    expect(saveBtn).not.toBeDisabled();
   });
 
   it("publish button becomes enabled after a successful CV save with changes", async () => {

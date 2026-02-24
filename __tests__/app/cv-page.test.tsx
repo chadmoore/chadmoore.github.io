@@ -4,7 +4,22 @@
  * Verifies all sections render from cv.json data.
  */
 import { render, screen } from "@testing-library/react";
-import cvData from "../../content/cv.json";
+import rawCvData from "../../content/cv.json";
+
+interface CvData {
+  name: string;
+  headline: string;
+  location: string;
+  summary: string;
+  specialties: string[];
+  links: { email: string; github: string; linkedin: string };
+  experience: Array<{ title: string; company: string; location: string; dates: string; description: string }>;
+  education: Array<{ degree: string; institution: string; location?: string }>;
+  skills: Record<string, Array<{ name: string; proficiency: string; preference?: string; status?: string }>>;
+  certifications: unknown[];
+}
+
+const cvData = rawCvData as unknown as CvData;
 
 // No Link mock needed — CV page doesn't use next/link
 import CVPage from "@/app/cv/page";

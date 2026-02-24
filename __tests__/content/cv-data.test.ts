@@ -5,7 +5,44 @@
  * populating it with real LinkedIn export data. Write RED first,
  * then update cv.json to make them GREEN.
  */
-import cvData from "../../content/cv.json";
+import rawCvData from "../../content/cv.json";
+
+interface CvSkill {
+  name: string;
+  proficiency: string;
+  preference?: string;
+  status?: string;
+}
+
+interface CvHighlight {
+  text: string;
+  skills: string[];
+}
+
+interface CvExperience {
+  title: string;
+  company: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  highlights: CvHighlight[];
+}
+
+interface CvData {
+  name: string;
+  headline: string;
+  location: string;
+  summary: string;
+  specialties: string[];
+  links: { email: string; github: string; linkedin: string };
+  experience: CvExperience[];
+  education: Array<{ degree: string; institution: string; location?: string }>;
+  skills: Record<string, CvSkill[]>;
+  certifications: unknown[];
+}
+
+const cvData = rawCvData as unknown as CvData;
 
 describe("cv.json data integrity", () => {
   it("has required top-level fields", () => {

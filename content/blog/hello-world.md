@@ -30,7 +30,7 @@ Your content here...
 
 The site reads these files at build time and generates static pages for each post. Simple, fast, and easy to maintain.
 
-Using the framework I've built, you can export your LinkedIn profile and extrapolate a configuration file automatically from the data. This will categorize and organize skills and job experience and generate the associated CV page. Depending on available LLM options, the development toolchain can take care of most tasks. Remaining tasks can be handled while interacting with the development server, where blog and category editing is available. It's actually pretty neat.
+Using the framework I've built, you can export your LinkedIn profile and extrapolate a configuration file automatically from the data. This will categorize and organize skills and job experience and generate the associated CV page. Depending on available LLM options, the development toolchain can take care of most tasks. Remaining tasks can be handled while interacting with the development server, where blog and category editing is available. It's actually pretty neat. [Check out the repo!](https://github.com/chadmoore/chadmoore.github.io/)
 
 ### What's Next
 

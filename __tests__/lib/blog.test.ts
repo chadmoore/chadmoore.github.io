@@ -45,12 +45,12 @@ describe("getAllPosts", () => {
       if (name === "new-post.md") return "---\ntitle: New\ndate: 2026-02-01\n---\nNew content";
       return "";
     });
-    mockedMatter.mockImplementation((input: string | Buffer) => {
+    mockedMatter.mockImplementation((input) => {
       const str = input.toString();
       if (str.includes("Old")) {
-        return { data: { title: "Old", date: "2025-01-01" }, content: "Old content" } as ReturnType<typeof matter>;
+        return { data: { title: "Old", date: "2025-01-01" }, content: "Old content" } as unknown as ReturnType<typeof matter>;
       }
-      return { data: { title: "New", date: "2026-02-01" }, content: "New content" } as ReturnType<typeof matter>;
+      return { data: { title: "New", date: "2026-02-01" }, content: "New content" } as unknown as ReturnType<typeof matter>;
     });
 
     const posts = getAllPosts();
@@ -71,7 +71,7 @@ describe("getAllPosts", () => {
     mockedMatter.mockReturnValue({
       data: { title: "Post", date: "2026-01-01" },
       content: "Content",
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const posts = getAllPosts();
 
@@ -88,7 +88,7 @@ describe("getAllPosts", () => {
     mockedMatter.mockReturnValue({
       data: { date: "2026-01-01" },
       content: "Some content",
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const posts = getAllPosts();
 
@@ -105,7 +105,7 @@ describe("getAllPosts", () => {
     mockedMatter.mockReturnValue({
       data: { title: "Post", date: "2026-01-01" },
       content: longContent,
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const posts = getAllPosts();
 
@@ -121,7 +121,7 @@ describe("getAllPosts", () => {
     mockedMatter.mockReturnValue({
       data: { title: "No Tags", date: "2026-01-01" },
       content: "Content",
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const posts = getAllPosts();
 
@@ -137,7 +137,7 @@ describe("getAllPosts", () => {
     mockedMatter.mockReturnValue({
       data: { title: "No Date" },
       content: "Content",
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const posts = getAllPosts();
 
@@ -160,7 +160,7 @@ describe("getPostBySlug", () => {
     mockedMatter.mockReturnValue({
       data: { title: "Hello", date: "2026-02-23", tags: ["test"] },
       content: "Hello world",
-    } as ReturnType<typeof matter>);
+    } as unknown as ReturnType<typeof matter>);
 
     const post = getPostBySlug("hello-world");
 

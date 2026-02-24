@@ -122,7 +122,7 @@ export default function CVPage() {
                 key={i}
                 className="relative pl-6 border-l-2 border-border hover:border-accent/50 transition-colors"
               >
-                <div className="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
+                <div className="absolute -left-1.75 top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
                 <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-1">
                   <h3 className="font-semibold">{job.title}</h3>
                   <span className="text-xs text-muted font-mono shrink-0">
@@ -180,7 +180,7 @@ export default function CVPage() {
                 key={i}
                 className="relative pl-6 border-l-2 border-border"
               >
-                <div className="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
+                <div className="absolute -left-1.75 top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
                 <h3 className="font-semibold">{edu.degree}</h3>
                 <p className="text-sm text-accent">
                   {edu.institution}
