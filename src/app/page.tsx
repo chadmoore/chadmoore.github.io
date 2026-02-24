@@ -24,26 +24,15 @@ import { siteConfig } from "@/lib/siteConfig";
 import { formatPostDate } from "@/lib/dates";
 import rawContent from "@/../content/content.json";
 import type { ContentData } from "@/lib/contentData";
+import { ArrowLeftRight, Shield, Building2 } from "lucide-react";
 
 const content = rawContent as unknown as ContentData;
 
-/** Map icon identifiers from content.json to inline SVGs. */
+/** Map icon identifiers from content.json to Lucide icon components. */
 const featureIcons: Record<string, React.ReactNode> = {
-  integration: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m-8 6H4m0 0l4 4m-4-4l4-4" />
-    </svg>
-  ),
-  security: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  ),
-  architecture: (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>
-  ),
+  integration: <ArrowLeftRight className="w-5 h-5" />,
+  security: <Shield className="w-5 h-5" />,
+  architecture: <Building2 className="w-5 h-5" />,
 };
 
 export default function Home() {
