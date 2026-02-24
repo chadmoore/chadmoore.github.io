@@ -58,6 +58,16 @@ Project-level guidance for all AI agents working in this codebase.
 - Mock external dependencies (fs, fetch, git) — never hit real APIs in tests.
 - Assertions should be specific: prefer `.toBe()` / `.toEqual()` over `.toBeTruthy()`.
 
+### Documentation
+
+- **README is a first-class deliverable.** Any major feature addition must include a corresponding README update before the work is considered done.
+- A "major feature" is anything that: adds a new page or route, introduces a new user-visible behavior, changes the architecture or build pipeline, or adds a new developer-facing script or workflow.
+- Minor changes (bug fixes, refactors, dependency bumps) do not require README updates unless they change user-observable behavior.
+- **Keep the test suite summary current.** The README contains a hardcoded test count in two places — the `npm test` command comment in the Development section and the Testing section prose. Update both whenever the count changes.
+  - Development command: `` npm test # <N> tests across <S> suites ``
+  - Testing section: ``Jest + React Testing Library with <N> tests...``
+- When adding a new `__tests__/` file, check whether a new suite description belongs in the Testing section of the README.
+
 ### Git & Workflow
 
 - Small, focused commits with descriptive messages.
