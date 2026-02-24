@@ -9,7 +9,7 @@ Location: Earth (generally speaking)
 Built with: Next.js, React, Tailwind CSS, TypeScript
 Hosted on: GitHub Pages
 Fonts: Geist Sans, Geist Mono (by Vercel)
-Last updated: 2025
+Last updated: 2026
 
 /* THANKS */
 Coffee: for existing
