@@ -40,6 +40,10 @@ sections: {
 }
 ```
 
+### Filterable CV Experience
+
+The CV page's work history is interactive. Filter toggles at the top of the Experience section control which highlight bullets are visible by cross-referencing each bullet's skill tags against the skills dictionary (where every skill carries proficiency, preference, and status). A bullet with no skill tags is always shown. A role whose every bullet is filtered out dims rather than disappears — the job title and company stay visible so the timeline stays readable. A **relevance** sort mode floats the entries with the most matching highlights to the top; **date** (default) preserves the original reverse-chronological order.
+
 ### Three-Dimensional Skill System
 
 Every skill is tagged on three orthogonal axes:
@@ -92,8 +96,9 @@ Content here...
 ```bash
 npm install
 npm run dev       # http://localhost:3000 (with admin panel + API routes)
-npm test          # 219 tests across 19 suites
+npm test          # 278 tests across 22 suites
 npm run build     # static export to ./out
+npm run lint:quality  # ESLint code-smell check (0 warnings allowed)
 ```
 
 ## Deployment
@@ -102,7 +107,28 @@ Pushes to `main` auto-deploy via GitHub Actions to GitHub Pages. The workflow de
 
 ## Testing
 
-Jest + React Testing Library with 219 tests mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link` and `next/navigation` mocked in component tests. Tests assert current feature-flag values to catch accidental flips.
+Jest + React Testing Library with 278 tests across 22 suites mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link` and `next/navigation` mocked in component tests. Tests assert current feature-flag values to catch accidental flips.
+
+| Suite | Description |
+|---|---|
+| `app/` | Page-level smoke tests (7 suites) |
+| `components/` | `DevEditLink`, `Footer`, `Header`, `Markdown`, `ProjectsList`, `SkillsGrid`, `TogglePill` |
+| `content/` | CV JSON data shape |
+| `lib/` | `admin`, `blog`, `dates`, `linkedin`, `siteConfig`, `skills` |
+
+## Code Quality
+
+`npm run lint:quality` runs ESLint with [eslint-plugin-sonarjs](https://github.com/SonarSource/SonarJS) and enforces the following thresholds (zero warnings allowed):
+
+| Rule | Threshold |
+|---|---|
+| Cyclomatic complexity | ≤ 15 |
+| Cognitive complexity | ≤ 15 |
+| Nesting depth | ≤ 4 |
+| Duplicate strings (`.ts` only) | < 4 occurrences |
+| Identical functions, duplicated branches | error |
+
+The sole exempt file is `src/app/admin/page.tsx`, which is an intentionally monolithic tabbed form.
 
 ## Tech Stack
 
@@ -110,5 +136,6 @@ Jest + React Testing Library with 219 tests mirroring the `src/` structure. Mock
 - [React](https://react.dev) 19 with React Compiler
 - [Tailwind CSS](https://tailwindcss.com) v4 (custom dark theme via `@theme inline` tokens)
 - [TypeScript](https://www.typescriptlang.org)
+- [Lucide React](https://lucide.dev) for icons (maintained Feather Icons fork)
 - [gray-matter](https://github.com/jonschlinkert/gray-matter) for blog frontmatter
 - [Jest](https://jestjs.io) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)

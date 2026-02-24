@@ -43,6 +43,7 @@ Project-level guidance for all AI agents working in this codebase.
 - Tailwind CSS v4 for styling — no CSS modules, no styled-components.
 - Content lives in `content/` as JSON files, not in the database.
 - API routes in `src/app/api/` are excluded from static export at build time.
+- Icons use **Lucide React** — do not add inline SVGs or other icon libraries. Import named icon components from `lucide-react` and size them with Tailwind (`className="w-4 h-4"`). The `SkillIcon` component maps category strings to Lucide icons via a lookup table.
 
 ### Code Style
 
@@ -67,6 +68,16 @@ Project-level guidance for all AI agents working in this codebase.
   - Development command: `` npm test # <N> tests across <S> suites ``
   - Testing section: ``Jest + React Testing Library with <N> tests...``
 - When adding a new `__tests__/` file, check whether a new suite description belongs in the Testing section of the README.
+
+### Code Quality
+
+- **All new code must pass `npm run lint:quality` with zero warnings.** This runs ESLint with `eslint-plugin-sonarjs` and built-in complexity rules.
+- Thresholds: cyclomatic complexity ≤ 15, cognitive complexity ≤ 15, nesting depth ≤ 4.
+- Additional smell rules: no identical functions, no duplicated branches, no redundant boolean logic, no collapsible ifs.
+- Duplicate string literals (`.ts` files, threshold ≥ 4) are flagged as warnings — extract to a named constant.
+- The only override is `src/app/admin/page.tsx` (intentionally monolithic tabbed form — complexity exempted).
+- When a function exceeds cognitive complexity 15, refactor it by extracting named helper functions rather than adding an override.
+- `"use client"` components with Tailwind class strings are exempt from the no-duplicate-string rule (`.tsx` files excluded).
 
 ### Git & Workflow
 
