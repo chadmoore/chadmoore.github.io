@@ -1,7 +1,7 @@
 /**
  * tag-skills.ts — Automatically tag CV highlights with relevant skills.
  *
- * Reads content/cv.json, sends each experience entry's highlights + the
+ * Reads content/content.json, sends each experience entry's highlights + the
  * full skill list to OpenAI, and writes back a richer highlight format:
  *
  *   Before: "highlights": ["Designed and implemented secure..."]
@@ -30,7 +30,7 @@ import { resolve } from "path";
 /**
  * RawHighlight and ScriptExperience are script-local because the
  * script handles BOTH pre-tagged (string) and post-tagged (object)
- * highlight formats — unlike the shared CvData which assumes
+ * highlight formats — unlike the shared ContentData which assumes
  * highlights are already tagged.
  */
 interface RawHighlight {
@@ -48,8 +48,7 @@ interface ScriptExperience {
   highlights: (string | RawHighlight)[];
 }
 
-interface ScriptCvData {
-  name: string;
+interface ScriptCvSection {
   location: string;
   headline: string;
   summary: string;
@@ -58,7 +57,14 @@ interface ScriptCvData {
   education: unknown[];
   skills: Record<string, { name: string; proficiency: string; preference?: string; status?: string }[]>;
   certifications: string[];
-  links: Record<string, string>;
+}
+
+interface ScriptContentData {
+  site: unknown;
+  home: unknown;
+  about: unknown;
+  blog: unknown;
+  cv: ScriptCvSection;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────
@@ -69,7 +75,7 @@ function highlightText(highlight: string | RawHighlight): string {
 }
 
 /** Collect every skill name from all categories. */
-function allSkillNames(skills: ScriptCvData["skills"]): string[] {
+function allSkillNames(skills: ScriptCvSection["skills"]): string[] {
   return Object.values(skills)
     .flat()
     .map((skill) => skill.name);
@@ -78,8 +84,9 @@ function allSkillNames(skills: ScriptCvData["skills"]): string[] {
 // ─── Main ───────────────────────────────────────────────────────────
 
 async function main() {
-  const cvPath = resolve(__dirname, "..", "content", "cv.json");
-  const cvData: ScriptCvData = JSON.parse(readFileSync(cvPath, "utf-8"));
+  const contentPath = resolve(__dirname, "..", "content", "content.json");
+  const contentData: ScriptContentData = JSON.parse(readFileSync(contentPath, "utf-8"));
+  const cvData = contentData.cv;
   const skillNames = allSkillNames(cvData.skills);
 
   console.log(`Loaded ${cvData.experience.length} experience entries`);
@@ -143,8 +150,8 @@ ${bulletTexts.map((bullet, i) => `${i}. ${bullet}`).join("\n")}`;
   }
 
   // Write back
-  writeFileSync(cvPath, JSON.stringify(cvData, null, 2) + "\n", "utf-8");
-  console.log(`\n✓ Updated ${cvPath}`);
+  writeFileSync(contentPath, JSON.stringify(contentData, null, 2) + "\n", "utf-8");
+  console.log(`\n✓ Updated ${contentPath}`);
 }
 
 main().catch((err) => {

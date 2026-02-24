@@ -1,8 +1,8 @@
 /**
- * Admin API — GET and PUT cv.json.
+ * Admin API — GET and PUT content.json.
  *
- * GET  /api/admin/cv  → returns the current cv.json
- * PUT  /api/admin/cv  → overwrites cv.json with the request body
+ * GET  /api/admin/content  → returns the current content.json
+ * PUT  /api/admin/content  → overwrites content.json with the request body
  *
  * These routes only work in development (next dev).
  * The CI pipeline removes src/app/api/ before static export,
@@ -12,15 +12,15 @@
  * // congratulations on your time-travel abilities.
  */
 import { NextResponse } from "next/server";
-import { readCvData, writeCvData } from "@/lib/admin";
+import { readContentData, writeContentData } from "@/lib/admin";
 
 export async function GET() {
   try {
-    const data = readCvData();
+    const data = readContentData();
     return NextResponse.json(data);
   } catch {
     return NextResponse.json(
-      { error: "Failed to read cv.json" },
+      { error: "Failed to read content.json" },
       { status: 500 }
     );
   }
@@ -29,11 +29,11 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const data = await request.json();
-    writeCvData(data);
+    writeContentData(data);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(
-      { error: "Failed to write cv.json" },
+      { error: "Failed to write content.json" },
       { status: 500 }
     );
   }

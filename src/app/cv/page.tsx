@@ -21,15 +21,17 @@
  * // You're welcome, ATS robots.
  */
 import type { Metadata } from "next";
-import rawCvData from "@/../content/cv.json";
+import rawContent from "@/../content/content.json";
 import { formatDateRange } from "@/lib/dates";
-import type { CvData } from "@/lib/cvData";
+import type { ContentData } from "@/lib/contentData";
 import SkillsGrid from "@/components/SkillsGrid";
 
-const cvData = rawCvData as unknown as CvData;
+const content = rawContent as unknown as ContentData;
+const cvData = content.cv;
+const siteData = content.site;
 
 export const metadata: Metadata = {
-  title: "CV | Chad Moore",
+  title: `CV | ${siteData.name}`,
   description: cvData.headline,
 };
 
@@ -39,22 +41,22 @@ export default function CVPage() {
       {/* Header */}
       <header className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
-          {cvData.name}
+          {siteData.name}
         </h1>
         <p className="text-lg text-accent mb-1">{cvData.headline}</p>
         <p className="text-sm text-muted">{cvData.location}</p>
         <div className="flex gap-4 mt-4 text-sm">
-          {cvData.links.email && (
+          {siteData.links.email && (
             <a
-              href={`mailto:${cvData.links.email}`}
+              href={`mailto:${siteData.links.email}`}
               className="text-muted hover:text-accent transition-colors"
             >
               Email
             </a>
           )}
-          {cvData.links.linkedin && (
+          {siteData.links.linkedin && (
             <a
-              href={cvData.links.linkedin}
+              href={siteData.links.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted hover:text-accent transition-colors"
@@ -62,9 +64,9 @@ export default function CVPage() {
               LinkedIn
             </a>
           )}
-          {cvData.links.github && (
+          {siteData.links.github && (
             <a
-              href={cvData.links.github}
+              href={siteData.links.github}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted hover:text-accent transition-colors"

@@ -23,10 +23,14 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import DevEditLink from "@/components/DevEditLink";
 import { formatPostDate } from "@/lib/dates";
+import rawContent from "@/../content/content.json";
+import type { ContentData } from "@/lib/contentData";
+
+const content = rawContent as unknown as ContentData;
 
 export const metadata: Metadata = {
-  title: "Blog | Chad Moore",
-  description: "Thoughts and writing by Chad Moore",
+  title: `${content.blog.heading} | ${content.site.name}`,
+  description: content.blog.description,
 };
 
 export default function BlogPage() {
@@ -36,10 +40,10 @@ export default function BlogPage() {
     <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
       <div className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-          Blog
+          {content.blog.heading}
         </h1>
         <p className="text-muted">
-          Thoughts on software, data, and building things.
+          {content.blog.description}
         </p>
       </div>
 

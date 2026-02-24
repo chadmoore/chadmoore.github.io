@@ -1,38 +1,29 @@
 /**
- * Site Configuration — The single source of truth.
- * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * Site Configuration — Thin re-export from content.json.
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ *
+ * All site-level config (name, tagline, section toggles) now
+ * lives in content/content.json so it can be edited from the
+ * admin panel alongside everything else. This module re-exports
+ * it under the same `siteConfig` name so existing consumers
+ * don't need to change.
  *
  * Toggle any section on/off and the entire site adapts:
  * navigation links, homepage hero buttons, and recent-posts
- * section all respect these flags. No hunting through JSX.
- *
- * Want to show the Projects page? Flip `projects` to `true`.
- * Want to hide the blog? Set `blog` to `false`.
- *
- * That's it. One file. One commit. Done.
+ * section all respect these flags.
  *
  * // TODO: add a "uses" page for the /uses crowd
  * // TODO: add dark/light theme toggle (currently dark-only because taste)
  */
+import rawContent from "@/../content/content.json";
+import type { ContentData, SectionKey } from "@/lib/contentData";
+
+const content = rawContent as unknown as ContentData;
+
 export const siteConfig = {
-  /** Display name used in the hero, nav, and footer */
-  name: "Chad Moore",
+  name: content.site.name,
+  tagline: content.site.tagline,
+  sections: content.site.sections,
+};
 
-  /** Tagline shown below the name on the homepage */
-  tagline: "Full-stack engineer. Enterprise systems. Cloud to UI.",
-
-  /**
-   * Section visibility flags.
-   * Each key maps to a route (e.g. about → /about).
-   * Set to `false` to hide from nav AND homepage.
-   */
-  sections: {
-    about: true,
-    projects: false,   // flip to true when the repos are ready for prime time
-    blog: true,
-    cv: true,
-  },
-} as const;
-
-/** Union type of all toggleable section keys — keeps the Header type-safe. */
-export type SectionKey = keyof typeof siteConfig.sections;
+export type { SectionKey };

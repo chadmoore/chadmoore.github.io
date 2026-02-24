@@ -7,9 +7,9 @@
  *    adjust based on which sections are enabled in siteConfig.
  *    If projects is off, "About Me" gets promoted to primary.
  *
- * 2. Feature cards — Three pillars of what I do, each with an
- *    SVG icon. These are intentionally not data-driven because
- *    there are exactly three and they won't change often.
+ * 2. Feature cards — Three pillars of what I do, driven by
+ *    content.json so they're editable from the admin panel.
+ *    Each card maps an icon identifier to an inline SVG.
  *
  * 3. Recent posts — The latest 3 blog posts, pulled at build time.
  *    Only renders if the blog section is enabled AND posts exist.
@@ -22,6 +22,29 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/siteConfig";
 import { formatPostDate } from "@/lib/dates";
+import rawContent from "@/../content/content.json";
+import type { ContentData } from "@/lib/contentData";
+
+const content = rawContent as unknown as ContentData;
+
+/** Map icon identifiers from content.json to inline SVGs. */
+const featureIcons: Record<string, React.ReactNode> = {
+  integration: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m-8 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+  ),
+  security: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  architecture: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+  ),
+};
 
 export default function Home() {
   // Only fetch posts if the blog is enabled — no wasted I/O
@@ -31,7 +54,7 @@ export default function Home() {
     <div className="max-w-5xl mx-auto px-6">
       {/* Hero */}
       <section className="py-24 md:py-32">
-        <p className="text-accent font-mono text-sm mb-4">Hi, I&apos;m</p>
+        <p className="text-accent font-mono text-sm mb-4">{content.home.greeting}</p>
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
           {siteConfig.name}
         </h1>
@@ -73,42 +96,15 @@ export default function Home() {
       {/* Quick intro cards */}
       <section className="py-16 border-t border-border">
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m-8 6H4m0 0l4 4m-4-4l4-4" />
-              </svg>
+          {content.home.featureCards.map((card) => (
+            <div key={card.title} className="space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+                {featureIcons[card.icon] ?? featureIcons.integration}
+              </div>
+              <h3 className="font-semibold">{card.title}</h3>
+              <p className="text-sm text-muted">{card.description}</p>
             </div>
-            <h3 className="font-semibold">Enterprise Integration</h3>
-            <p className="text-sm text-muted">
-              Connecting systems that weren&apos;t designed to talk to each other — from
-              legacy terminals to modern cloud platforms.
-            </p>
-          </div>
-          <div className="space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <h3 className="font-semibold">Secure Identity &amp; APIs</h3>
-            <p className="text-sm text-muted">
-              Deep expertise in OAuth, SAML, OIDC, and SSO — designing
-              authentication and authorization systems at scale.
-            </p>
-          </div>
-          <div className="space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </div>
-            <h3 className="font-semibold">Architecture &amp; Technical Leadership</h3>
-            <p className="text-sm text-muted">
-              Owning system design and technical direction across complex
-              enterprise engagements for Fortune 50 organizations.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 

@@ -1,0 +1,541 @@
+{
+  "site": {
+    "name": "Chad Moore",
+    "tagline": "Full-stack engineer. Enterprise systems. Cloud to UI.",
+    "sections": {
+      "about": true,
+      "projects": true,
+      "blog": true,
+      "cv": true
+    },
+    "links": {
+      "email": "chad@chadmoore.info",
+      "github": "https://github.com/chadmoore",
+      "linkedin": "https://www.linkedin.com/in/chad-moore-info"
+    }
+  },
+  "home": {
+    "greeting": "Hi, I'm",
+    "featureCards": [
+      {
+        "title": "Enterprise Integration",
+        "description": "Connecting systems that weren't designed to talk to each other — from legacy terminals to modern cloud platforms.",
+        "icon": "integration"
+      },
+      {
+        "title": "Secure Identity & APIs",
+        "description": "Deep expertise in OAuth, SAML, OIDC, and SSO — designing authentication and authorization systems at scale.",
+        "icon": "security"
+      },
+      {
+        "title": "Architecture & Technical Leadership",
+        "description": "Owning system design and technical direction across complex enterprise engagements for Fortune 50 organizations.",
+        "icon": "architecture"
+      }
+    ]
+  },
+  "about": {
+    "heading": "About Me",
+    "intro": [
+      "I'm Chad Moore — a senior full-stack engineer with nearly three decades of experience designing and delivering complex enterprise systems. I've worked across financial services, telecommunications, government, healthcare, and manufacturing — from Fortune 50 organizations to federal agencies.",
+      "My work centers on enterprise integration, secure identity systems, and API architecture. I frequently operate in an architectural capacity — owning system design, integration strategy, and technical direction. More recently, I've been leveraging agentic AI and MCP-based tooling to accelerate development while raising the bar on testing and code consistency."
+    ],
+    "skillsHeading": "What I Work With",
+    "contactHeading": "Get In Touch",
+    "contactText": "I'm always open to interesting conversations and collaborations."
+  },
+  "blog": {
+    "heading": "Blog",
+    "description": "Thoughts on software, data, and building things."
+  },
+  "cv": {
+    "headline": "Senior / Staff Full‑Stack Engineer",
+    "location": "Northampton, Massachusetts, United States",
+    "summary": "Senior full‑stack engineer with nearly three decades of experience designing and delivering complex enterprise systems across financial services, telecommunications, government, healthcare, and manufacturing. Deep expertise in frontend architecture, API design, cloud infrastructure, and secure identity systems. Frequently operating in an architectural capacity — owning system design, integration strategy, and technical direction across client engagements. Actively leveraging agentic AI, MCP‑based tooling, and AI‑assisted workflows to accelerate development while raising the bar on testing, documentation, and code consistency. Proven track record leading high‑stakes implementations for Fortune 50 organizations, federal agencies, and national service providers — translating complex technical problems into clear solutions for clients, cross‑functional teams, and executive stakeholders.",
+    "specialties": [
+      "Enterprise Systems",
+      "Cloud & Infrastructure",
+      "API Architecture",
+      "AI‑Augmented Development",
+      "Secure Identity"
+    ],
+    "experience": [
+      {
+        "title": "Senior Implementation Consultant",
+        "company": "Qlik",
+        "location": "Northampton, MA",
+        "startDate": "2020-03",
+        "endDate": "2026-02",
+        "description": "Operated in an architectural capacity across complex enterprise client engagements — owning system design, API integration strategy, and technical direction.",
+        "highlights": [
+          {
+            "text": "Designed and implemented secure, scalable API integration layers connecting enterprise systems to cloud analytics platforms using OAuth, SAML, and JWT",
+            "skills": [
+              "REST APIs",
+              "OAuth 2.0",
+              "SAML",
+              "JWT",
+              "AWS",
+              "Azure"
+            ]
+          },
+          {
+            "text": "Became the go‑to escalation point for complex API integration issues — consistently resolving problems that had stalled client teams and internal engineers",
+            "skills": [
+              "REST APIs"
+            ]
+          },
+          {
+            "text": "Architected frontend solutions using React, Next.js, and TypeScript, deployed on AWS, Azure, and Kubernetes/Docker infrastructure",
+            "skills": [
+              "React",
+              "Next.js",
+              "TypeScript",
+              "AWS",
+              "Azure",
+              "Kubernetes",
+              "Docker"
+            ]
+          },
+          {
+            "text": "Built rich data visualization and embedded analytics experiences on Qlik Sense Enterprise & SaaS, supporting tens of thousands of end users",
+            "skills": [
+              "JavaScript",
+              "Data Visualization"
+            ]
+          },
+          {
+            "text": "Guided enterprise engineering teams through complex authentication and authorization implementations as technical authority on identity architecture",
+            "skills": [
+              "OAuth 2.0",
+              "OIDC",
+              "SAML",
+              "SSO",
+              "Authorization"
+            ]
+          },
+          {
+            "text": "Drove full‑stack performance optimization across client engagements, improving platform responsiveness and reliability under high‑load conditions",
+            "skills": [
+              "React",
+              "Node.js",
+              "REST APIs"
+            ]
+          },
+          {
+            "text": "Integrated agentic AI and MCP‑based tooling into development workflows — accelerating code generation, test coverage, documentation, and review cycles",
+            "skills": [
+              "Agentic AI",
+              "MCP Tooling",
+              "AI‑Assisted Workflows"
+            ]
+          },
+          {
+            "text": "Served as client‑facing technical architect on high‑stakes enterprise deployments for Fortune 50 organizations, federal agencies, and national service providers",
+            "skills": []
+          },
+          {
+            "text": "Mentored enterprise engineering teams, elevating capability on authentication architecture, frontend patterns, and delivery best practices",
+            "skills": [
+              "OAuth 2.0",
+              "OIDC",
+              "SSO",
+              "React",
+              "Agile Methodologies"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Application Developer",
+        "company": "RCN",
+        "location": "",
+        "startDate": "2012-01",
+        "endDate": "2020-03",
+        "description": "Full‑stack developer owning consumer‑facing and internal web/mobile applications across the complete product lifecycle, from development through marketplace release and ongoing iteration.",
+        "highlights": [
+          {
+            "text": "Co‑designed and built a custom SAML Identity Provider integrating with numerous TV Everywhere content platforms — critical infrastructure enabling secure subscriber authentication across the organization's digital ecosystem",
+            "skills": [
+              "SAML",
+              "SSO",
+              "Authorization",
+              "Ruby on Rails",
+              "Linux"
+            ]
+          },
+          {
+            "text": "Owned and maintained Ubuntu‑based production infrastructure 24/7, handling provisioning, monitoring, deployment, and uptime — effectively operating as platform engineer for the team",
+            "skills": [
+              "Linux",
+              "nginx",
+              "Apache",
+              "DevOps",
+              "CI/CD"
+            ]
+          },
+          {
+            "text": "Designed, developed, deployed, and supported consumer‑facing and internal web and mobile applications (RCN2Go, RCN Mobile, RCN.com)",
+            "skills": [
+              "JavaScript",
+              "Ruby on Rails",
+              "HTML5",
+              "CSS",
+              "User Interface Design"
+            ]
+          },
+          {
+            "text": "Collaborated with a major media technology partner to develop a content discovery system, serving as primary technical point of contact across internal teams and external partners",
+            "skills": [
+              "REST APIs",
+              "JavaScript",
+              "Ruby"
+            ]
+          },
+          {
+            "text": "Worked across the full stack using Ruby on Rails, JavaScript/jQuery, MySQL, Redis, and Linux‑based infrastructure (Apache, nginx)",
+            "skills": [
+              "Ruby on Rails",
+              "Ruby",
+              "JavaScript",
+              "MySQL",
+              "Redis",
+              "Linux",
+              "Apache",
+              "nginx"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Lead Software Developer",
+        "company": "Bridgeport National Bindery",
+        "location": "",
+        "startDate": "2006-10",
+        "endDate": "2012-01",
+        "description": "Led a development team designing and building a sophisticated B2B print job integration platform using the PrintTalk XML standard — replacing manual processes with an end‑to‑end automated pipeline.",
+        "highlights": [
+          {
+            "text": "Architected a system enabling major digital publishing platforms, global e‑commerce organizations, and academic institutions to submit print jobs electronically",
+            "skills": [
+              "REST APIs",
+              "SQL"
+            ]
+          },
+          {
+            "text": "Designed and built production lifecycle management covering customer relationship tracking, cost and materials reporting, manufacturing workflow automation, and shipping coordination",
+            "skills": [
+              "SQL",
+              "User Interface Design"
+            ]
+          },
+          {
+            "text": "Modernized how the organization received and processed work from enterprise clients, transforming a manual intake process into a fully automated, scalable integration platform",
+            "skills": [
+              "REST APIs"
+            ]
+          },
+          {
+            "text": "Partnered with prepress, print, and shipping managers to design software coordinating workflows across the organization",
+            "skills": [
+              "Agile Methodologies"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Professional Services Consultant",
+        "company": "Mitem Corporation",
+        "location": "",
+        "startDate": "1999",
+        "endDate": "2006",
+        "description": "Delivered custom integration solutions for enterprise clients across major national retailers, utility providers, and healthcare organizations — modernizing workflows without replacing critical legacy infrastructure.",
+        "highlights": [
+          {
+            "text": "Built modern software interfaces integrating seamlessly with legacy terminal systems (IBM 5250, 3270, VAX, VT100), bridging decades‑old infrastructure to contemporary platforms",
+            "skills": [
+              "Java",
+              "C#",
+              ".NET",
+              "User Interface Design"
+            ]
+          },
+          {
+            "text": "Partnered directly with enterprise client teams to diagnose integration challenges, define technical requirements, and communicate solutions across technical and non‑technical audiences",
+            "skills": [
+              "REST APIs"
+            ]
+          },
+          {
+            "text": "Received a Macromedia Flex award for UI/UX excellence on a technically complex enterprise integration project",
+            "skills": [
+              "User Interface Design"
+            ]
+          },
+          {
+            "text": "Delivered solutions for clients including LL Bean, Cinergy, Alliant Energy, Baltimore Gas & Electric, and Western Resources",
+            "skills": [
+              "Java",
+              "C#",
+              ".NET"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Junior Consultant",
+        "company": "Winthrop Technologies",
+        "location": "",
+        "startDate": "1996",
+        "endDate": "1998",
+        "description": "Early career contributing code to enterprise logistics tracking products and delivering desktop and automation solutions for Fortune 50 organizations.",
+        "highlights": [
+          {
+            "text": "Built a DTMF phone interface enabling clients to retrieve logistics data via telephone — predating modern IVR systems",
+            "skills": [
+              "SQL"
+            ]
+          },
+          {
+            "text": "Delivered desktop and automation solutions for Fortune 50 pharmaceutical and industrial organizations, including work supporting C‑suite executive operations",
+            "skills": []
+          }
+        ]
+      }
+    ],
+    "education": [],
+    "skills": {
+      "Frontend": [
+        {
+          "name": "React",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "Next.js",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "TypeScript",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "JavaScript",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "HTML5",
+          "proficiency": "expert"
+        },
+        {
+          "name": "CSS",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "Tailwind CSS",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "User Interface Design",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "AngularJS",
+          "proficiency": "proficient",
+          "status": "legacy"
+        }
+      ],
+      "Backend": [
+        {
+          "name": "Node.js",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "Ruby",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "REST APIs",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "SQL",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Python",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Ruby on Rails",
+          "proficiency": "proficient",
+          "status": "legacy",
+          "preference": "preferred"
+        },
+        {
+          "name": "C#",
+          "proficiency": "proficient",
+          "status": "legacy"
+        },
+        {
+          "name": ".NET",
+          "proficiency": "proficient",
+          "status": "legacy"
+        },
+        {
+          "name": "Java",
+          "proficiency": "proficient",
+          "status": "legacy"
+        },
+        {
+          "name": "PHP",
+          "proficiency": "familiar",
+          "status": "legacy"
+        }
+      ],
+      "Cloud & Infrastructure": [
+        {
+          "name": "Linux",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "Git",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "AWS",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Docker",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "CI/CD",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Azure",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "nginx",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "DevOps",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "Kubernetes",
+          "proficiency": "familiar"
+        },
+        {
+          "name": "Unix",
+          "proficiency": "proficient",
+          "status": "legacy"
+        },
+        {
+          "name": "Apache",
+          "proficiency": "proficient",
+          "status": "legacy"
+        },
+        {
+          "name": "IIS",
+          "proficiency": "proficient",
+          "status": "legacy"
+        }
+      ],
+      "Identity & Security": [
+        {
+          "name": "OAuth 2.0",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "OIDC",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "SSO",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
+          "name": "SAML",
+          "proficiency": "expert"
+        },
+        {
+          "name": "JWT",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "Authorization",
+          "proficiency": "proficient"
+        }
+      ],
+      "Data": [
+        {
+          "name": "PostgreSQL",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Redis",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Data Visualization",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "SQL Server",
+          "proficiency": "proficient",
+          "status": "legacy"
+        },
+        {
+          "name": "MySQL",
+          "proficiency": "proficient",
+          "status": "legacy"
+        }
+      ],
+      "AI & Tooling": [
+        {
+          "name": "Agentic AI",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "MCP Tooling",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "AI‑Assisted Workflows",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Agile Methodologies",
+          "proficiency": "expert"
+        }
+      ]
+    },
+    "certifications": []
+  }
+}

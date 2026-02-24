@@ -1,5 +1,5 @@
 /**
- * Admin helpers — read and write cv.json and blog posts from disk.
+ * Admin helpers — read and write content.json and blog posts from disk.
  *
  * Server-side only (used by Route Handlers). These functions
  * give the admin API a clean interface to the content directory
@@ -12,22 +12,22 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { execSync } from "child_process";
-import type { CvData } from "@/lib/cvData";
+import type { ContentData } from "@/lib/contentData";
 
-const CV_PATH = path.resolve(process.cwd(), "content/cv.json");
+const CONTENT_PATH = path.resolve(process.cwd(), "content/content.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
 
-// ─── CV Helpers ─────────────────────────────────────────────────────
+// ─── Content Helpers ────────────────────────────────────────────────
 
-/** Read and parse cv.json. Throws if the file is missing or corrupt. */
-export function readCvData(): CvData {
-  const raw = fs.readFileSync(CV_PATH, "utf-8");
+/** Read and parse content.json. Throws if the file is missing or corrupt. */
+export function readContentData(): ContentData {
+  const raw = fs.readFileSync(CONTENT_PATH, "utf-8");
   return JSON.parse(raw);
 }
 
-/** Write data back to cv.json with pretty-printing. */
-export function writeCvData(data: CvData): void {
-  fs.writeFileSync(CV_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
+/** Write data back to content.json with pretty-printing. */
+export function writeContentData(data: ContentData): void {
+  fs.writeFileSync(CONTENT_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
 }
 
 // ─── Blog Helpers ───────────────────────────────────────────────────

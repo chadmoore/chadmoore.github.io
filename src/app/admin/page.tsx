@@ -1,11 +1,13 @@
 /**
- * Admin Page — Local development CV & blog management.
+ * Admin Page — Local development content management.
  *
  * Client component that talks to /api/admin/* to read and write
  * content files. Only functional when running `next dev` — the API
  * routes don't exist in the static export.
  *
- * Two sections: Skills editor and Blog manager, toggled via tabs.
+ * Six tabs: Site, Home, About, CV, Skills, and Blog.
+ * All non-blog tabs edit content.json via a single Save button.
+ * Blog posts are managed separately via /api/admin/blog/*.
  *
  * // If you're reading this code and thinking "this should use
  * // a form library" — you're probably right, but it ships today.
@@ -14,7 +16,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { Skill, Proficiency, Preference, Status } from "@/lib/skills";
-import type { CvData } from "@/lib/cvData";
+import type { ContentData, FeatureCard } from "@/lib/contentData";
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -30,20 +32,43 @@ interface BlogPostFull extends BlogPostMeta {
   content: string;
 }
 
-type Tab = "skills" | "blog";
+type Tab = "site" | "home" | "about" | "cv" | "skills" | "blog";
+
+const TAB_LABELS: Record<Tab, string> = {
+  site: "Site",
+  home: "Home",
+  about: "About",
+  cv: "CV",
+  skills: "Skills",
+  blog: "Blog",
+};
 
 // ─── Constants ──────────────────────────────────────────────────────
 
 const PROFICIENCY_OPTIONS: Proficiency[] = ["expert", "proficient", "familiar"];
 const PREFERENCE_OPTIONS: Preference[] = ["preferred", "neutral"];
 const STATUS_OPTIONS: Status[] = ["active", "legacy"];
+const ICON_OPTIONS = ["integration", "security", "architecture"];
+
+// ─── Shared input component ─────────────────────────────────────────
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs text-muted mb-1">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+const inputClass = "w-full bg-background border border-border rounded px-2 py-1 text-sm";
 
 // ─── Component ──────────────────────────────────────────────────────
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<Tab>("skills");
-  const [data, setData] = useState<CvData | null>(null);
-  const lastSavedCv = useRef<string>("");
+  const [tab, setTab] = useState<Tab>("site");
+  const [data, setData] = useState<ContentData | null>(null);
+  const lastSavedContent = useRef<string>("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [hasUnpublished, setHasUnpublished] = useState(false);
@@ -68,15 +93,15 @@ export default function AdminPage() {
     }
   }, []);
 
-  // Fetch cv data on mount
+  // Fetch content data on mount
   useEffect(() => {
-    fetch("/api/admin/cv")
+    fetch("/api/admin/content")
       .then((res) => res.json())
       .then((json) => {
         setData(json);
-        lastSavedCv.current = JSON.stringify(json);
+        lastSavedContent.current = JSON.stringify(json);
       })
-      .catch(() => setMessage("Failed to load CV data. Is the dev server running?"));
+      .catch(() => setMessage("Failed to load content data. Is the dev server running?"));
   }, []);
 
   // Fetch blog posts on mount
@@ -102,79 +127,152 @@ export default function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialEditSlug, posts]);
 
+  // ─── Generic Content Update ───────────────────────────────────
+
+  /** Type-safe deep setter for any content.json path. */
+  const updateField = useCallback(
+    <K extends keyof ContentData>(
+      section: K,
+      updater: (prev: ContentData[K]) => ContentData[K],
+    ) => {
+      setData((prev) => {
+        if (!prev) return prev;
+        return { ...prev, [section]: updater(prev[section]) };
+      });
+    },
+    [],
+  );
+
   // ─── Skill Mutations ─────────────────────────────────────────────
 
   const updateSkill = useCallback(
     (category: string, index: number, field: keyof Skill, value: string) => {
       if (!data) return;
-      setData((prev) => {
-        if (!prev) return prev;
-        const skills = { ...prev.skills };
+      updateField("cv", (cv) => {
+        const skills = { ...cv.skills };
         const list = [...skills[category]];
         list[index] = { ...list[index], [field]: value };
         skills[category] = list;
-        return { ...prev, skills };
+        return { ...cv, skills };
       });
     },
-    [data]
+    [data, updateField],
   );
 
   const removeSkill = useCallback(
     (category: string, index: number) => {
       if (!data) return;
-      setData((prev) => {
-        if (!prev) return prev;
-        const skills = { ...prev.skills };
+      updateField("cv", (cv) => {
+        const skills = { ...cv.skills };
         const list = [...skills[category]];
         list.splice(index, 1);
         skills[category] = list;
-        return { ...prev, skills };
+        return { ...cv, skills };
       });
     },
-    [data]
+    [data, updateField],
   );
 
   const addSkill = useCallback(
     (category: string) => {
       if (!data) return;
-      setData((prev) => {
-        if (!prev) return prev;
-        const skills = { ...prev.skills };
+      updateField("cv", (cv) => {
+        const skills = { ...cv.skills };
         const list = [...skills[category]];
         list.push({ name: "", proficiency: "proficient" });
         skills[category] = list;
-        return { ...prev, skills };
+        return { ...cv, skills };
       });
     },
-    [data]
+    [data, updateField],
   );
 
   const addCategory = useCallback(() => {
     const name = prompt("New category name:");
     if (!name || !data) return;
-    setData((prev) => {
-      if (!prev) return prev;
-      const skills = { ...prev.skills };
+    updateField("cv", (cv) => {
+      const skills = { ...cv.skills };
       skills[name] = [{ name: "", proficiency: "proficient" }];
-      return { ...prev, skills };
+      return { ...cv, skills };
     });
-  }, [data]);
+  }, [data, updateField]);
 
   const removeCategory = useCallback(
     (category: string) => {
       if (!data) return;
       if (!confirm(`Remove "${category}" and all its skills?`)) return;
-      setData((prev) => {
-        if (!prev) return prev;
-        const skills = { ...prev.skills };
+      updateField("cv", (cv) => {
+        const skills = { ...cv.skills };
         delete skills[category];
-        return { ...prev, skills };
+        return { ...cv, skills };
       });
     },
-    [data]
+    [data, updateField],
   );
 
-  // ─── Save ─────────────────────────────────────────────────────────
+  // ─── Feature Card Mutations ───────────────────────────────────
+
+  const updateCard = useCallback(
+    (index: number, field: keyof FeatureCard, value: string) => {
+      updateField("home", (home) => {
+        const cards = [...home.featureCards];
+        cards[index] = { ...cards[index], [field]: value };
+        return { ...home, featureCards: cards };
+      });
+    },
+    [updateField],
+  );
+
+  const addCard = useCallback(() => {
+    updateField("home", (home) => ({
+      ...home,
+      featureCards: [...home.featureCards, { title: "", description: "", icon: "integration" }],
+    }));
+  }, [updateField]);
+
+  const removeCard = useCallback(
+    (index: number) => {
+      updateField("home", (home) => {
+        const cards = [...home.featureCards];
+        cards.splice(index, 1);
+        return { ...home, featureCards: cards };
+      });
+    },
+    [updateField],
+  );
+
+  // ─── About Intro Mutations ───────────────────────────────────
+
+  const updateIntroParagraph = useCallback(
+    (index: number, value: string) => {
+      updateField("about", (about) => {
+        const intro = [...about.intro];
+        intro[index] = value;
+        return { ...about, intro };
+      });
+    },
+    [updateField],
+  );
+
+  const addIntroParagraph = useCallback(() => {
+    updateField("about", (about) => ({
+      ...about,
+      intro: [...about.intro, ""],
+    }));
+  }, [updateField]);
+
+  const removeIntroParagraph = useCallback(
+    (index: number) => {
+      updateField("about", (about) => {
+        const intro = [...about.intro];
+        intro.splice(index, 1);
+        return { ...about, intro };
+      });
+    },
+    [updateField],
+  );
+
+  // ─── Save Content ─────────────────────────────────────────────
 
   const save = useCallback(async () => {
     if (!data) return;
@@ -182,24 +280,27 @@ export default function AdminPage() {
     setMessage("");
     try {
       // Strip empty skill names before saving
-      const cleaned = {
+      const cleaned: ContentData = {
         ...data,
-        skills: Object.fromEntries(
-          Object.entries(data.skills).map(([cat, skills]) => [
-            cat,
-            skills.filter((skill) => skill.name.trim() !== ""),
-          ])
-        ),
+        cv: {
+          ...data.cv,
+          skills: Object.fromEntries(
+            Object.entries(data.cv.skills).map(([cat, skills]) => [
+              cat,
+              skills.filter((skill) => skill.name.trim() !== ""),
+            ]),
+          ),
+        },
       };
-      const res = await fetch("/api/admin/cv", {
+      const res = await fetch("/api/admin/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cleaned),
       });
       if (res.ok) {
         const cleanedJson = JSON.stringify(cleaned);
-        const changed = cleanedJson !== lastSavedCv.current;
-        lastSavedCv.current = cleanedJson;
+        const changed = cleanedJson !== lastSavedContent.current;
+        lastSavedContent.current = cleanedJson;
         setData(cleaned);
         if (changed) {
           setMessage("Saved!");
@@ -340,7 +441,7 @@ export default function AdminPage() {
 
   // ─── Render ───────────────────────────────────────────────────────
 
-  const cvDirty = data ? JSON.stringify(data) !== lastSavedCv.current : false;
+  const contentDirty = data ? JSON.stringify(data) !== lastSavedContent.current : false;
 
   if (!data) {
     return (
@@ -359,163 +460,473 @@ export default function AdminPage() {
         </p>
       </div>
 
-      {/* ─── Publish Bar ───────────────────────────────────────── */}
+      {/* ─── Global Action Bar ─────────────────────────────────── */}
       <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={publish}
-          disabled={!hasUnpublished || publishing}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm"
-        >
-          {publishing ? "Publishing…" : "Publish"}
-        </button>
-        {publishMessage && (
-          <span className={`text-sm ${publishMessage.includes("Published") ? "text-green-400" : publishMessage.includes("Nothing") ? "text-muted" : "text-red-400"}`}>
-            {publishMessage}
-          </span>
+        {tab !== "blog" && (
+          <>
+            <button
+              onClick={save}
+              disabled={saving || !contentDirty}
+              className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50 text-sm"
+            >
+              {saving ? "Saving…" : "Save"}
+            </button>
+            {message && (
+              <span className={`text-sm ${message.includes("Saved") ? "text-green-400" : message.includes("No changes") ? "text-muted" : "text-red-400"}`}>
+                {message}
+              </span>
+            )}
+          </>
         )}
+        <div className="ml-auto flex items-center gap-3">
+          <button
+            onClick={publish}
+            disabled={!hasUnpublished || publishing}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm"
+          >
+            {publishing ? "Publishing…" : "Publish"}
+          </button>
+          {publishMessage && (
+            <span className={`text-sm ${publishMessage.includes("Published") ? "text-green-400" : publishMessage.includes("Nothing") ? "text-muted" : "text-red-400"}`}>
+              {publishMessage}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* ─── Tabs ──────────────────────────────────────────────── */}
-      <div className="flex gap-4 border-b border-border mb-8">
-        {(["skills", "blog"] as Tab[]).map((t) => (
+      <div className="flex gap-4 border-b border-border mb-8 overflow-x-auto">
+        {(Object.keys(TAB_LABELS) as Tab[]).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`pb-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
+            className={`pb-2 text-sm font-medium transition-colors border-b-2 -mb-px whitespace-nowrap ${
               tab === t
                 ? "border-accent text-accent"
                 : "border-transparent text-muted hover:text-foreground"
             }`}
           >
-            {t}
+            {TAB_LABELS[t]}
           </button>
         ))}
       </div>
 
-      {/* ─── Skills Tab ────────────────────────────────────────── */}
-      {tab === "skills" && (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold">Skills</h2>
-            <div className="flex items-center gap-3">
-              {message && (
-                <span className={`text-sm ${message.includes("Saved") ? "text-green-400" : "text-red-400"}`}>
-                  {message}
-                </span>
-              )}
-              <button
-                onClick={save}
-                disabled={saving || !cvDirty}
-                className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-50"
-              >
-                {saving ? "Saving…" : "Save"}
-              </button>
-            </div>
+      {/* ─── Site Tab ──────────────────────────────────────────── */}
+      {tab === "site" && (
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">Site Settings</h2>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+            <Field label="Name">
+              <input
+                type="text"
+                value={data.site.name}
+                onChange={(e) => updateField("site", (site) => ({ ...site, name: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="Tagline">
+              <input
+                type="text"
+                value={data.site.tagline}
+                onChange={(e) => updateField("site", (site) => ({ ...site, tagline: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
           </div>
 
-        <div className="space-y-8">
-          {Object.entries(data.skills).map(([category, skills]) => (
-            <div
-              key={category}
-              className="bg-surface border border-border rounded-lg p-4"
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+            <h3 className="font-medium">Links</h3>
+            <Field label="Email">
+              <input
+                type="email"
+                value={data.site.links.email}
+                onChange={(e) => updateField("site", (site) => ({ ...site, links: { ...site.links, email: e.target.value } }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="GitHub URL">
+              <input
+                type="url"
+                value={data.site.links.github}
+                onChange={(e) => updateField("site", (site) => ({ ...site, links: { ...site.links, github: e.target.value } }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="LinkedIn URL">
+              <input
+                type="url"
+                value={data.site.links.linkedin}
+                onChange={(e) => updateField("site", (site) => ({ ...site, links: { ...site.links, linkedin: e.target.value } }))}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-3">
+            <h3 className="font-medium">Section Visibility</h3>
+            {(["about", "projects", "blog", "cv"] as const).map((key) => (
+              <label key={key} className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={data.site.sections[key]}
+                  onChange={(e) =>
+                    updateField("site", (site) => ({
+                      ...site,
+                      sections: { ...site.sections, [key]: e.target.checked },
+                    }))
+                  }
+                  className="accent-accent"
+                />
+                <span className="capitalize">{key}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─── Home Tab ──────────────────────────────────────────── */}
+      {tab === "home" && (
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">Homepage</h2>
+
+          <div className="bg-surface border border-border rounded-lg p-4">
+            <Field label="Greeting (shown above name)">
+              <input
+                type="text"
+                value={data.home.greeting}
+                onChange={(e) => updateField("home", (home) => ({ ...home, greeting: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <h3 className="font-medium">Feature Cards</h3>
+          <div className="space-y-4">
+            {data.home.featureCards.map((card, index) => (
+              <div key={index} className="bg-surface border border-border rounded-lg p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted">Card {index + 1}</span>
+                  <button
+                    onClick={() => removeCard(index)}
+                    className="text-xs text-red-400 hover:text-red-300"
+                    title="Remove card"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <Field label="Title">
+                  <input
+                    type="text"
+                    value={card.title}
+                    onChange={(e) => updateCard(index, "title", e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Description">
+                  <textarea
+                    value={card.description}
+                    onChange={(e) => updateCard(index, "description", e.target.value)}
+                    rows={2}
+                    className={inputClass + " resize-y"}
+                  />
+                </Field>
+                <Field label="Icon">
+                  <select
+                    value={card.icon}
+                    onChange={(e) => updateCard(index, "icon", e.target.value)}
+                    className={inputClass}
+                  >
+                    {ICON_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </Field>
+              </div>
+            ))}
+            <button
+              onClick={addCard}
+              className="text-xs text-accent hover:text-accent-hover transition-colors"
             >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium">{category}</h3>
+              + Add Card
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── About Tab ─────────────────────────────────────────── */}
+      {tab === "about" && (
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">About Page</h2>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+            <Field label="Page Heading">
+              <input
+                type="text"
+                value={data.about.heading}
+                onChange={(e) => updateField("about", (about) => ({ ...about, heading: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Skills Section Heading">
+              <input
+                type="text"
+                value={data.about.skillsHeading}
+                onChange={(e) => updateField("about", (about) => ({ ...about, skillsHeading: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Contact Section Heading">
+              <input
+                type="text"
+                value={data.about.contactHeading}
+                onChange={(e) => updateField("about", (about) => ({ ...about, contactHeading: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Contact Text (after email/LinkedIn links)">
+              <input
+                type="text"
+                value={data.about.contactText}
+                onChange={(e) => updateField("about", (about) => ({ ...about, contactText: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <h3 className="font-medium">Intro Paragraphs</h3>
+          <div className="space-y-3">
+            {data.about.intro.map((paragraph, index) => (
+              <div key={index} className="bg-surface border border-border rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-muted">Paragraph {index + 1}</span>
+                  <button
+                    onClick={() => removeIntroParagraph(index)}
+                    className="text-xs text-red-400 hover:text-red-300"
+                    title="Remove paragraph"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <textarea
+                  value={paragraph}
+                  onChange={(e) => updateIntroParagraph(index, e.target.value)}
+                  rows={4}
+                  className={inputClass + " resize-y"}
+                />
+              </div>
+            ))}
+            <button
+              onClick={addIntroParagraph}
+              className="text-xs text-accent hover:text-accent-hover transition-colors"
+            >
+              + Add Paragraph
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── CV Tab ────────────────────────────────────────────── */}
+      {tab === "cv" && (
+        <div className="space-y-6">
+          <h2 className="text-lg font-semibold">CV / Resume</h2>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
+            <Field label="Headline">
+              <input
+                type="text"
+                value={data.cv.headline}
+                onChange={(e) => updateField("cv", (cv) => ({ ...cv, headline: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Location">
+              <input
+                type="text"
+                value={data.cv.location}
+                onChange={(e) => updateField("cv", (cv) => ({ ...cv, location: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Summary">
+              <textarea
+                value={data.cv.summary}
+                onChange={(e) => updateField("cv", (cv) => ({ ...cv, summary: e.target.value }))}
+                rows={6}
+                className={inputClass + " resize-y"}
+              />
+            </Field>
+          </div>
+
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-3">
+            <h3 className="font-medium">Specialties</h3>
+            {data.cv.specialties.map((specialty, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={specialty}
+                  onChange={(e) =>
+                    updateField("cv", (cv) => {
+                      const specialties = [...cv.specialties];
+                      specialties[index] = e.target.value;
+                      return { ...cv, specialties };
+                    })
+                  }
+                  className={inputClass}
+                />
                 <button
-                  onClick={() => removeCategory(category)}
-                  className="text-xs text-red-400 hover:text-red-300"
-                  title="Remove category"
+                  onClick={() =>
+                    updateField("cv", (cv) => ({
+                      ...cv,
+                      specialties: cv.specialties.filter((_, i) => i !== index),
+                    }))
+                  }
+                  className="text-red-400 hover:text-red-300 text-sm px-1"
+                  title="Remove"
                 >
                   ✕
                 </button>
               </div>
+            ))}
+            <button
+              onClick={() =>
+                updateField("cv", (cv) => ({
+                  ...cv,
+                  specialties: [...cv.specialties, ""],
+                }))
+              }
+              className="text-xs text-accent hover:text-accent-hover transition-colors"
+            >
+              + Add Specialty
+            </button>
+          </div>
 
-              <div className="space-y-2">
-                {skills.map((skill, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 flex-wrap"
-                  >
-                    {/* Name */}
-                    <input
-                      type="text"
-                      value={skill.name}
-                      onChange={(e) =>
-                        updateSkill(category, i, "name", e.target.value)
-                      }
-                      placeholder="Skill name"
-                      className="flex-1 min-w-35 bg-background border border-border rounded px-2 py-1 text-sm"
-                    />
-
-                    {/* Proficiency */}
-                    <select
-                      value={skill.proficiency}
-                      onChange={(e) =>
-                        updateSkill(category, i, "proficiency", e.target.value)
-                      }
-                      aria-label="Proficiency"
-                      className="bg-background border border-border rounded px-2 py-1 text-sm"
-                    >
-                      {PROFICIENCY_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Preference */}
-                    <select
-                      value={skill.preference ?? "neutral"}
-                      onChange={(e) =>
-                        updateSkill(category, i, "preference", e.target.value)
-                      }
-                      aria-label="Preference"
-                      className="bg-background border border-border rounded px-2 py-1 text-sm"
-                    >
-                      {PREFERENCE_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Status */}
-                    <select
-                      value={skill.status ?? "active"}
-                      onChange={(e) =>
-                        updateSkill(category, i, "status", e.target.value)
-                      }
-                      aria-label="Status"
-                      className="bg-background border border-border rounded px-2 py-1 text-sm"
-                    >
-                      {STATUS_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Remove */}
-                    <button
-                      onClick={() => removeSkill(category, i)}
-                      className="text-red-400 hover:text-red-300 text-sm px-1"
-                      title="Remove skill"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => addSkill(category)}
-                className="mt-2 text-xs text-accent hover:text-accent-hover transition-colors"
-              >
-                + Add Skill
-              </button>
-            </div>
-          ))}
+          <div className="bg-surface border border-border rounded-lg p-4 space-y-2">
+            <h3 className="font-medium">Blog Page</h3>
+            <Field label="Blog Heading">
+              <input
+                type="text"
+                value={data.blog.heading}
+                onChange={(e) => updateField("blog", (blog) => ({ ...blog, heading: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Blog Description">
+              <input
+                type="text"
+                value={data.blog.description}
+                onChange={(e) => updateField("blog", (blog) => ({ ...blog, description: e.target.value }))}
+                className={inputClass}
+              />
+            </Field>
+          </div>
         </div>
+      )}
+
+      {/* ─── Skills Tab ────────────────────────────────────────── */}
+      {tab === "skills" && (
+        <>
+          <h2 className="text-lg font-semibold mb-6">Skills</h2>
+
+          <div className="space-y-8">
+            {Object.entries(data.cv.skills).map(([category, skills]) => (
+              <div
+                key={category}
+                className="bg-surface border border-border rounded-lg p-4"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-medium">{category}</h3>
+                  <button
+                    onClick={() => removeCategory(category)}
+                    className="text-xs text-red-400 hover:text-red-300"
+                    title="Remove category"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {skills.map((skill, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 flex-wrap"
+                    >
+                      <input
+                        type="text"
+                        value={skill.name}
+                        onChange={(e) =>
+                          updateSkill(category, i, "name", e.target.value)
+                        }
+                        placeholder="Skill name"
+                        className="flex-1 min-w-35 bg-background border border-border rounded px-2 py-1 text-sm"
+                      />
+
+                      <select
+                        value={skill.proficiency}
+                        onChange={(e) =>
+                          updateSkill(category, i, "proficiency", e.target.value)
+                        }
+                        aria-label="Proficiency"
+                        className="bg-background border border-border rounded px-2 py-1 text-sm"
+                      >
+                        {PROFICIENCY_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        value={skill.preference ?? "neutral"}
+                        onChange={(e) =>
+                          updateSkill(category, i, "preference", e.target.value)
+                        }
+                        aria-label="Preference"
+                        className="bg-background border border-border rounded px-2 py-1 text-sm"
+                      >
+                        {PREFERENCE_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        value={skill.status ?? "active"}
+                        onChange={(e) =>
+                          updateSkill(category, i, "status", e.target.value)
+                        }
+                        aria-label="Status"
+                        className="bg-background border border-border rounded px-2 py-1 text-sm"
+                      >
+                        {STATUS_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        onClick={() => removeSkill(category, i)}
+                        className="text-red-400 hover:text-red-300 text-sm px-1"
+                        title="Remove skill"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => addSkill(category)}
+                  className="mt-2 text-xs text-accent hover:text-accent-hover transition-colors"
+                >
+                  + Add Skill
+                </button>
+              </div>
+            ))}
+          </div>
 
           <button
             onClick={addCategory}
@@ -553,73 +964,71 @@ export default function AdminPage() {
               </h3>
 
               {newPost && (
-                <div>
-                  <label className="block text-xs text-muted mb-1">Slug (filename)</label>
+                <Field label="Slug (filename)">
                   <input
                     type="text"
                     value={editingPost.slug}
                     onChange={(e) => updateEditingPost("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
                     placeholder="my-post-slug"
-                    className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                    className={inputClass}
                   />
-                </div>
+                </Field>
               )}
 
-              <div>
-                <label className="block text-xs text-muted mb-1">Title</label>
+              <Field label="Title">
                 <input
                   type="text"
                   value={editingPost.title}
                   onChange={(e) => updateEditingPost("title", e.target.value)}
                   placeholder="Post title"
-                  className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                  className={inputClass}
                 />
-              </div>
+              </Field>
 
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-xs text-muted mb-1">Date</label>
-                  <input
-                    type="date"
-                    value={editingPost.date}
-                    onChange={(e) => updateEditingPost("date", e.target.value)}
-                    title="Post date"
-                    className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
-                  />
+                  <Field label="Date">
+                    <input
+                      type="date"
+                      value={editingPost.date}
+                      onChange={(e) => updateEditingPost("date", e.target.value)}
+                      title="Post date"
+                      className={inputClass}
+                    />
+                  </Field>
                 </div>
                 <div className="flex-1">
-                  <label className="block text-xs text-muted mb-1">Tags (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={editingPost.tags.join(", ")}
-                    onChange={(e) => updateEditingPost("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
-                    placeholder="tag1, tag2"
-                    className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
-                  />
+                  <Field label="Tags (comma-separated)">
+                    <input
+                      type="text"
+                      value={editingPost.tags.join(", ")}
+                      onChange={(e) => updateEditingPost("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
+                      placeholder="tag1, tag2"
+                      className={inputClass}
+                    />
+                  </Field>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs text-muted mb-1">Excerpt</label>
+              <Field label="Excerpt">
                 <input
                   type="text"
                   value={editingPost.excerpt}
                   onChange={(e) => updateEditingPost("excerpt", e.target.value)}
                   placeholder="Short description"
-                  className="w-full bg-background border border-border rounded px-2 py-1 text-sm"
+                  className={inputClass}
                 />
-              </div>
+              </Field>
 
-              <div>
-                <label className="block text-xs text-muted mb-1">Content (Markdown)</label>
+              <Field label="Content (Markdown)">
                 <textarea
                   value={editingPost.content}
                   onChange={(e) => updateEditingPost("content", e.target.value)}
                   placeholder="Write your post in Markdown..."
                   rows={16}
-                  className="w-full bg-background border border-border rounded px-3 py-2 text-sm font-mono resize-y"
+                  className={inputClass + " font-mono resize-y"}
                 />
-              </div>
+              </Field>
 
               <div className="flex gap-2">
                 <button

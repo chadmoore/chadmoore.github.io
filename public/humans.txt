@@ -3,7 +3,7 @@ Developer: Chad Moore
 Contact: chad@chadmoore.info
 LinkedIn: www.linkedin.com/in/chad-moore-info
 GitHub: github.com/chadmoore
-Location: Earth (mostly)
+Location: Earth (generally speaking)
 
 /* SITE */
 Built with: Next.js, React, Tailwind CSS, TypeScript
@@ -13,5 +13,5 @@ Last updated: 2025
 
 /* THANKS */
 Coffee: for existing
-Stack Overflow: for the weird edge cases
+Stack Overflow: the OG info gauntlet, RIP old friend
 You: for reading this file — seriously, who checks humans.txt?
