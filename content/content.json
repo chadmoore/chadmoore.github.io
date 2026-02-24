@@ -14,12 +14,12 @@
       "linkedin": "https://www.linkedin.com/in/chad-moore-info"
     },
     "navOrder": [
+      "skills",
       "home",
       "about",
-      "cv",
-      "projects",
       "blog",
-      "skills"
+      "cv",
+      "projects"
     ]
   },
   "home": {
