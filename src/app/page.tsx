@@ -19,7 +19,6 @@
  * // than writing most of the blog posts. ✨Priorities✨
  */
 import Link from "next/link";
-import Image from "next/image";
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/siteConfig";
 import { formatPostDate } from "@/lib/dates";
@@ -41,54 +40,42 @@ export default function Home() {
     <div className="max-w-5xl mx-auto px-6">
       {/* Hero */}
       <section className="py-24 md:py-32">
-        <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-8 md:gap-12">
-          <div>
-            <p className="text-accent font-mono text-sm mb-4">{content.home.greeting}</p>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
-              {siteConfig.name}
-            </h1>
-            <p className="text-xl md:text-2xl text-muted max-w-2xl mb-8">
-              {siteConfig.tagline}
-            </p>
-            <div className="flex gap-4">
-              {siteConfig.sections.projects && (
-                <Link
-                  href="/projects"
-                  className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors"
-                >
-                  View Projects
-                </Link>
-              )}
-              {siteConfig.sections.about && (
-                <Link
-                  href="/about"
-                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    siteConfig.sections.projects
-                      ? "border border-border hover:border-accent text-muted hover:text-accent"
-                      : "bg-accent hover:bg-accent-hover text-white"
-                  }`}
-                >
-                  About Me
-                </Link>
-              )}
-              {siteConfig.sections.cv && (
-                <Link
-                  href="/cv"
-                  className="inline-flex items-center gap-2 border border-border hover:border-accent text-muted hover:text-accent px-6 py-3 rounded-lg text-sm font-medium transition-colors"
-                >
-                  View CV
-                </Link>
-              )}
-            </div>
-          </div>
-          <Image
-            src="/avatar.png"
-            alt={siteConfig.name}
-            width={200}
-            height={200}
-            priority
-            className="rounded-full w-36 h-36 md:w-48 md:h-48 shrink-0"
-          />
+        <p className="text-accent font-mono text-sm mb-4">{content.home.greeting}</p>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
+          {siteConfig.name}
+        </h1>
+        <p className="text-xl md:text-2xl text-muted max-w-2xl mb-8">
+          {siteConfig.tagline}
+        </p>
+        <div className="flex gap-4">
+          {siteConfig.sections.projects && (
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors"
+            >
+              View Projects
+            </Link>
+          )}
+          {siteConfig.sections.about && (
+            <Link
+              href="/about"
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors ${
+                siteConfig.sections.projects
+                  ? "border border-border hover:border-accent text-muted hover:text-accent"
+                  : "bg-accent hover:bg-accent-hover text-white"
+              }`}
+            >
+              About Me
+            </Link>
+          )}
+          {siteConfig.sections.cv && (
+            <Link
+              href="/cv"
+              className="inline-flex items-center gap-2 border border-border hover:border-accent text-muted hover:text-accent px-6 py-3 rounded-lg text-sm font-medium transition-colors"
+            >
+              View CV
+            </Link>
+          )}
         </div>
       </section>
 
