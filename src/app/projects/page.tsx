@@ -11,10 +11,7 @@
  */
 import type { Metadata } from "next";
 import ProjectsList from "@/components/ProjectsList";
-import rawContent from "@/../content/content.json";
-import type { ContentData } from "@/lib/contentData";
-
-const content = rawContent as unknown as ContentData;
+import { content } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `${content.projects.heading} | ${content.site.name}`,

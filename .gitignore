@@ -42,3 +42,4 @@ yarn-error.log*
 # input data (LinkedIn exports, etc.)
 /input
 next-env.d.ts
+CODEBASE_REVIEW.*

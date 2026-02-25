@@ -111,7 +111,7 @@ describe("content.json experience (from LinkedIn Positions)", () => {
     expect(qlik.title).toBe("Senior Implementation Consultant");
     expect(qlik.startDate).toBe("2020-03");
     expect(qlik.endDate).toBe("2026-02");
-    expect(qlik.location).toBe("Northampton, MA");
+    expect(qlik.location).toBe("");
   });
 
   it("has RCN as the second position", () => {

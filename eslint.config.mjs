@@ -16,9 +16,6 @@ import sonarjs from "eslint-plugin-sonarjs";
 //                               because Tailwind utilities are a design system,
 //                               not magic strings.
 //
-// Exempt file: src/app/admin/page.tsx — intentionally monolithic tabbed form.
-// Raising its complexity would require breaking it into separate tab modules
-// (a valid refactor but out of scope for the current iteration).
 //
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -68,18 +65,6 @@ const eslintConfig = defineConfig([
     },
   },
 
-  // ── Admin page exemption ──────────────────────────────────────────────────
-  // AdminPage is a single-file tabbed form editor. Its complexity is
-  // structural (one render function, many conditional form sections),
-  // not algorithmic. Splitting it into per-tab components is a valid
-  // future refactor; for now this exemption is intentional.
-  {
-    files: ["src/app/admin/page.tsx"],
-    rules: {
-      "complexity":                   "off",
-      "sonarjs/cognitive-complexity": "off",
-    },
-  },
 ]);
 
 export default eslintConfig;

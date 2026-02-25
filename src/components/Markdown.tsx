@@ -74,6 +74,7 @@ export default function Markdown({ content }: MarkdownProps) {
 
   return (
     <div
+      role="article"
       className="prose-custom"
       dangerouslySetInnerHTML={{ __html: html }}
     />

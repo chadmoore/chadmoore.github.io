@@ -196,4 +196,44 @@ describe("CVExperience", () => {
     expect(headings[0]).toHaveTextContent("Senior Engineer");
     expect(headings[1]).toHaveTextContent("Junior Developer");
   });
+
+  // ── Collapse ──────────────────────────────────────────────────────
+
+  it("all jobs start expanded", () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} />);
+    const dots = screen.getAllByRole("button", { name: /collapse job details/i });
+    expect(dots).toHaveLength(2);
+  });
+
+  it("clicking the dot collapses a job's details", async () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} />);
+    const [firstDot] = screen.getAllByRole("button", { name: /collapse job details/i });
+    await user.click(firstDot);
+    expect(screen.queryByText("Built React dashboard")).not.toBeInTheDocument();
+  });
+
+  it("clicking the dot a second time re-expands the job", async () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} />);
+    const [firstDot] = screen.getAllByRole("button", { name: /collapse job details/i });
+    await user.click(firstDot);
+    const expandBtn = screen.getByRole("button", { name: /expand job details/i });
+    await user.click(expandBtn);
+    expect(screen.getByText("Built React dashboard")).toBeInTheDocument();
+  });
+
+  it("collapsing one job does not affect the other", async () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} />);
+    const dots = screen.getAllByRole("button", { name: /collapse job details/i });
+    await user.click(dots[0]);
+    // OldCorp highlights should still be visible
+    expect(screen.getByText("Maintained jQuery frontend")).toBeInTheDocument();
+  });
+
+  it("job title and company remain visible when collapsed", async () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} />);
+    const [firstDot] = screen.getAllByRole("button", { name: /collapse job details/i });
+    await user.click(firstDot);
+    expect(screen.getByText("Senior Engineer")).toBeInTheDocument();
+    expect(screen.getByText(/AcmeCorp/)).toBeInTheDocument();
+  });
 });

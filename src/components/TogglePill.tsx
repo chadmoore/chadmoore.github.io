@@ -20,7 +20,7 @@ export default function TogglePill({ label, active, onClick }: TogglePillProps) 
     <button
       type="button"
       onClick={onClick}
-      aria-pressed={active ? "true" : "false"}
+      aria-pressed={active}
       className={`px-2.5 py-0.5 rounded-full border text-xs transition-colors ${
         active
           ? "border-accent/60 text-accent bg-accent/10"

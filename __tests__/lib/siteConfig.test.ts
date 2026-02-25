@@ -14,6 +14,11 @@ describe("siteConfig", () => {
     expect(siteConfig.tagline.length).toBeGreaterThan(0);
   });
 
+  it("exports a siteUrl pointing to the canonical domain", () => {
+    expect(typeof siteConfig.siteUrl).toBe("string");
+    expect(siteConfig.siteUrl).toMatch(/^https?:\/\//);
+  });
+
   it("has a sections object with boolean values", () => {
     expect(siteConfig.sections).toBeDefined();
     const keys = Object.keys(siteConfig.sections);
@@ -27,13 +32,10 @@ describe("siteConfig", () => {
     }
   });
 
-  it("has consistent current values", () => {
-    // These reflect the intended production config
-    expect(siteConfig.sections.about).toBe(true);
-    expect(siteConfig.sections.projects).toBe(true);
-    expect(siteConfig.sections.blog).toBe(true);
-    expect(siteConfig.sections.cv).toBe(true);
-  });
+  // Note: specific section on/off values are NOT tested here because they are
+  // user-editable admin panel decisions — not invariants of the code itself.
+  // Component tests (Header, Home) mock siteConfig to test conditional
+  // rendering behavior independently of what content.json currently says.
 
   it("has the expected shape", () => {
     // siteConfig is derived from content.json, verify its shape is complete

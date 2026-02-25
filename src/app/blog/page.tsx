@@ -23,10 +23,7 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import DevEditLink from "@/components/DevEditLink";
 import { formatPostDate } from "@/lib/dates";
-import rawContent from "@/../content/content.json";
-import type { ContentData } from "@/lib/contentData";
-
-const content = rawContent as unknown as ContentData;
+import { content } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `${content.blog.heading} | ${content.site.name}`,
@@ -39,10 +36,21 @@ export default function BlogPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
       <div className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-          {content.blog.heading}
-        </h1>
-        <p className="text-muted">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+            {content.blog.heading}
+          </h1>
+          {process.env.NODE_ENV !== "production" && (
+            <a
+              href="/admin?tab=blog&new=1"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-accent hover:text-accent-hover transition-colors border border-accent/30 rounded-lg hover:bg-accent/5"
+              title="New post (dev only)"
+            >
+              + Post
+            </a>
+          )}
+        </div>
+        <p className="text-muted mt-4">
           {content.blog.description}
         </p>
       </div>
@@ -54,36 +62,35 @@ export default function BlogPage() {
       ) : (
         <div className="space-y-1">
           {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="group block py-6 border-b border-border hover:bg-surface-hover -mx-4 px-4 rounded-lg transition-colors"
-            >
-              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-2">
-                <div className="flex items-baseline gap-2">
+            <div key={post.slug} className="group py-6 border-b border-border hover:bg-surface-hover -mx-4 px-4 rounded-lg transition-colors">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="block"
+              >
+                <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-2">
                   <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
                     {post.title}
                   </h2>
-                  <DevEditLink slug={post.slug} />
+                  <time className="text-sm text-muted shrink-0 font-mono">
+                    {formatPostDate(post.date)}
+                  </time>
                 </div>
-                <time className="text-sm text-muted shrink-0 font-mono">
-                  {formatPostDate(post.date)}
-                </time>
-              </div>
-              <p className="text-sm text-muted line-clamp-2">{post.excerpt}</p>
-              {post.tags.length > 0 && (
-                <div className="flex gap-2 mt-3">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs bg-accent/10 text-accent px-2.5 py-0.5 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Link>
+                <p className="text-sm text-muted line-clamp-2">{post.excerpt}</p>
+                {post.tags.length > 0 && (
+                  <div className="flex gap-2 mt-3">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs bg-accent/10 text-accent px-2.5 py-0.5 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </Link>
+              <DevEditLink slug={post.slug} />
+            </div>
           ))}
         </div>
       )}

@@ -11,7 +11,7 @@ jest.mock("gray-matter");
 
 import fs from "fs";
 import matter from "gray-matter";
-import { getAllPosts, getPostBySlug, resolveWikiLinks, type BlogPost } from "@/lib/blog";
+import { getAllPosts, getPostBySlug, resolveWikiLinks } from "@/lib/blog";
 
 const mockedFs = fs as jest.Mocked<typeof fs>;
 const mockedMatter = matter as jest.MockedFunction<typeof matter>;

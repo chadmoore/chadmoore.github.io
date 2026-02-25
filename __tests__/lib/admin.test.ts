@@ -121,7 +121,7 @@ describe("listBlogPosts", () => {
       "new.md" as unknown as ReturnType<typeof fs.readdirSync>[number],
     ]);
     mockedFs.readFileSync.mockReturnValue("frontmatter");
-    mockedMatter.mockImplementation((input) => {
+    mockedMatter.mockImplementation((_input) => {
       // Both calls return the same structure; we differentiate by call order
       return {
         data: { title: "Post", date: "2026-01-01", excerpt: "desc", tags: ["a"] },

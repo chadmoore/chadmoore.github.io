@@ -126,7 +126,7 @@ ${bulletTexts.map((bullet, i) => `${i}. ${bullet}`).join("\n")}`;
       // Strip markdown fences if present (just in case)
       const cleaned = content.replace(/^```json?\n?/i, "").replace(/\n?```$/i, "");
       taggedSkills = JSON.parse(cleaned);
-    } catch (e) {
+    } catch {
       console.error(`  ⚠ Failed to parse response for ${job.company}. Skipping.`);
       console.error(`  Raw: ${content.slice(0, 200)}`);
       continue;

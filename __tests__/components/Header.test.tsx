@@ -5,6 +5,22 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import Header from "@/components/Header";
 import { siteConfig } from "@/lib/siteConfig";
 
+// Isolate component behavior tests from content.json changes:
+// mock siteConfig with projects enabled regardless of what content.json says.
+// Only sections.projects is overridden; all other values (name, tagline,
+// navOrder) are inherited from the real module so they stay in sync.
+jest.mock("@/lib/siteConfig", () => {
+  const actual =
+    jest.requireActual<typeof import("@/lib/siteConfig")>("@/lib/siteConfig");
+  return {
+    ...actual,
+    siteConfig: {
+      ...actual.siteConfig,
+      sections: { ...actual.siteConfig.sections, projects: true },
+    },
+  };
+});
+
 // Configurable pathname mock for testing active states
 let currentPathname = "/";
 jest.mock("next/navigation", () => ({
@@ -74,8 +90,6 @@ describe("Header", () => {
     // If a section were disabled, its nav link would not render.
     render(<Header />);
     // Verify the count matches expected enabled links (Home + 4 sections = 5 per nav × 2 navs = 10, but desktop+mobile)
-    const allLinks = screen.getAllByRole("link");
-    // "Chad Moore" home brand + 5 nav links desktop + 5 nav links would appear in mobile when open
     // Just verify Projects IS present since it's now enabled
     expect(screen.getAllByText("Projects").length).toBeGreaterThanOrEqual(1);
   });

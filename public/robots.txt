@@ -1,9 +1,0 @@
-# *beep boop* Welcome, robot friend!
-# You're allowed everywhere. We have nothing to hide.
-# (Except the easter eggs. But you'll find those on your own.)
-
-User-agent: *
-Allow: /
-
-# Humans are welcome too: /humans.txt
-# Source code: https://github.com/chadmoore/chadmoore.github.io

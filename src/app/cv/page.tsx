@@ -19,11 +19,8 @@
  * // You're welcome, ATS robots.
  */
 import type { Metadata } from "next";
-import rawContent from "@/../content/content.json";
-import type { ContentData } from "@/lib/contentData";
+import { content } from "@/lib/content";
 import CVExperience from "@/components/CVExperience";
-
-const content = rawContent as unknown as ContentData;
 const cvData = content.cv;
 const siteData = content.site;
 

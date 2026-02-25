@@ -13,11 +13,8 @@
  * // about page, we should probably be friends. chad@chadmoore.info
  */
 import type { Metadata } from "next";
-import rawContent from "@/../content/content.json";
-import type { ContentData } from "@/lib/contentData";
+import { content } from "@/lib/content";
 import SkillsGrid from "@/components/SkillsGrid";
-
-const content = rawContent as unknown as ContentData;
 
 export const metadata: Metadata = {
   title: `${content.about.heading} | ${content.site.name}`,

@@ -8,10 +8,7 @@
  * If you're reading this in 2030 and the site still says the
  * right year, you're welcome.
  */
-import rawContent from "@/../content/content.json";
-import type { ContentData } from "@/lib/contentData";
-
-const content = rawContent as unknown as ContentData;
+import { content } from "@/lib/content";
 
 export default function Footer() {
   return (

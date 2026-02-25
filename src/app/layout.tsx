@@ -18,6 +18,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { siteConfig } from "@/lib/siteConfig";
+import { content } from "@/lib/content";
 
 /* Load Geist typeface family — Vercel's open-source font.
  * Using next/font guarantees self-hosting, font-display: swap,
@@ -33,9 +35,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chad Moore",
-  description: "Creative Data Driven Full Stack Software",
-  authors: [{ name: "Chad Moore", url: "https://chadmoore.info" }],
+  metadataBase: new URL(siteConfig.siteUrl),
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.tagline,
+  authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.siteUrl,
+    siteName: siteConfig.name,
+    title: siteConfig.name,
+    description: siteConfig.tagline,
+  },
+  twitter: {
+    card: "summary",
+    title: siteConfig.name,
+    description: siteConfig.tagline,
+  },
   other: {
     // Point to our humans.txt for the 0.01% of people who care
     "link:author": "/humans.txt",
@@ -57,6 +76,33 @@ export default function RootLayout({
         If you found this, say hi: chad@chadmoore.info
       */}
       <head>
+        {/* Structured data — helps search engines understand who this is */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: content.site.name,
+              url: siteConfig.siteUrl,
+              email: content.site.links.email,
+              jobTitle: content.cv.headline,
+              sameAs: [
+                content.site.links.github,
+                content.site.links.linkedin,
+              ],
+            }),
+          }}
+        />
+        {/* Cloudflare Web Analytics — privacy-first, no cookies.
+           Only loads in production to avoid CORS errors on localhost. */}
+        {process.env.NODE_ENV === "production" && siteConfig.cloudflareAnalyticsToken && (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({ token: siteConfig.cloudflareAnalyticsToken })}
+          />
+        )}
         {/* Console easter egg — because every good site needs one */}
         <script
           dangerouslySetInnerHTML={{

@@ -51,6 +51,8 @@ export type SectionKey = "about" | "projects" | "blog" | "cv";
 export interface SiteSection {
   name: string;
   tagline: string;
+  siteUrl?: string;
+  cloudflareAnalyticsToken?: string;
   sections: Record<SectionKey, boolean>;
   links: { email: string; github: string; linkedin: string };
   navOrder: string[];

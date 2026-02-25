@@ -22,11 +22,8 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/siteConfig";
 import { formatPostDate } from "@/lib/dates";
-import rawContent from "@/../content/content.json";
-import type { ContentData } from "@/lib/contentData";
+import { content } from "@/lib/content";
 import { ArrowLeftRight, Shield, Building2 } from "lucide-react";
-
-const content = rawContent as unknown as ContentData;
 
 /** Map icon identifiers from content.json to Lucide icon components. */
 const featureIcons: Record<string, React.ReactNode> = {

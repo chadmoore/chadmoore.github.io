@@ -23,6 +23,7 @@ import { ChevronLeft } from "lucide-react";
 import Markdown from "@/components/Markdown";
 import DevEditLink from "@/components/DevEditLink";
 import { formatPostDate } from "@/lib/dates";
+import { siteConfig } from "@/lib/siteConfig";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -37,9 +38,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return {};
+  const title = `${post.title} | ${siteConfig.name}`;
+  const postUrl = `${siteConfig.siteUrl}/blog/${slug}`;
   return {
-    title: `${post.title} | Chad Moore`,
+    title,
     description: post.excerpt,
+    openGraph: {
+      type: "article",
+      url: postUrl,
+      title,
+      description: post.excerpt,
+      publishedTime: post.date,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description: post.excerpt,
+    },
   };
 }
 

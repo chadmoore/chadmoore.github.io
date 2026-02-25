@@ -22,6 +22,20 @@ jest.mock("next/link", () => {
   };
 });
 
+// Isolate component behavior tests from content.json changes:
+// mock siteConfig with projects enabled regardless of what content.json says.
+jest.mock("@/lib/siteConfig", () => {
+  const actual =
+    jest.requireActual<typeof import("@/lib/siteConfig")>("@/lib/siteConfig");
+  return {
+    ...actual,
+    siteConfig: {
+      ...actual.siteConfig,
+      sections: { ...actual.siteConfig.sections, projects: true },
+    },
+  };
+});
+
 // Mock the blog module to avoid filesystem access
 jest.mock("@/lib/blog", () => ({
   getAllPosts: () => [

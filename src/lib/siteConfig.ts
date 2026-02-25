@@ -15,16 +15,16 @@
  * // TODO: add a "uses" page for the /uses crowd
  * // TODO: add dark/light theme toggle (currently dark-only because taste)
  */
-import rawContent from "@/../content/content.json";
-import type { ContentData, SectionKey } from "@/lib/contentData";
-
-const content = rawContent as unknown as ContentData;
+import { content } from "@/lib/content";
+import type { SectionKey } from "@/lib/contentData";
 
 const DEFAULT_NAV_ORDER = ["home", "about", "projects", "blog", "cv"];
 
 export const siteConfig = {
   name: content.site.name,
   tagline: content.site.tagline,
+  siteUrl: content.site.siteUrl ?? "https://chadmoore.info",
+  cloudflareAnalyticsToken: content.site.cloudflareAnalyticsToken,
   sections: content.site.sections,
   navOrder: content.site.navOrder ?? DEFAULT_NAV_ORDER,
 };

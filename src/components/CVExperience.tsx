@@ -95,6 +95,15 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
     new Set(["active", "legacy"]),
   );
   const [sortMode, setSortMode] = useState<SortMode>("date");
+  const [collapsedJobs, setCollapsedJobs] = useState<Set<string>>(new Set());
+
+  const toggleCollapsed = useCallback((key: string) => {
+    setCollapsedJobs((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) { next.delete(key); } else { next.add(key); }
+      return next;
+    });
+  }, []);
 
   const filters: SkillFilters = useMemo(
     () => ({ proficiency, preference, status }),
@@ -190,57 +199,76 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
 
       {/* ── Experience entries ──────────────────────────────────── */}
       <div className="space-y-8">
-        {processed.map(({ job, visibleHighlights, matchCount }, i) => {
+        {processed.map(({ job, visibleHighlights, matchCount }) => {
+          const jobKey = `${job.company}-${job.startDate}`;
+          const isCollapsed = collapsedJobs.has(jobKey);
           // Dim entries where all highlights were filtered out (but some exist)
           const fullyFiltered = job.highlights.length > 0 && matchCount === 0;
           return (
             <div
-              key={i}
+              key={jobKey}
               className={`relative pl-6 border-l-2 transition-colors ${
                 fullyFiltered
                   ? "border-border/30 opacity-40"
                   : "border-border hover:border-accent/50"
               }`}
             >
-              <div className="absolute -left-1.75 top-1 w-3 h-3 rounded-full bg-surface border-2 border-border" />
+              {/* Collapse toggle — full-height strip covering the bar + dot */}
+              <button
+                type="button"
+                aria-label={isCollapsed ? "Expand job details" : "Collapse job details"}
+                aria-expanded={!isCollapsed}
+                onClick={() => toggleCollapsed(jobKey)}
+                className="absolute -left-2 inset-y-0 w-4 flex items-start pt-0.5 cursor-pointer group"
+              >
+                <span className={`w-4 h-4 rounded-full border-2 transition-colors ${
+                  isCollapsed
+                    ? "bg-accent/40 border-accent"
+                    : "bg-surface border-border group-hover:border-accent group-hover:bg-accent/10"
+                }`} />
+              </button>
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-1">
                 <h3 className="font-semibold">{job.title}</h3>
                 <span className="text-xs text-muted font-mono shrink-0">
                   {formatDateRange(job.startDate, job.endDate)}
                 </span>
               </div>
-              <p className="text-sm text-accent mb-2">
+              <p className={`text-sm text-accent ${isCollapsed ? "" : "mb-2"}`}>
                 {job.company}
                 {job.location && (
                   <span className="text-muted"> · {job.location}</span>
                 )}
               </p>
-              {job.description && (
-                <p className="text-sm text-muted mb-2">{job.description}</p>
-              )}
-              {visibleHighlights.length > 0 && (
-                <ul className="space-y-3">
-                  {visibleHighlights.map((highlight, j) => (
-                    <li key={j} className="text-sm text-muted">
-                      <div className="flex gap-2">
-                        <span className="text-accent mt-1 shrink-0">•</span>
-                        <span>{highlight.text}</span>
-                      </div>
-                      {highlight.skills.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
-                          {highlight.skills.map((skill) => (
-                            <span
-                              key={skill}
-                              className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+              {!isCollapsed && (
+                <>
+                  {job.description && (
+                    <p className="text-sm text-muted mb-2">{job.description}</p>
+                  )}
+                  {visibleHighlights.length > 0 && (
+                    <ul className="space-y-3">
+                      {visibleHighlights.map((highlight, j) => (
+                        <li key={j} className="text-sm text-muted">
+                          <div className="flex gap-2">
+                            <span className="text-accent mt-1 shrink-0">•</span>
+                            <span>{highlight.text}</span>
+                          </div>
+                          {highlight.skills.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 mt-1.5 ml-5">
+                              {highlight.skills.map((skill) => (
+                                <span
+                                  key={skill}
+                                  className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
               )}
             </div>
           );

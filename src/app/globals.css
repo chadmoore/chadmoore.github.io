@@ -75,4 +75,13 @@ body {
   color: white;
 }
 
+/* Finite pulse: opacity throb ×3, then hold solid. */
+@keyframes pulse-3 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.animate-pulse-3 {
+  animation: pulse-3 0.8s ease-in-out 3;
+}
+
 /* P.S. — No !important was harmed in the making of this stylesheet. */
