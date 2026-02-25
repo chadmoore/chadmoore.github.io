@@ -13,6 +13,7 @@
  * // about page, we should probably be friends. chad@chadmoore.info
  */
 import type { Metadata } from "next";
+import Image from "next/image";
 import { content } from "@/lib/content";
 import SkillsGrid from "@/components/SkillsGrid";
 
@@ -25,9 +26,19 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-8">
-        {content.about.heading}
-      </h1>
+      <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 mb-12">
+        <Image
+          src="/avatar.png"
+          alt={content.site.name}
+          width={160}
+          height={160}
+          priority
+          className="rounded-full w-28 h-28 sm:w-36 sm:h-36"
+        />
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+          {content.about.heading}
+        </h1>
+      </div>
 
       <div className="prose prose-invert max-w-none space-y-6 text-muted leading-relaxed">
         {content.about.intro.map((paragraph, index) => (
