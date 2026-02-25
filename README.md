@@ -1,6 +1,6 @@
 # chadmoore.info
 
-Personal homepage built with Next.js, React, and Tailwind CSS. Deployed to GitHub Pages as a fully static site — no server, no database, no CMS vendor.
+Personal homepage built with Next.js, React, and Tailwind CSS. Deployed to GitHub Pages as a fully static site — no server, no database, no CMS needed.
 
 **Live:** [https://chadmoore.info](https://chadmoore.info)
 
