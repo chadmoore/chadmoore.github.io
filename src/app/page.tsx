@@ -87,7 +87,7 @@ export default function Home() {
               <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
                 {featureIcons[card.icon] ?? featureIcons.integration}
               </div>
-              <h3 className="font-semibold">{card.title}</h3>
+              <h2 className="font-semibold text-base">{card.title}</h2>
               <p className="text-sm text-muted">{card.description}</p>
             </div>
           ))}
