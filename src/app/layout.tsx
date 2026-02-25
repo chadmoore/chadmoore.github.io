@@ -106,20 +106,7 @@ export default function RootLayout({
         {/* Console easter egg — because every good site needs one */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              console.log(
-                "%c👋 Hey there, fellow developer!",
-                "font-size:16px;font-weight:bold;color:#3b82f6"
-              );
-              console.log(
-                "%cCurious about how this site is built?\\nNext.js • Tailwind CSS • TypeScript • Static Export\\n\\nSource: https://github.com/chadmoore/chadmoore.github.io",
-                "font-size:12px;color:#a3a3a3"
-              );
-              console.log(
-                "%cP.S. — If you found a bug, it's a feature. If you found a feature, it's intentional. Probably.",
-                "font-size:11px;color:#525252;font-style:italic"
-              );
-            `,
+            __html: `(function(){var d=function(a){return a.map(function(c){return String.fromCodePoint(c)}).join("")};var m=[${Array.from("%c👋 Hey there, fellow developer!").map(c => c.codePointAt(0)).join(",")}];var s1=[${Array.from("font-size:16px;font-weight:bold;color:#3b82f6").map(c => c.codePointAt(0)).join(",")}];var m2=[${Array.from("%cCurious about how this site is built?\nNext.js • Tailwind CSS • TypeScript • Static Export\n\nSource: https://github.com/chadmoore/chadmoore.github.io").map(c => c.codePointAt(0)).join(",")}];var s2=[${Array.from("font-size:12px;color:#a3a3a3").map(c => c.codePointAt(0)).join(",")}];var m3=[${Array.from("%cP.S. — If you found a bug, it's a feature. If you found a feature, it's intentional. Probably.").map(c => c.codePointAt(0)).join(",")}];var s3=[${Array.from("font-size:11px;color:#525252;font-style:italic").map(c => c.codePointAt(0)).join(",")}];console.log(d(m),d(s1));console.log(d(m2),d(s2));console.log(d(m3),d(s3))})();`,
           }}
         />
       </head>
