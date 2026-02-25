@@ -110,7 +110,7 @@ Pushes to `main` auto-deploy via GitHub Actions to GitHub Pages. The workflow de
 Jest + React Testing Library with 289 tests across 24 suites mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link`, `next/navigation`, and `@/lib/siteConfig` mocked in component tests. `siteConfig` is mocked via `jest.requireActual` so component behavior tests stay isolated from admin-panel content changes.
 
 | Suite | Description |
-|---|---|
+| --- | --- |
 | `app/` | Page-level smoke tests (7 suites) |
 | `components/` | `DevEditLink`, `Footer`, `Header`, `Markdown`, `ProjectsList`, `SkillsGrid`, `TogglePill` |
 | `content/` | CV JSON data shape |
@@ -121,7 +121,7 @@ Jest + React Testing Library with 289 tests across 24 suites mirroring the `src/
 `npm run lint:quality` runs ESLint with [eslint-plugin-sonarjs](https://github.com/SonarSource/SonarJS) and enforces the following thresholds (zero warnings allowed):
 
 | Rule | Threshold |
-|---|---|
+| --- | --- |
 | Cyclomatic complexity | ≤ 15 |
 | Cognitive complexity | ≤ 15 |
 | Nesting depth | ≤ 4 |
