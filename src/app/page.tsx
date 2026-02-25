@@ -84,7 +84,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-8">
           {content.home.featureCards.map((card) => (
             <div key={card.title} className="space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+              <div className="w-10 h-10 rounded-lg bg-accent/8 flex items-center justify-center text-accent">
                 {featureIcons[card.icon] ?? featureIcons.integration}
               </div>
               <h2 className="font-semibold text-base">{card.title}</h2>

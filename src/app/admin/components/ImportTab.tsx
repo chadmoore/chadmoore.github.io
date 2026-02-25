@@ -45,7 +45,7 @@ export function ImportTab({
             accept=".zip"
             aria-label="LinkedIn export zip"
             onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm text-muted file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:bg-accent/10 file:text-accent hover:file:bg-accent/20 cursor-pointer"
+            className="block w-full text-sm text-muted file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:bg-accent/8 file:text-accent hover:file:bg-accent/20 cursor-pointer"
           />
         </div>
 

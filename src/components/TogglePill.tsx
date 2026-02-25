@@ -23,7 +23,7 @@ export default function TogglePill({ label, active, onClick }: TogglePillProps) 
       aria-pressed={active}
       className={`px-2.5 py-0.5 rounded-full border text-xs transition-colors ${
         active
-          ? "border-accent/60 text-accent bg-accent/10"
+          ? "border-accent/60 text-accent bg-accent/8"
           : "border-border text-muted/40 bg-surface line-through hover:border-accent/30 hover:text-muted"
       }`}
     >

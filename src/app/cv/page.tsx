@@ -82,7 +82,7 @@ export default function CVPage() {
             {cvData.specialties.map((specialty) => (
               <span
                 key={specialty}
-                className="text-xs bg-accent/10 text-accent px-3 py-1 rounded-full"
+                className="text-xs bg-accent/8 text-accent px-3 py-1 rounded-full"
               >
                 {specialty}
               </span>

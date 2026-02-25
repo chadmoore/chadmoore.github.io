@@ -131,7 +131,7 @@ export default function SkillsGrid({ skills, showIcons = false }: SkillsGridProp
               onClick={() => setSortMode(mode)}
               className={`px-2.5 py-0.5 rounded-full border text-xs transition-colors capitalize ${
                 sortMode === mode
-                  ? "border-accent/60 text-accent bg-accent/10"
+                  ? "border-accent/60 text-accent bg-accent/8"
                   : "border-border text-muted bg-surface hover:border-accent/30"
               }`}
             >
