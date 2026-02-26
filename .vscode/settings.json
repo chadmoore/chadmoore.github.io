@@ -4,6 +4,7 @@
     "ConvertFrom-Json": true,
     "ForEach-Object": true,
     "ConvertTo-Json": true,
-    "git add": true
+    "git add": true,
+    "git push": true
   }
 }
