@@ -76,6 +76,8 @@ export default function RootLayout({
         If you found this, say hi: chad@chadmoore.info
       */}
       <head>
+        {/* Preload avatar so it's cached before the About page renders */}
+        <link rel="preload" href="/avatar.png" as="image" />
         {/* Structured data — helps search engines understand who this is */}
         <script
           type="application/ld+json"

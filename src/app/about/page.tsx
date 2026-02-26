@@ -33,7 +33,7 @@ export default function AboutPage() {
           width={160}
           height={160}
           priority
-          className="rounded-full w-28 h-28 sm:w-32 sm:h-32 mx-auto mb-6"
+          className="rounded-full w-28 h-28 sm:w-32 sm:h-32 mx-auto mb-6 animate-zoom-in-elastic"
         />
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-center">
           {content.about.heading}
