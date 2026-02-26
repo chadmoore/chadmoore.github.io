@@ -75,7 +75,7 @@ export function LighthouseTab() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/lighthouse");
+      const res = await fetch("/api/admin/lighthouse", { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       setData(json);
