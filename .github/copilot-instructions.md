@@ -75,8 +75,7 @@ Project-level guidance for all AI agents working in this codebase.
 - Thresholds: cyclomatic complexity ≤ 15, cognitive complexity ≤ 15, nesting depth ≤ 4.
 - Additional smell rules: no identical functions, no duplicated branches, no redundant boolean logic, no collapsible ifs.
 - Duplicate string literals (`.ts` files, threshold ≥ 4) are flagged as warnings — extract to a named constant.
-- The only override is `src/app/admin/page.tsx` (intentionally monolithic tabbed form — complexity exempted).
-- When a function exceeds cognitive complexity 15, refactor it by extracting named helper functions rather than adding an override.
+- There are no complexity exemptions. When a function exceeds cognitive complexity 15, refactor it by extracting named helper functions rather than adding an override.
 - `"use client"` components with Tailwind class strings are exempt from the no-duplicate-string rule (`.tsx` files excluded).
 
 ### Git & Workflow

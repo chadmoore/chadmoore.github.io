@@ -129,7 +129,7 @@ Jest + React Testing Library with 332 tests across 27 suites mirroring the `src/
 | Duplicate strings (`.ts` only) | < 4 occurrences |
 | Identical functions, duplicated branches | error |
 
-The sole exempt file is `src/app/admin/page.tsx`, which is an intentionally monolithic tabbed form.
+There are no exemptions — the admin panel is decomposed into focused hook and component modules (`src/app/admin/hooks/`, `src/app/admin/components/`), so no file requires a complexity override.
 
 ## Tech Stack
 
