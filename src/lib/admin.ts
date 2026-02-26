@@ -149,6 +149,11 @@ export async function publishChanges(message: string): Promise<string> {
   await regenerateCvPdf();
 
   const opts = { cwd: REPO_ROOT, encoding: "utf-8" as const };
+
+  // Pull remote changes first so our commit goes cleanly on top,
+  // avoiding a rebase conflict if remote has moved since last push.
+  execSync("git pull --rebase", opts);
+
   execSync("git add -A", opts);
 
   // If there's nothing to commit, skip
@@ -156,7 +161,6 @@ export async function publishChanges(message: string): Promise<string> {
   if (!status) return "no-changes";
 
   execSync(`git commit -m ${JSON.stringify(message)}`, opts);
-  execSync("git pull --rebase", opts);
   execSync("git push", opts);
 
   return execSync("git rev-parse --short HEAD", opts).trim();

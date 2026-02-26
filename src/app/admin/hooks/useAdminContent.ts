@@ -9,6 +9,7 @@ import type { ContentData } from "@/lib/contentData";
 export function useAdminContent() {
   const [data, setData] = useState<ContentData | null>(null);
   const lastSavedContent = useRef<string>("");
+  const deployTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [hasUnpublished, setHasUnpublished] = useState(false);
@@ -22,6 +23,13 @@ export function useAdminContent() {
         lastSavedContent.current = JSON.stringify(json);
       })
       .catch(() => setMessage("Failed to load content data. Is the dev server running?"));
+  }, []);
+
+  // Clear any in-flight deploy poll on unmount
+  useEffect(() => {
+    return () => {
+      if (deployTimerRef.current) clearTimeout(deployTimerRef.current);
+    };
   }, []);
 
   /** Type-safe deep setter for any content.json path. */
@@ -96,6 +104,71 @@ export function useAdminContent() {
     setMessage("");
   }, []);
 
+  const formatElapsed = useCallback((ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  }, []);
+
+  /**
+   * Poll /api/admin/deploy-status until the GitHub Actions workflow
+   * for `hash` completes (success or failure) or 5 minutes elapse.
+   * Keeps `publishing` true and ticks `publishMessage` with elapsed time.
+   *
+   * Polls immediately on first call, then waits POLL_INTERVAL_MS between retries
+   * so the UI reflects deploy completion as soon as possible.
+   */
+  const watchDeploy = useCallback(
+    (hash: string): Promise<void> => {
+      const TIMEOUT_MS = 5 * 60 * 1000;
+      const POLL_INTERVAL_MS = 6_000;
+      const startTime = Date.now();
+
+      setPublishMessage(`Deploying… 0:00`);
+
+      return new Promise<void>((resolve) => {
+        const poll = async () => {
+          const elapsed = Date.now() - startTime;
+
+          if (elapsed > TIMEOUT_MS) {
+            setPublishMessage("Deploy timed out — check GitHub Actions.");
+            resolve();
+            return;
+          }
+
+          setPublishMessage(`Deploying… ${formatElapsed(elapsed)}`);
+
+          try {
+            const res = await fetch(`/api/admin/deploy-status?sha=${hash}`);
+            if (!res.ok) {
+              setPublishMessage("Could not reach deploy status API.");
+              resolve();
+              return;
+            }
+            const { status } = (await res.json()) as { status: string };
+            if (status === "success") {
+              setPublishMessage(`Deployed! (${hash})`);
+              resolve();
+            } else if (status === "failure") {
+              setPublishMessage("Deploy failed — check GitHub Actions.");
+              resolve();
+            } else {
+              // "pending" → schedule next poll
+              deployTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS);
+            }
+          } catch {
+            // transient network error — retry after interval
+            deployTimerRef.current = setTimeout(poll, POLL_INTERVAL_MS);
+          }
+        };
+
+        poll(); // fire immediately; retries are scheduled by poll() itself
+      });
+    },
+    [formatElapsed],
+  );
+
   const publish = useCallback(async () => {
     setPublishing(true);
     setPublishMessage("");
@@ -105,20 +178,21 @@ export function useAdminContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: "Update content via admin" }),
       });
-      if (!res.ok) throw new Error("Publish failed");
-      const { hash } = await res.json();
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Publish failed");
+      const { hash } = json as { hash: string };
       if (hash === "no-changes") {
         setPublishMessage("Nothing to publish.");
       } else {
-        setPublishMessage(`Published (${hash})`);
         setHasUnpublished(false);
+        await watchDeploy(hash);
       }
-    } catch {
-      setPublishMessage("Publish failed.");
+    } catch (err) {
+      setPublishMessage(err instanceof Error ? err.message : "Publish failed.");
     } finally {
       setPublishing(false);
     }
-  }, []);
+  }, [watchDeploy]);
 
   return {
     data,

@@ -244,29 +244,30 @@ describe("publishChanges", () => {
     mockedFs.readFileSync.mockReturnValue(JSON.stringify({ site: {}, cv: {} }));
   });
 
-  it("regenerates PDF, then stages, commits, and pushes changes", async () => {
+  it("regenerates PDF, then pulls, stages, commits, and pushes changes", async () => {
     mockedExecSync
+      .mockReturnValueOnce("") // git pull --rebase  ← first, so we commit on top of remote
       .mockReturnValueOnce("") // git add -A
       .mockReturnValueOnce(" M content/content.json\n") // git status --porcelain
       .mockReturnValueOnce("") // git commit
-      .mockReturnValueOnce("") // git pull --rebase
       .mockReturnValueOnce("") // git push
       .mockReturnValueOnce("abc1234\n"); // git rev-parse --short HEAD
 
     const hash = await publishChanges("test commit");
 
-    expect(mockedExecSync).toHaveBeenCalledWith("git add -A", expect.objectContaining({ cwd: process.cwd() }));
-    expect(mockedExecSync).toHaveBeenCalledWith(
-      expect.stringContaining("git commit"),
-      expect.objectContaining({ cwd: process.cwd() }),
-    );
-    expect(mockedExecSync).toHaveBeenCalledWith("git pull --rebase", expect.objectContaining({ cwd: process.cwd() }));
-    expect(mockedExecSync).toHaveBeenCalledWith("git push", expect.objectContaining({ cwd: process.cwd() }));
+    // Verify call order matters: pull before add before commit before push
+    const calls = mockedExecSync.mock.calls.map((c) => c[0] as string);
+    expect(calls[0]).toBe("git pull --rebase");
+    expect(calls[1]).toBe("git add -A");
+    expect(calls[2]).toBe("git status --porcelain");
+    expect(calls[3]).toContain("git commit");
+    expect(calls[4]).toBe("git push");
     expect(hash).toBe("abc1234");
   });
 
   it("returns 'no-changes' when working tree is clean", async () => {
     mockedExecSync
+      .mockReturnValueOnce("") // git pull --rebase
       .mockReturnValueOnce("") // git add -A
       .mockReturnValueOnce(""); // git status --porcelain (empty)
 
@@ -274,6 +275,6 @@ describe("publishChanges", () => {
 
     expect(hash).toBe("no-changes");
     // Should NOT have called commit or push
-    expect(mockedExecSync).toHaveBeenCalledTimes(2);
+    expect(mockedExecSync).toHaveBeenCalledTimes(3);
   });
 });

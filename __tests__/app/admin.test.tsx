@@ -350,12 +350,18 @@ describe("AdminPage", () => {
     });
   });
 
-  it("shows published commit hash after publish", async () => {
+  it("shows deployed confirmation after publish and deploy completes", async () => {
     (global.fetch as jest.Mock).mockImplementation((url: string, opts?: RequestInit) => {
       if (opts?.method === "POST" && url.includes("/api/admin/publish")) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve({ hash: "abc1234" }),
+        });
+      }
+      if (url.includes("/api/admin/deploy-status")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ status: "success" }),
         });
       }
       if (opts?.method === "PUT" && url.includes("/api/admin/content")) {
@@ -382,7 +388,7 @@ describe("AdminPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /publish/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Published.*abc1234/)).toBeInTheDocument();
+      expect(screen.getByText(/Deployed!.*abc1234/)).toBeInTheDocument();
     });
   });
 

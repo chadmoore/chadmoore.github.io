@@ -27,9 +27,11 @@ export async function POST(request: Request) {
     const hash = await publishChanges(message);
     return NextResponse.json({ hash });
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Publish failed" },
-      { status: 500 }
-    );
+    const stderr =
+      err instanceof Error && "stderr" in err
+        ? String((err as NodeJS.ErrnoException & { stderr?: unknown }).stderr).trim()
+        : "";
+    const detail = stderr || (err instanceof Error ? err.message : "Publish failed");
+    return NextResponse.json({ error: detail }, { status: 500 });
   }
 }
