@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   experimental: {
     inlineCss: true,
   },
+  // Keep PDFKit as an external — it uses __dirname to resolve built-in
+  // font AFM files, which breaks when bundled by Turbopack/webpack.
+  serverExternalPackages: ["pdfkit"],
 };
 
 export default nextConfig;
