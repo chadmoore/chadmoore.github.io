@@ -128,7 +128,7 @@ describe("getSkillClasses", () => {
       status: "legacy",
     };
     const classes = getSkillClasses(resolved);
-    expect(classes).toContain("opacity-60");
+    expect(classes).toContain("opacity-75");
   });
 
   it("returns base classes for neutral active skills", () => {
@@ -140,7 +140,7 @@ describe("getSkillClasses", () => {
     };
     const classes = getSkillClasses(resolved);
     expect(classes).toContain("border-border");
-    expect(classes).not.toContain("opacity-60");
+    expect(classes).not.toContain("opacity-75");
     expect(classes).not.toContain("border-accent/60");
   });
 

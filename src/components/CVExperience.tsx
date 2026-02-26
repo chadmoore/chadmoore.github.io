@@ -209,7 +209,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
               key={jobKey}
               className={`relative pl-6 border-l-2 transition-colors ${
                 fullyFiltered
-                  ? "border-border/30 opacity-40"
+                  ? "border-border/30 opacity-50"
                   : "border-border hover:border-accent/50"
               }`}
             >
@@ -257,7 +257,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
                               {highlight.skills.map((skill) => (
                                 <span
                                   key={skill}
-                                  className="text-[10px] text-accent/80 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
+                                  className="text-[10px] text-accent/90 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
                                 >
                                   {skill}
                                 </span>

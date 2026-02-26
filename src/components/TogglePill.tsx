@@ -24,7 +24,7 @@ export default function TogglePill({ label, active, onClick }: TogglePillProps) 
       className={`px-2.5 py-0.5 rounded-full border text-xs transition-colors ${
         active
           ? "border-accent/60 text-accent bg-accent/8"
-          : "border-border text-muted/40 bg-surface line-through hover:border-accent/30 hover:text-muted"
+          : "border-border text-muted bg-surface line-through hover:border-accent/30 hover:text-foreground"
       }`}
     >
       {label}
