@@ -146,13 +146,13 @@ export async function regenerateCvPdf(): Promise<void> {
 
 /** Stage, commit, and push content changes. Returns the commit hash. */
 export async function publishChanges(message: string): Promise<string> {
-  await regenerateCvPdf();
-
   const opts = { cwd: REPO_ROOT, encoding: "utf-8" as const };
 
-  // Pull remote changes first so our commit goes cleanly on top,
-  // avoiding a rebase conflict if remote has moved since last push.
+  // Pull while tree is clean so rebase never hits unstaged-changes error.
   execSync("git pull --rebase", opts);
+
+  // Generate PDF after pulling so it lands in the same commit as content.json.
+  await regenerateCvPdf();
 
   execSync("git add -A", opts);
 

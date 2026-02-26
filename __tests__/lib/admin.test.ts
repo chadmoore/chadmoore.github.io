@@ -244,7 +244,7 @@ describe("publishChanges", () => {
     mockedFs.readFileSync.mockReturnValue(JSON.stringify({ site: {}, cv: {} }));
   });
 
-  it("regenerates PDF, then pulls, stages, commits, and pushes changes", async () => {
+  it("pulls, then regenerates PDF, stages, commits, and pushes changes", async () => {
     mockedExecSync
       .mockReturnValueOnce("") // git pull --rebase  ← first, so we commit on top of remote
       .mockReturnValueOnce("") // git add -A
