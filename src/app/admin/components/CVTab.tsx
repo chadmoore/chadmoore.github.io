@@ -186,10 +186,12 @@ export function CVTab({ data, updateField }: CVTabProps) {
               className="bg-surface border border-border rounded-lg overflow-hidden"
             >
               {/* ── Collapsed header ───────────────────────── */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => toggleExpanded(expIndex)}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-surface-hover transition-colors"
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleExpanded(expIndex); } }}
+                className="w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-surface-hover transition-colors cursor-pointer"
               >
                 {isOpen ? (
                   <ChevronDown className="w-4 h-4 text-muted shrink-0" />
@@ -227,7 +229,7 @@ export function CVTab({ data, updateField }: CVTabProps) {
                   </button>
                   <GripVertical className="w-4 h-4 text-muted/40" />
                 </div>
-              </button>
+              </div>
 
               {/* ── Expanded body ──────────────────────────── */}
               {isOpen && (
