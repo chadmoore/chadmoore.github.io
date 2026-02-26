@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-26T04:02:13.675Z",
+  "timestamp": "2026-02-26T04:13:22.783Z",
   "pages": [
     {
       "url": "/",
@@ -48,10 +48,10 @@
     }
   ],
   "reportLinks": {
-    "https://chadmoore.info/": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772078529884-9805.report.html",
-    "https://chadmoore.info/about": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772078530445-39656.report.html",
-    "https://chadmoore.info/blog": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772078530745-30667.report.html",
-    "https://chadmoore.info/projects": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772078531033-72532.report.html",
-    "https://chadmoore.info/resume": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772078531320-82565.report.html"
+    "https://chadmoore.info/": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772079198789-71766.report.html",
+    "https://chadmoore.info/about": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772079199149-45602.report.html",
+    "https://chadmoore.info/blog": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772079199497-51706.report.html",
+    "https://chadmoore.info/projects": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772079199801-68097.report.html",
+    "https://chadmoore.info/resume": "https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/1772079200484-13230.report.html"
   }
 }
