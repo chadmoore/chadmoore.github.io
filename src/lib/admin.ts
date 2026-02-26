@@ -13,6 +13,7 @@ import path from "path";
 import matter from "gray-matter";
 import { execSync } from "child_process";
 import type { ContentData } from "@/lib/contentData";
+import { generateCvPdf } from "../../scripts/generate-cv-pdf";
 
 const CONTENT_PATH = path.resolve(process.cwd(), "content/content.json");
 const BLOG_DIR = path.resolve(process.cwd(), "content/blog");
@@ -131,8 +132,22 @@ export function deleteBlogPost(slug: string): void {
 
 const REPO_ROOT = process.cwd();
 
+/** Derive the PDF output path from the current content configuration. */
+function getPdfOutputPath(data: { site: { cvLabel?: string } }): string {
+  const slug = data.site.cvLabel === "cv" ? "cv" : "resume";
+  return path.resolve(REPO_ROOT, "public", `${slug}.pdf`);
+}
+
+/** Regenerate the CV PDF from current content.json data. */
+export async function regenerateCvPdf(): Promise<void> {
+  const data = readContentData();
+  await generateCvPdf(data, getPdfOutputPath(data));
+}
+
 /** Stage, commit, and push content changes. Returns the commit hash. */
-export function publishChanges(message: string): string {
+export async function publishChanges(message: string): Promise<string> {
+  await regenerateCvPdf();
+
   const opts = { cwd: REPO_ROOT, encoding: "utf-8" as const };
   execSync("git add -A", opts);
 

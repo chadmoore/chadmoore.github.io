@@ -79,6 +79,7 @@ afterEach(() => {
 
 // Dynamic import so the mock is in place before the component loads
 import AdminPage from "@/app/admin/page";
+import { cvDisplayLabel } from "@/lib/siteConfig";
 
 describe("AdminPage", () => {
   it("fetches content data on mount", async () => {
@@ -102,7 +103,7 @@ describe("AdminPage", () => {
       expect(screen.getByRole("button", { name: /^home$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^about$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^projects$/i })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /^cv$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: new RegExp(`^${cvDisplayLabel}$`, "i") })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^skills$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^blog$/i })).toBeInTheDocument();
     });
@@ -175,7 +176,7 @@ describe("AdminPage", () => {
     await waitFor(() => screen.getByText("Site Settings"));
 
     const allButtons = screen.getAllByRole("button");
-    const tabLabels = ["Site", "Home", "About", "Projects", "Blog", "CV", "Skills"];
+    const tabLabels = ["Site", "Home", "About", "Projects", "Blog", cvDisplayLabel, "Skills"];
     const tabs = allButtons.filter((btn) => tabLabels.includes(btn.textContent ?? ""));
     expect(tabs.map((btn) => btn.textContent)).toEqual(tabLabels);
   });
@@ -376,5 +377,27 @@ describe("AdminPage", () => {
     await waitFor(() => {
       expect(screen.getByText(/Published.*abc1234/)).toBeInTheDocument();
     });
+  });
+
+  // ─── CV mode radio tests ─────────────────────────────────────
+
+  it("renders CV/Resume mode as radio buttons (Off, Resume, CV)", async () => {
+    render(<AdminPage />);
+    await waitFor(() => screen.getByText("Site Settings"));
+
+    const radios = screen.getAllByRole("radio");
+    expect(radios.length).toBe(3);
+
+    expect(screen.getByLabelText("Off")).toBeInTheDocument();
+    expect(screen.getByLabelText("Resume")).toBeInTheDocument();
+    expect(screen.getByLabelText("CV")).toBeInTheDocument();
+  });
+
+  it("has Resume selected by default when cv section is enabled", async () => {
+    render(<AdminPage />);
+    await waitFor(() => screen.getByText("Site Settings"));
+
+    const resumeRadio = screen.getByLabelText("Resume") as HTMLInputElement;
+    expect(resumeRadio.checked).toBe(true);
   });
 });

@@ -96,7 +96,7 @@ Content here...
 ```bash
 npm install
 npm run dev       # http://localhost:3000 (with admin panel + API routes)
-npm test          # 289 tests across 24 suites
+npm test          # 298 tests across 25 suites
 npm run build     # static export to ./out
 npm run lint:quality  # ESLint code-smell check (0 warnings allowed)
 ```
@@ -107,7 +107,7 @@ Pushes to `main` auto-deploy via GitHub Actions to GitHub Pages. The workflow de
 
 ## Testing
 
-Jest + React Testing Library with 289 tests across 24 suites mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link`, `next/navigation`, and `@/lib/siteConfig` mocked in component tests. `siteConfig` is mocked via `jest.requireActual` so component behavior tests stay isolated from admin-panel content changes.
+Jest + React Testing Library with 298 tests across 25 suites mirroring the `src/` structure. Mocking strategy: `fs` and `gray-matter` mocked in content tests, `child_process` mocked for git publish tests, `next/link`, `next/navigation`, and `@/lib/siteConfig` mocked in component tests. `siteConfig` is mocked via `jest.requireActual` so component behavior tests stay isolated from admin-panel content changes.
 
 | Suite | Description |
 | --- | --- |
@@ -115,6 +115,7 @@ Jest + React Testing Library with 289 tests across 24 suites mirroring the `src/
 | `components/` | `DevEditLink`, `Footer`, `Header`, `Markdown`, `ProjectsList`, `SkillsGrid`, `TogglePill` |
 | `content/` | CV JSON data shape |
 | `lib/` | `admin`, `blog`, `dates`, `linkedin`, `siteConfig`, `skills` |
+| `scripts/` | PDF generation from CV data |
 
 ## Code Quality
 

@@ -21,7 +21,8 @@
       "cv",
       "blog",
       "projects"
-    ]
+    ],
+    "cvLabel": "resume"
   },
   "home": {
     "greeting": "Hi, I'm",

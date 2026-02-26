@@ -53,6 +53,8 @@ export interface SiteSection {
   tagline: string;
   siteUrl?: string;
   cloudflareAnalyticsToken?: string;
+  /** Controls the route and display label: "resume" (default) or "cv". */
+  cvLabel?: "resume" | "cv";
   sections: Record<SectionKey, boolean>;
   links: { email: string; github: string; linkedin: string };
   navOrder: string[];

@@ -20,13 +20,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, SquarePen, X } from "lucide-react";
 import { useState } from "react";
-import { siteConfig, type SectionKey } from "@/lib/siteConfig";
+import { siteConfig, cvSlug, cvDisplayLabel, type SectionKey } from "@/lib/siteConfig";
 
 /** Map the current pathname to the corresponding admin tab. */
 function adminTabForPath(pathname: string): string {
   if (pathname === "/") return "home";
   if (pathname === "/about") return "about";
-  if (pathname === "/cv") return "cv";
+  if (pathname === `/${cvSlug}`) return "cv";
   if (pathname === "/projects") return "site";
   if (pathname.startsWith("/blog/")) {
     const slug = pathname.replace("/blog/", "");
@@ -48,7 +48,7 @@ const NAV_ENTRIES: Record<string, { href: string; label: string; section?: Secti
   about:    { href: "/about",     label: "About",    section: "about" },
   projects: { href: "/projects",  label: "Projects", section: "projects" },
   blog:     { href: "/blog",      label: "Blog",     section: "blog" },
-  cv:       { href: "/cv",        label: "CV",       section: "cv" },
+  cv:       { href: `/${cvSlug}`,  label: cvDisplayLabel, section: "cv" },
 };
 
 /**

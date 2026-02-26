@@ -20,6 +20,12 @@ import type { SectionKey } from "@/lib/contentData";
 
 const DEFAULT_NAV_ORDER = ["home", "about", "projects", "blog", "cv"];
 
+/** URL slug for the CV/Resume route: "resume" (default) or "cv". */
+export const cvSlug = content.site.cvLabel === "cv" ? "cv" : "resume";
+
+/** Human-readable label: "Resume" (default) or "CV". */
+export const cvDisplayLabel = content.site.cvLabel === "cv" ? "CV" : "Resume";
+
 export const siteConfig = {
   name: content.site.name,
   tagline: content.site.tagline,

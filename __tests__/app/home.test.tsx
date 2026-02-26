@@ -50,6 +50,8 @@ jest.mock("@/lib/blog", () => ({
   ],
 }));
 
+import { cvDisplayLabel, cvSlug } from "@/lib/siteConfig";
+
 import Home from "@/app/page";
 
 describe("Homepage", () => {
@@ -72,11 +74,11 @@ describe("Homepage", () => {
     expect(aboutLink.closest("a")).toHaveAttribute("href", "/about");
   });
 
-  it('renders the "View CV" CTA link', () => {
+  it(`renders the "View ${cvDisplayLabel}" CTA link`, () => {
     render(<Home />);
-    const cvLink = screen.getByText("View CV");
+    const cvLink = screen.getByText(`View ${cvDisplayLabel}`);
     expect(cvLink).toBeInTheDocument();
-    expect(cvLink.closest("a")).toHaveAttribute("href", "/cv");
+    expect(cvLink.closest("a")).toHaveAttribute("href", `/${cvSlug}`);
   });
 
   it("renders the three feature cards", () => {

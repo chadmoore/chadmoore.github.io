@@ -12,7 +12,8 @@ const cvData = content.cv;
 const siteData = content.site;
 
 // No Link mock needed — CV page doesn't use next/link
-import CVPage from "@/app/cv/page";
+import CVPage from "@/app/[cvSlug]/page";
+import { cvSlug } from "@/lib/siteConfig";
 
 describe("CVPage", () => {
   it("renders the name from content.json", () => {
@@ -111,5 +112,13 @@ describe("CVPage", () => {
     if (cvData.certifications.length === 0) {
       expect(screen.queryByText("Certifications")).not.toBeInTheDocument();
     }
+  });
+
+  it("renders a PDF download link", () => {
+    render(<CVPage />);
+    const pdfLink = screen.getByText("PDF");
+    const anchor = pdfLink.closest("a");
+    expect(anchor).toHaveAttribute("href", `/${cvSlug}.pdf`);
+    expect(anchor).toHaveAttribute("download", `chad-moore-${cvSlug}.pdf`);
   });
 });

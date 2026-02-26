@@ -3,7 +3,7 @@
  */
 import { render, screen, fireEvent } from "@testing-library/react";
 import Header from "@/components/Header";
-import { siteConfig } from "@/lib/siteConfig";
+import { siteConfig, cvSlug, cvDisplayLabel } from "@/lib/siteConfig";
 
 // Isolate component behavior tests from content.json changes:
 // mock siteConfig with projects enabled regardless of what content.json says.
@@ -65,7 +65,7 @@ describe("Header", () => {
     expect(screen.getAllByText("About").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Projects").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Blog").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText("CV").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(cvDisplayLabel).length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders nav links in the order specified by navOrder", () => {
@@ -77,7 +77,7 @@ describe("Header", () => {
     const labels = Array.from(desktopItems ?? []).map((li) => li.textContent);
     // Derive expected order from siteConfig.navOrder (same logic as Header)
     const labelFor: Record<string, string> = {
-      home: "Home", about: "About", projects: "Projects", blog: "Blog", cv: "CV",
+      home: "Home", about: "About", projects: "Projects", blog: "Blog", cv: cvDisplayLabel,
     };
     const expected = siteConfig.navOrder
       .filter((key) => key in labelFor)
@@ -162,8 +162,8 @@ describe("Header", () => {
       expect(editLink).toHaveAttribute("href", "/admin?tab=about");
     });
 
-    it("maps /cv to the cv admin tab", () => {
-      currentPathname = "/cv";
+    it("maps the cv route to the cv admin tab", () => {
+      currentPathname = `/${cvSlug}`;
       render(<Header />);
       const editLink = screen.getByTitle(/edit this page/i);
       expect(editLink).toHaveAttribute("href", "/admin?tab=cv");

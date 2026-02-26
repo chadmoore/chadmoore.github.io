@@ -12,6 +12,9 @@ import { execSync } from "child_process";
 jest.mock("fs");
 jest.mock("gray-matter");
 jest.mock("child_process");
+jest.mock("../../scripts/generate-cv-pdf", () => ({
+  generateCvPdf: jest.fn().mockResolvedValue(undefined),
+}));
 
 import {
   readContentData,
@@ -22,6 +25,7 @@ import {
   updateBlogPost,
   deleteBlogPost,
   publishChanges,
+  regenerateCvPdf,
 } from "../../src/lib/admin";
 
 const mockedFs = fs as jest.Mocked<typeof fs>;
@@ -236,9 +240,11 @@ describe("deleteBlogPost", () => {
 describe("publishChanges", () => {
   beforeEach(() => {
     mockedExecSync.mockReset();
+    // readContentData needs a valid JSON response for regenerateCvPdf
+    mockedFs.readFileSync.mockReturnValue(JSON.stringify({ site: {}, cv: {} }));
   });
 
-  it("stages, commits, and pushes changes", () => {
+  it("regenerates PDF, then stages, commits, and pushes changes", async () => {
     mockedExecSync
       .mockReturnValueOnce("") // git add -A
       .mockReturnValueOnce(" M content/content.json\n") // git status --porcelain
@@ -246,7 +252,7 @@ describe("publishChanges", () => {
       .mockReturnValueOnce("") // git push
       .mockReturnValueOnce("abc1234\n"); // git rev-parse --short HEAD
 
-    const hash = publishChanges("test commit");
+    const hash = await publishChanges("test commit");
 
     expect(mockedExecSync).toHaveBeenCalledWith("git add -A", expect.objectContaining({ cwd: process.cwd() }));
     expect(mockedExecSync).toHaveBeenCalledWith(
@@ -257,12 +263,12 @@ describe("publishChanges", () => {
     expect(hash).toBe("abc1234");
   });
 
-  it("returns 'no-changes' when working tree is clean", () => {
+  it("returns 'no-changes' when working tree is clean", async () => {
     mockedExecSync
       .mockReturnValueOnce("") // git add -A
       .mockReturnValueOnce(""); // git status --porcelain (empty)
 
-    const hash = publishChanges("nothing to do");
+    const hash = await publishChanges("nothing to do");
 
     expect(hash).toBe("no-changes");
     // Should NOT have called commit or push

@@ -3,6 +3,7 @@
     "npx jest": true,
     "ConvertFrom-Json": true,
     "ForEach-Object": true,
-    "ConvertTo-Json": true
+    "ConvertTo-Json": true,
+    "git add": true
   }
 }

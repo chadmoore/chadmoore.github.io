@@ -1,7 +1,15 @@
 /**
- * CV Page — Professional timeline, powered by JSON.
+ * CV / Resume Page — Professional timeline, powered by JSON.
  *
- * All CV data lives in /content/cv.json, which was originally
+ * This is a dynamic route: the URL is either /resume or /cv
+ * depending on `site.cvLabel` in content.json. The default is
+ * "resume" — set `"cvLabel": "cv"` to switch to /cv.
+ *
+ * `generateStaticParams` ensures only the configured slug is
+ * built during static export. In dev, both slugs technically
+ * render — the navigation only links to the configured one.
+ *
+ * All CV data lives in content/content.json, which was originally
  * generated from a LinkedIn CSV export and then hand-polished.
  * This means updating the CV is a JSON edit, not a code change.
  *
@@ -19,13 +27,21 @@
  * // You're welcome, ATS robots.
  */
 import type { Metadata } from "next";
+import { Download } from "lucide-react";
 import { content } from "@/lib/content";
+import { cvSlug, cvDisplayLabel } from "@/lib/siteConfig";
 import CVExperience from "@/components/CVExperience";
+
 const cvData = content.cv;
 const siteData = content.site;
 
+/** Only build the route for the configured slug (resume or cv). */
+export function generateStaticParams() {
+  return [{ cvSlug }];
+}
+
 export const metadata: Metadata = {
-  title: `CV | ${siteData.name}`,
+  title: `${cvDisplayLabel} | ${siteData.name}`,
   description: cvData.headline,
 };
 
@@ -68,6 +84,14 @@ export default function CVPage() {
               GitHub
             </a>
           )}
+          <a
+            href={`/${cvSlug}.pdf`}
+            download={`chad-moore-${cvSlug}.pdf`}
+            className="text-muted hover:text-accent transition-colors inline-flex items-center gap-1"
+          >
+            <Download className="w-3.5 h-3.5" />
+            PDF
+          </a>
         </div>
       </header>
 

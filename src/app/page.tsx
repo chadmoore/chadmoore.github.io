@@ -20,7 +20,7 @@
  */
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
-import { siteConfig } from "@/lib/siteConfig";
+import { siteConfig, cvSlug, cvDisplayLabel } from "@/lib/siteConfig";
 import { formatPostDate } from "@/lib/dates";
 import { content } from "@/lib/content";
 import { ArrowLeftRight, Shield, Building2 } from "lucide-react";
@@ -70,10 +70,10 @@ export default function Home() {
           )}
           {siteConfig.sections.cv && (
             <Link
-              href="/cv"
+              href={`/${cvSlug}`}
               className="inline-flex items-center gap-2 border border-border hover:border-accent text-muted hover:text-accent px-6 py-3 rounded-lg text-sm font-medium transition-colors"
             >
-              View CV
+              View {cvDisplayLabel}
             </Link>
           )}
         </div>

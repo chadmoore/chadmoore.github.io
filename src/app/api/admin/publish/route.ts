@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       // no body or invalid JSON — use default message
     }
 
-    const hash = publishChanges(message);
+    const hash = await publishChanges(message);
     return NextResponse.json({ hash });
   } catch (err) {
     return NextResponse.json(

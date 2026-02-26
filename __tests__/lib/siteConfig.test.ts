@@ -1,7 +1,7 @@
 /**
  * Tests for src/lib/siteConfig.ts — site configuration.
  */
-import { siteConfig } from "@/lib/siteConfig";
+import { siteConfig, cvSlug, cvDisplayLabel } from "@/lib/siteConfig";
 
 describe("siteConfig", () => {
   it("exports a name string", () => {
@@ -42,5 +42,22 @@ describe("siteConfig", () => {
     expect(Object.keys(siteConfig)).toEqual(
       expect.arrayContaining(["name", "tagline", "sections"])
     );
+  });
+});
+
+describe("cvSlug", () => {
+  it("is 'resume' or 'cv'", () => {
+    expect(["resume", "cv"]).toContain(cvSlug);
+  });
+});
+
+describe("cvDisplayLabel", () => {
+  it("is 'Resume' or 'CV' matching the slug", () => {
+    expect(["Resume", "CV"]).toContain(cvDisplayLabel);
+    if (cvSlug === "cv") {
+      expect(cvDisplayLabel).toBe("CV");
+    } else {
+      expect(cvDisplayLabel).toBe("Resume");
+    }
   });
 });

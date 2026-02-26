@@ -1,6 +1,7 @@
 /**
  * Admin page types — shared across all admin sub-modules.
  */
+import { cvDisplayLabel } from "@/lib/siteConfig";
 
 // ─── Blog Types ─────────────────────────────────────────────────────
 
@@ -25,7 +26,7 @@ export const TAB_LABELS: Record<Tab, string> = {
   home: "Home",
   about: "About",
   projects: "Projects",
-  cv: "CV",
+  cv: cvDisplayLabel,
   skills: "Skills",
   blog: "Blog",
   import: "Import",

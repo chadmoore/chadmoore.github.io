@@ -10,6 +10,7 @@ jest.mock("@/lib/siteConfig", () => ({
     tagline: "A tagline",
     navOrder: [],
   },
+  cvSlug: "resume",
 }));
 
 import sitemap from "@/app/sitemap";
@@ -41,7 +42,7 @@ describe("sitemap", () => {
     const urls = result.map((e) => e.url);
     expect(urls).toContain("https://example.com/about");
     expect(urls).toContain("https://example.com/blog");
-    expect(urls).toContain("https://example.com/cv");
+    expect(urls).toContain("https://example.com/resume");
     expect(urls).toContain("https://example.com/projects");
   });
 

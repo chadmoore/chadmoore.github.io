@@ -13,7 +13,7 @@
  */
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
-import { siteConfig } from "@/lib/siteConfig";
+import { siteConfig, cvSlug } from "@/lib/siteConfig";
 
 export const dynamic = "force-static";
 
@@ -50,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   if (siteConfig.sections.cv) {
     staticPages.push({
-      url: `${base}/cv`,
+      url: `${base}/${cvSlug}`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
