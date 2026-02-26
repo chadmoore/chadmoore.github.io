@@ -66,6 +66,12 @@ beforeEach(() => {
         json: () => Promise.resolve(mockPosts),
       });
     }
+    if (url.includes("/api/admin/lighthouse")) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(null),
+      });
+    }
     return Promise.resolve({
       ok: true,
       json: () => Promise.resolve(mockContentData),
@@ -106,6 +112,7 @@ describe("AdminPage", () => {
       expect(screen.getByRole("button", { name: new RegExp(`^${cvDisplayLabel}$`, "i") })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^skills$/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /^blog$/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /^lighthouse$/i })).toBeInTheDocument();
     });
   });
 

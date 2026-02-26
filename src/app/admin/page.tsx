@@ -5,7 +5,7 @@
  * content files. Only functional when running `next dev` — the API
  * routes don't exist in the static export.
  *
- * Eight tabs: Site, Home, About, Projects, CV, Skills, Blog, Import.
+ * Nine tabs: Site, Home, About, Projects, CV, Skills, Blog, Import, Lighthouse.
  * All non-blog tabs edit content.json via a single Save button.
  * Blog posts are managed separately via /api/admin/blog/*.
  *
@@ -36,6 +36,7 @@ import { CVTab } from "./components/CVTab";
 import { SkillsTab } from "./components/SkillsTab";
 import { BlogTab } from "./components/BlogTab";
 import { ImportTab } from "./components/ImportTab";
+import { LighthouseTab } from "./components/LighthouseTab";
 
 // ─── Component ──────────────────────────────────────────────────────
 
@@ -81,7 +82,7 @@ export default function AdminPage() {
 
       {/* ─── Global Action Bar ─────────────────────────────────── */}
       <div className="flex items-center gap-3 mb-6">
-        {tab !== "blog" && tab !== "import" && (
+        {tab !== "blog" && tab !== "import" && tab !== "lighthouse" && (
           <>
             <button
               onClick={save}
@@ -180,6 +181,7 @@ export default function AdminPage() {
         />
       )}
       {tab === "import" && <ImportTab {...linkedIn} />}
+      {tab === "lighthouse" && <LighthouseTab />}
     </div>
   );
 }

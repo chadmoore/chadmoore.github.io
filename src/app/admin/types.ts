@@ -19,7 +19,7 @@ export interface BlogPostFull extends BlogPostMeta {
 
 // ─── Tab Types ──────────────────────────────────────────────────────
 
-export type Tab = "site" | "home" | "about" | "projects" | "cv" | "skills" | "blog" | "import";
+export type Tab = "site" | "home" | "about" | "projects" | "cv" | "skills" | "blog" | "import" | "lighthouse";
 
 export const TAB_LABELS: Record<Tab, string> = {
   site: "Site",
@@ -30,4 +30,5 @@ export const TAB_LABELS: Record<Tab, string> = {
   skills: "Skills",
   blog: "Blog",
   import: "Import",
+  lighthouse: "Lighthouse",
 };

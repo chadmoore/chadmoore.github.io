@@ -8,6 +8,12 @@
  * Performance budgets are intentionally generous — the goal
  * is catching regressions, not chasing 100s.
  */
+
+// Derive the CV/Resume slug from content.json so the URL stays in sync
+const content = require("./content/content.json");
+const cvLabel = content.site?.cvLabel ?? "resume";
+const cvSlug = cvLabel === "cv" ? "cv" : "resume";
+
 module.exports = {
   ci: {
     collect: {
@@ -16,7 +22,7 @@ module.exports = {
         "https://chadmoore.info/about",
         "https://chadmoore.info/blog",
         "https://chadmoore.info/projects",
-        "https://chadmoore.info/cv",
+        `https://chadmoore.info/${cvSlug}`,
       ],
       // Run each page 3 times and take the median — reduces flakiness
       numberOfRuns: 3,

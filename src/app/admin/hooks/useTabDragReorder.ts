@@ -7,7 +7,7 @@ import type { Tab } from "../types";
 import { TAB_LABELS } from "../types";
 
 /** Tabs that are pinned (not draggable, don't affect nav order). */
-const PINNED_TABS = new Set<Tab>(["site", "skills", "import"]);
+const PINNED_TABS = new Set<Tab>(["site", "skills", "import", "lighthouse"]);
 
 export function useTabDragReorder(
   data: ContentData | null,
@@ -27,7 +27,7 @@ export function useTabDragReorder(
       if (key in TAB_LABELS && !PINNED_TABS.has(key as Tab)) order.push(key as Tab);
     }
     // Append pinned non-site tabs after nav tabs
-    order.push("skills", "import");
+    order.push("skills", "import", "lighthouse");
     // Safety: append any remaining tabs missing from navOrder
     for (const key of Object.keys(TAB_LABELS) as Tab[]) {
       if (!order.includes(key)) order.push(key);
