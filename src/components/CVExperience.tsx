@@ -160,7 +160,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
   return (
     <div className="space-y-6">
       {/* ── Filter + sort bar ──────────────────────────────────── */}
-      <div className="sticky top-14 z-10 bg-surface space-y-2 pt-3 pb-4 border-b border-border">
+      <div className="sticky top-14 z-10 bg-background space-y-2 pt-3 pb-4 border-b border-border">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
           <span className="text-muted font-medium uppercase tracking-wider text-[10px]">
             Show
