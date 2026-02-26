@@ -81,8 +81,8 @@ describe("ProjectsList", () => {
     });
 
     // Verify order: many-stars should come before few-stars in the DOM
-    const repoNames = Array.from(container.querySelectorAll("h3")).map(
-      (h3) => h3.textContent
+    const repoNames = Array.from(container.querySelectorAll("h2")).map(
+      (h2) => h2.textContent
     );
     expect(repoNames.indexOf("many-stars")).toBeLessThan(
       repoNames.indexOf("few-stars")

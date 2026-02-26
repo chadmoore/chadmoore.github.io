@@ -257,7 +257,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
                               {highlight.skills.map((skill) => (
                                 <span
                                   key={skill}
-                                  className="text-[10px] text-accent/90 bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
+                                  className="text-[10px] text-accent bg-accent/5 border border-accent/20 px-2 py-0.5 rounded-full"
                                 >
                                   {skill}
                                 </span>

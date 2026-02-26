@@ -99,7 +99,7 @@ export function getSkillClasses(skill: ResolvedSkill): string {
 
   // Status → opacity
   if (skill.status === "legacy") {
-    classes.push("opacity-75");
+    classes.push("opacity-85");
   }
 
   // Preference → border highlight  (applied last so it layers on top)

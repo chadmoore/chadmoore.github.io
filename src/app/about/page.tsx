@@ -40,7 +40,7 @@ export default function AboutPage() {
         </h1>
       </div>
 
-      <div className="prose dark:prose-invert max-w-none space-y-6 text-muted leading-relaxed">
+      <div className="max-w-none space-y-6 text-muted leading-relaxed">
         {content.about.intro.map((paragraph, index) => (
           <p key={index} className={index === 0 ? "text-lg" : undefined}>
             {paragraph}

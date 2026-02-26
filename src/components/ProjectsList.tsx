@@ -141,9 +141,9 @@ export default function ProjectsList() {
           className="group border border-border rounded-xl p-6 hover:border-accent/50 hover:bg-surface-hover transition-all"
         >
           <div className="flex items-start justify-between mb-2">
-            <h3 className="font-semibold group-hover:text-accent transition-colors truncate">
+            <h2 className="text-base font-semibold group-hover:text-accent transition-colors truncate">
               {repo.name}
-            </h3>
+            </h2>
             {repo.stargazers_count > 0 && (
               <span className="text-xs text-muted flex items-center gap-1 shrink-0 ml-2">
                 <Star className="w-3.5 h-3.5 fill-current" />
