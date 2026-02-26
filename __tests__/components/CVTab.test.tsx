@@ -234,6 +234,39 @@ describe("CVTab", () => {
     expect(downButtons[1]).toBeDisabled();
   });
 
+  // ── Highlight reorder controls ─────────────────────────────────
+
+  it("shows move-up/down buttons for highlights when expanded", () => {
+    renderCVTab();
+    fireEvent.click(screen.getByText("Staff Engineer"));
+
+    const upButtons = screen.getAllByTitle("Move highlight up");
+    const downButtons = screen.getAllByTitle("Move highlight down");
+    expect(upButtons).toHaveLength(2);
+    expect(downButtons).toHaveLength(2);
+  });
+
+  it("disables move-up on first highlight and move-down on last", () => {
+    renderCVTab();
+    fireEvent.click(screen.getByText("Staff Engineer"));
+
+    const upButtons = screen.getAllByTitle("Move highlight up");
+    const downButtons = screen.getAllByTitle("Move highlight down");
+    expect(upButtons[0]).toBeDisabled();
+    expect(upButtons[1]).not.toBeDisabled();
+    expect(downButtons[0]).not.toBeDisabled();
+    expect(downButtons[1]).toBeDisabled();
+  });
+
+  it("calls updateField when moving a highlight down", () => {
+    const { updateField } = renderCVTab();
+    fireEvent.click(screen.getByText("Staff Engineer"));
+
+    const downButtons = screen.getAllByTitle("Move highlight down");
+    fireEvent.click(downButtons[0]);
+    expect(updateField).toHaveBeenCalledWith("cv", expect.any(Function));
+  });
+
   // ── Add / delete entry ──────────────────────────────────────────
 
   it("renders '+ Add Position' button", () => {

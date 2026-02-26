@@ -322,6 +322,38 @@ export function CVTab({ data, updateField }: CVTabProps) {
                         className="border border-border rounded-lg p-3 space-y-2 bg-background"
                       >
                         <div className="flex gap-2">
+                          <div className="flex flex-col gap-0.5 self-start pt-1">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateExperience(updateField, expIndex, (ex) => {
+                                  const hs = [...ex.highlights];
+                                  [hs[hlIndex - 1], hs[hlIndex]] = [hs[hlIndex], hs[hlIndex - 1]];
+                                  return { ...ex, highlights: hs };
+                                })
+                              }
+                              disabled={hlIndex === 0}
+                              title="Move highlight up"
+                              className="text-[10px] leading-none p-0.5 text-muted hover:text-foreground disabled:opacity-30"
+                            >
+                              ▲
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateExperience(updateField, expIndex, (ex) => {
+                                  const hs = [...ex.highlights];
+                                  [hs[hlIndex], hs[hlIndex + 1]] = [hs[hlIndex + 1], hs[hlIndex]];
+                                  return { ...ex, highlights: hs };
+                                })
+                              }
+                              disabled={hlIndex === exp.highlights.length - 1}
+                              title="Move highlight down"
+                              className="text-[10px] leading-none p-0.5 text-muted hover:text-foreground disabled:opacity-30"
+                            >
+                              ▼
+                            </button>
+                          </div>
                           <textarea
                             value={hl.text}
                             onChange={(e) =>
@@ -330,7 +362,7 @@ export function CVTab({ data, updateField }: CVTabProps) {
                                 text: e.target.value,
                               }))
                             }
-                            rows={2}
+                            rows={3}
                             aria-label={`Highlight ${hlIndex + 1}`}
                             className={inputClass + " resize-y flex-1"}
                           />
