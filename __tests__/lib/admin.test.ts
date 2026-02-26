@@ -249,6 +249,7 @@ describe("publishChanges", () => {
       .mockReturnValueOnce("") // git add -A
       .mockReturnValueOnce(" M content/content.json\n") // git status --porcelain
       .mockReturnValueOnce("") // git commit
+      .mockReturnValueOnce("") // git pull --rebase
       .mockReturnValueOnce("") // git push
       .mockReturnValueOnce("abc1234\n"); // git rev-parse --short HEAD
 
@@ -259,6 +260,7 @@ describe("publishChanges", () => {
       expect.stringContaining("git commit"),
       expect.objectContaining({ cwd: process.cwd() }),
     );
+    expect(mockedExecSync).toHaveBeenCalledWith("git pull --rebase", expect.objectContaining({ cwd: process.cwd() }));
     expect(mockedExecSync).toHaveBeenCalledWith("git push", expect.objectContaining({ cwd: process.cwd() }));
     expect(hash).toBe("abc1234");
   });

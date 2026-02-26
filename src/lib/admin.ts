@@ -156,6 +156,7 @@ export async function publishChanges(message: string): Promise<string> {
   if (!status) return "no-changes";
 
   execSync(`git commit -m ${JSON.stringify(message)}`, opts);
+  execSync("git pull --rebase", opts);
   execSync("git push", opts);
 
   return execSync("git rev-parse --short HEAD", opts).trim();
