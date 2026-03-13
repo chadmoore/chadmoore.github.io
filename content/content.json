@@ -66,7 +66,7 @@
   "cv": {
     "headline": "Senior Full-Stack Engineer",
     "location": "Northampton, Massachusetts, United States",
-    "summary": "Senior full-stack engineer with deep experience building complex, stateful software systems across legacy modernization, enterprise integrations, and modern cloud and web platforms. Strong background across TypeScript, Node.js, React, Ruby on Rails, APIs, infrastructure, identity, and workflow-driven applications. Known for owning complex projects end-to-end, translating difficult requirements into maintainable systems, and bringing a strong focus to maintainability, developer usability, and clean system design.",
+    "summary": "Senior full-stack engineer with deep experience building complex, stateful software systems across legacy modernization, enterprise integrations, and modern cloud and web platforms. Strong background across TypeScript, Node.js, React, Ruby on Rails, APIs, infrastructure, identity, and workflow-driven applications. Known for owning complex projects end-to-end, translating difficult requirements into maintainable systems, and bringing a strong focus to maintainability, developer usability, and clean system design. More recently, I’ve incorporated MCP-based and agentic development workflows to improve engineering leverage, consistency, and verification.",
     "specialties": [
       "Full-Stack Architecture",
       "API & System Integration",
@@ -85,39 +85,43 @@
         "highlights": [
           {
             "text": "Designed secure, scalable API integration layers connecting enterprise systems to cloud platforms using OAuth, SAML, and JWT",
-            "skills": []
+            "skills": ["REST APIs", "System Integration", "OAuth 2.0", "SAML", "JWT"]
           },
           {
             "text": "Built frontend applications and embedded experiences with React, Next.js, and TypeScript",
-            "skills": []
+            "skills": ["React", "Next.js", "TypeScript", "JavaScript"]
           },
           {
             "text": "Designed developer-facing tooling and interfaces that simplified how single-page Qlik applications were configured, managed, and extended across client implementations",
-            "skills": []
+            "skills": ["TypeScript", "React", "JavaScript"]
           },
           {
             "text": "Brought a strong maintainability mindset to shared codebases, including testing patterns, codebase conventions, and day-to-day development practices",
-            "skills": []
+            "skills": ["Agile", "Git"]
           },
           {
             "text": "Delivered solutions across AWS, Azure, Docker, and Kubernetes environments with CI/CD pipelines tailored to client delivery models",
-            "skills": []
+            "skills": ["AWS", "Azure", "Docker", "Kubernetes", "CI/CD"]
           },
           {
             "text": "Served as a technical lead and escalation point for complex implementation issues, helping teams unblock high-impact production work",
-            "skills": []
+            "skills": ["Technical Leadership"]
           },
           {
             "text": "Drove performance, reliability, and maintainability improvements across full-stack solutions operating under significant scale and complexity",
-            "skills": []
+            "skills": ["TypeScript", "Node.js", "React"]
           },
           {
             "text": "Partnered closely with client stakeholders and engineering teams to refine requirements and translate them into workable technical solutions",
-            "skills": []
+            "skills": ["Cross-Functional Collaboration"]
           },
           {
             "text": "Mentored engineers and client teams on frontend architecture, authentication patterns, and delivery best practices",
-            "skills": []
+            "skills": ["Mentoring", "React", "OAuth 2.0"]
+          },
+          {
+            "text": "Applied MCP-based and agentic development workflows to accelerate implementation and support more consistent, verifiable engineering output",
+            "skills": ["TypeScript", "Node.js", "Python"]
           }
         ]
       },
@@ -131,31 +135,31 @@
         "highlights": [
           {
             "text": "Built and maintained full-stack web and mobile applications supporting customer-facing and internal business workflows",
-            "skills": []
+            "skills": ["Ruby on Rails", "JavaScript", "Node.js"]
           },
           {
             "text": "Designed REST APIs used by the RCN mobile application, shaping backend interfaces for clarity, reliability, and long-term maintainability",
-            "skills": []
+            "skills": ["REST APIs", "Ruby on Rails"]
           },
           {
             "text": "Worked across Ruby on Rails, JavaScript, MySQL, Redis, and Linux-based infrastructure",
-            "skills": []
+            "skills": ["Ruby on Rails", "Ruby", "JavaScript", "MySQL", "Redis", "Linux"]
           },
           {
             "text": "Co-designed and built a custom SAML identity provider supporting secure authentication across multiple partner platforms",
-            "skills": []
+            "skills": ["SAML", "SSO", "Ruby on Rails"]
           },
           {
             "text": "Owned production environments for assigned systems, including deployment, monitoring, uptime, and operational support",
-            "skills": []
+            "skills": ["Linux", "CI/CD", "nginx"]
           },
           {
             "text": "Collaborated across internal teams and external partners to define requirements and deliver platform-level integrations",
-            "skills": []
+            "skills": ["Cross-Functional Collaboration", "System Integration"]
           },
           {
             "text": "Extended and modernized existing systems, improving maintainability and long-term usability",
-            "skills": []
+            "skills": ["Ruby on Rails", "JavaScript"]
           }
         ]
       },
@@ -169,19 +173,19 @@
         "highlights": [
           {
             "text": "Led a small development team through design and delivery of a business-critical integration platform",
-            "skills": []
+            "skills": ["Technical Leadership", "System Integration"]
           },
           {
             "text": "Built workflow software spanning customer intake, production lifecycle management, reporting, manufacturing coordination, and shipping",
-            "skills": []
+            "skills": ["System Integration", "SQL"]
           },
           {
             "text": "Modernized how enterprise work was received and processed by replacing manual intake with an automated, scalable pipeline",
-            "skills": []
+            "skills": ["System Integration"]
           },
           {
             "text": "Worked directly with enterprise clients and internal stakeholders to refine requirements, resolve integration issues, and support adoption",
-            "skills": []
+            "skills": ["Cross-Functional Collaboration", "System Integration"]
           }
         ]
       },
@@ -195,19 +199,19 @@
         "highlights": [
           {
             "text": "Built modern software interfaces that integrated with legacy terminal systems including IBM 5250, 3270, VAX, and VT100 environments",
-            "skills": []
+            "skills": ["System Integration"]
           },
           {
             "text": "Gained early experience with workflow-oriented, event-driven, and stateful system behavior through software that translated legacy system state into asynchronous application workflows",
-            "skills": []
+            "skills": ["System Integration"]
           },
           {
             "text": "Helped enterprise clients modernize critical workflows without replacing underlying legacy infrastructure",
-            "skills": []
+            "skills": ["System Integration", "Cross-Functional Collaboration"]
           },
           {
             "text": "Partnered directly with client teams to diagnose integration challenges, define technical requirements, and communicate solutions across technical and non-technical audiences",
-            "skills": []
+            "skills": ["Cross-Functional Collaboration", "System Integration"]
           },
           {
             "text": "Contributed to early-stage development of Mitem's medical software offerings, including work that became part of the initial Blue Iris product",
@@ -225,7 +229,7 @@
         "highlights": [
           {
             "text": "Contributed to an enterprise logistics tracking product, including a DTMF phone interface for retrieving logistics data",
-            "skills": []
+            "skills": ["System Integration"]
           },
           {
             "text": "Delivered desktop and automation solutions for large enterprise clients",
