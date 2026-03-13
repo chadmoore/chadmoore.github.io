@@ -55,6 +55,8 @@ export interface SiteSection {
   cloudflareAnalyticsToken?: string;
   /** Controls the route and display label: "resume" (default) or "cv". */
   cvLabel?: "resume" | "cv";
+  /** Show skill-filter and sort controls on the CV experience section. */
+  cvFilters?: boolean;
   sections: Record<SectionKey, boolean>;
   links: { email: string; github: string; linkedin: string };
   navOrder: string[];

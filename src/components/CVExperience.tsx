@@ -37,6 +37,8 @@ import type { Experience, Highlight } from "@/lib/contentData";
 interface CVExperienceProps {
   experience: Experience[];
   skills: Record<string, Skill[]>;
+  /** When false, the filter/sort bar is hidden and all highlights are shown. */
+  enableFilters?: boolean;
 }
 
 type SortMode = "date" | "relevance";
@@ -83,7 +85,7 @@ function computeRelevanceScore(
 
 // ─── Component ───────────────────────────────────────────────────────
 
-export default function CVExperience({ experience, skills }: CVExperienceProps) {
+export default function CVExperience({ experience, skills, enableFilters = true }: CVExperienceProps) {
   // ── Filter state ─────────────────────────────────────────────────
   const [proficiency, setProficiency] = useState<Set<Proficiency>>(
     new Set(["expert", "proficient", "familiar"]),
@@ -160,7 +162,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
   return (
     <div className="space-y-6">
       {/* ── Filter + sort bar ──────────────────────────────────── */}
-      <div className="sticky top-14 z-10 bg-background space-y-2 pt-3 pb-4 border-b border-border">
+      {enableFilters && <div className="sticky top-14 z-10 bg-background space-y-2 pt-3 pb-4 border-b border-border">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
           <span className="text-muted font-medium uppercase tracking-wider text-[10px]">
             Show
@@ -195,7 +197,7 @@ export default function CVExperience({ experience, skills }: CVExperienceProps) 
             </button>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* ── Experience entries ──────────────────────────────────── */}
       <div className="space-y-8">

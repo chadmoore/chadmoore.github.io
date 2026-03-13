@@ -72,13 +72,13 @@ describe("CVPage", () => {
     }
   });
 
-  it("renders filter controls inside the Experience section", () => {
+  it("hides filter controls when cvFilters is disabled", () => {
     render(<CVPage />);
-    // CVExperience renders toggle pills for skill dimensions
-    expect(screen.getByRole("button", { name: "Expert" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Legacy" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "date" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "relevance" })).toBeInTheDocument();
+    // cvFilters is false in content.json — filter/sort bar should be hidden
+    expect(screen.queryByRole("button", { name: "Expert" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Legacy" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "date" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "relevance" })).not.toBeInTheDocument();
   });
 
   it("does not render a standalone Skills section", () => {

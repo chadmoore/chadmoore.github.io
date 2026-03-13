@@ -121,7 +121,7 @@ export default function CVPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-6">
             Experience
           </h2>
-          <CVExperience experience={cvData.experience} skills={cvData.skills} />
+          <CVExperience experience={cvData.experience} skills={cvData.skills} enableFilters={siteData.cvFilters ?? false} />
         </section>
       )}
 

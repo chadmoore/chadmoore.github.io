@@ -71,22 +71,25 @@ describe("content.json top-level structure", () => {
 
 describe("content.json site data", () => {
   it("has name and tagline", () => {
-    expect(siteData.name).toBe("Chad Moore");
+    expect(typeof siteData.name).toBe("string");
+    expect(siteData.name.length).toBeGreaterThan(0);
     expect(typeof siteData.tagline).toBe("string");
     expect(siteData.tagline.length).toBeGreaterThan(0);
   });
 
   it("has links with email, github, and linkedin", () => {
-    expect(siteData.links.email).toBe("chad@chadmoore.info");
-    expect(siteData.links.github).toBe("https://github.com/chadmoore");
-    expect(siteData.links.linkedin).toBe("https://www.linkedin.com/in/chad-moore-info");
+    expect(siteData.links.email).toMatch(/@/);
+    expect(siteData.links.github).toMatch(/^https:\/\/github\.com\//);
+    expect(siteData.links.linkedin).toMatch(/^https:\/\/www\.linkedin\.com\//);
   });
 });
 
 describe("content.json CV data integrity", () => {
   it("has required CV fields", () => {
-    expect(cvData.headline).toBe("Senior / Staff Full‑Stack Engineer");
-    expect(cvData.location).toBe("Northampton, Massachusetts, United States");
+    expect(typeof cvData.headline).toBe("string");
+    expect(cvData.headline.length).toBeGreaterThan(0);
+    expect(typeof cvData.location).toBe("string");
+    expect(cvData.location.length).toBeGreaterThan(0);
     expect(typeof cvData.summary).toBe("string");
     expect(cvData.summary.length).toBeGreaterThan(100);
   });
@@ -213,25 +216,25 @@ describe("content.json skills (organized from LinkedIn Skills)", () => {
     }
   });
 
-  it("includes key skills from LinkedIn endorsements", () => {
+  it("includes key skills from resume", () => {
     const allNames = Object.values(cvData.skills)
       .flat()
       .map((s) => s.name);
     const keySkills = [
       "JavaScript", "React", "TypeScript", "Node.js",
-      "Ruby", "SQL", "Java", "C#", "Linux",
-      "REST APIs", "Git", "Agile Methodologies",
+      "Ruby", "SQL", "Linux",
+      "REST APIs", "Git", "Agile",
     ];
     for (const skill of keySkills) {
       expect(allNames).toContain(skill);
     }
   });
 
-  it("includes modern skills not yet endorsed but listed on LinkedIn", () => {
+  it("includes identity and security skills", () => {
     const allNames = Object.values(cvData.skills)
       .flat()
       .map((s) => s.name);
-    expect(allNames).toContain("Agentic AI");
+    expect(allNames).toContain("OAuth 2.0");
     expect(allNames).toContain("SSO");
     expect(allNames).toContain("SAML");
   });
@@ -242,10 +245,10 @@ describe("content.json skills (organized from LinkedIn Skills)", () => {
     expect(preferred.length).toBeGreaterThanOrEqual(10);
   });
 
-  it("has at least some legacy skills", () => {
+  it("has no legacy skills (cleaned up)", () => {
     const allSkills = Object.values(cvData.skills).flat();
     const legacy = allSkills.filter((s) => s.status === "legacy");
-    expect(legacy.length).toBeGreaterThanOrEqual(5);
+    expect(legacy.length).toBe(0);
   });
 
   it("has at least some expert-level skills", () => {

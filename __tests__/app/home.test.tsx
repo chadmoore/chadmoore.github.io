@@ -50,20 +50,24 @@ jest.mock("@/lib/blog", () => ({
   ],
 }));
 
-import { cvDisplayLabel, cvSlug } from "@/lib/siteConfig";
+import { cvDisplayLabel, cvSlug, siteConfig } from "@/lib/siteConfig";
+import content from "../../content/content.json";
+import type { ContentData } from "../../src/lib/contentData";
+
+const typedContent = content as unknown as ContentData;
 
 import Home from "@/app/page";
 
 describe("Homepage", () => {
   it("renders the site name", () => {
     render(<Home />);
-    expect(screen.getByText("Chad Moore")).toBeInTheDocument();
+    expect(screen.getByText(siteConfig.name)).toBeInTheDocument();
   });
 
   it("renders the tagline", () => {
     render(<Home />);
     expect(
-      screen.getByText("Full-stack engineer. Enterprise systems. Cloud to UI.")
+      screen.getByText(siteConfig.tagline)
     ).toBeInTheDocument();
   });
 
@@ -81,11 +85,11 @@ describe("Homepage", () => {
     expect(cvLink.closest("a")).toHaveAttribute("href", `/${cvSlug}`);
   });
 
-  it("renders the three feature cards", () => {
+  it("renders all feature cards from content", () => {
     render(<Home />);
-    expect(screen.getByText("Enterprise Integration")).toBeInTheDocument();
-    expect(screen.getByText("Secure Identity & APIs")).toBeInTheDocument();
-    expect(screen.getByText("Architecture & Technical Leadership")).toBeInTheDocument();
+    for (const card of typedContent.home.featureCards) {
+      expect(screen.getByText(card.title)).toBeInTheDocument();
+    }
   });
 
   it("renders recent blog posts section when posts exist", () => {

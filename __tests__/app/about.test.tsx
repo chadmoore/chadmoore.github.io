@@ -80,10 +80,10 @@ describe("AboutPage", () => {
     expect(svgs.length).toBeGreaterThanOrEqual(categoryCount);
   });
 
-  it("renders the About intro paragraphs", () => {
+  it("renders the About intro paragraphs from content", () => {
     render(<AboutPage />);
-    expect(
-      screen.getByText(/nearly three decades/)
-    ).toBeInTheDocument();
+    for (const paragraph of content.about.intro) {
+      expect(screen.getByText(paragraph)).toBeInTheDocument();
+    }
   });
 });

@@ -22,7 +22,8 @@
       "blog",
       "projects"
     ],
-    "cvLabel": "resume"
+    "cvLabel": "resume",
+    "cvFilters": false
   },
   "home": {
     "greeting": "Hi, I'm",
@@ -47,8 +48,8 @@
   "about": {
     "heading": "About Me",
     "intro": [
-      "I'm Chad Moore — a senior full-stack developer with nearly three decades of experience designing and delivering complex enterprise systems. I've worked across financial services, telecommunications, government, healthcare, and manufacturing — from Fortune 500 organizations to federal agencies.",
-      "My work centers on enterprise integration, secure identity systems, and API architecture. I frequently operate in an architectural capacity — owning system design, integration strategy, and technical direction. More recently, I've been leveraging agentic AI and MCP-based tooling to accelerate development while raising the bar on testing and code consistency."
+      "I'm Chad Moore — a senior full-stack engineer with deep experience building complex, stateful software systems across legacy modernization, enterprise integrations, and modern cloud and web platforms.",
+      "My work spans TypeScript, Node.js, React, Ruby on Rails, APIs, infrastructure, identity, and workflow-driven applications. I'm known for owning complex projects end-to-end, translating difficult requirements into maintainable systems, and bringing a strong focus to developer usability and clean system design."
     ],
     "skillsHeading": "What I Work With",
     "contactHeading": "Get In Touch",
@@ -63,15 +64,15 @@
     "description": "Thoughts on software, data, and building things."
   },
   "cv": {
-    "headline": "Senior / Staff Full‑Stack Developer",
+    "headline": "Senior Full-Stack Engineer",
     "location": "Northampton, Massachusetts, United States",
-    "summary": "Senior full‑stack developer with nearly three decades of experience designing and delivering complex enterprise systems across financial services, telecommunications, government, healthcare, and manufacturing. Deep expertise in frontend architecture, API design, cloud infrastructure, and secure identity systems. Frequently operating in an architectural capacity — owning system design, integration strategy, and technical direction across client engagements. Actively leveraging agentic AI, MCP‑based tooling, and AI‑assisted workflows to accelerate development while raising the bar on testing, documentation, and code consistency. Proven track record leading high‑stakes implementations for Fortune 50 organizations, federal agencies, and national service providers — translating complex technical problems into clear solutions for clients, cross‑functional teams, and executive stakeholders.",
+    "summary": "Senior full-stack engineer with deep experience building complex, stateful software systems across legacy modernization, enterprise integrations, and modern cloud and web platforms. Strong background across TypeScript, Node.js, React, Ruby on Rails, APIs, infrastructure, identity, and workflow-driven applications. Known for owning complex projects end-to-end, translating difficult requirements into maintainable systems, and bringing a strong focus to maintainability, developer usability, and clean system design.",
     "specialties": [
-      "Enterprise Systems",
+      "Full-Stack Architecture",
+      "API & System Integration",
       "Cloud & Infrastructure",
-      "API Architecture",
-      "AI‑Augmented Development",
-      "Secure Identity"
+      "Identity & Security",
+      "Technical Leadership"
     ],
     "experience": [
       {
@@ -80,91 +81,43 @@
         "location": "",
         "startDate": "2020-03",
         "endDate": "2026-02",
-        "description": "Operated in an architectural capacity across complex client engagements — owning system design, API integration strategy, and technical direction.",
+        "description": "Worked in a senior full-stack and architectural capacity across complex enterprise SaaS engagements, owning system design, integration strategy, and technical delivery.",
         "highlights": [
           {
-            "text": "Designed secure, scalable API integration layers connecting enterprise systems to cloud analytics platforms using OAuth, SAML, and JWT (enterprise‑scale authN/authZ across distributed environments)",
-            "skills": [
-              "REST APIs",
-              "OAuth 2.0",
-              "SAML",
-              "JWT",
-              "AWS",
-              "Azure"
-            ]
-          },
-          {
-            "text": "Served as the go‑to escalation point for complex API integration issues — diagnosing and unblocking problems across undocumented or poorly documented platform boundaries",
-            "skills": [
-              "REST APIs"
-            ]
-          },
-          {
-            "text": "Architected frontend solutions with React, Next.js, and TypeScript; deployed across AWS, Azure, and Kubernetes/Docker with CI/CD tailored per client (Jenkins, GitHub Actions, GitLab CI/CD)",
-            "skills": [
-              "React",
-              "Next.js",
-              "TypeScript",
-              "AWS",
-              "Azure",
-              "Kubernetes",
-              "Docker",
-              "CI/CD"
-            ]
-          },
-          {
-            "text": "Built embedded analytics and data visualization experiences on Qlik Sense Enterprise & SaaS, supporting tens of thousands of end users",
-            "skills": [
-              "JavaScript",
-              "Data Visualization"
-            ]
-          },
-          {
-            "text": "Guided enterprise engineering teams through identity architecture and implementation, acting as a technical authority on authentication and authorization",
-            "skills": [
-              "OAuth 2.0",
-              "OIDC",
-              "SAML",
-              "SSO",
-              "Authorization"
-            ]
-          },
-          {
-            "text": "Drove full‑stack performance optimization across engagements, improving responsiveness and reliability under high‑load conditions",
-            "skills": [
-              "React",
-              "Node.js",
-              "REST APIs"
-            ]
-          },
-          {
-            "text": "Integrated agentic AI and MCP‑based tooling into daily workflows to accelerate code generation, test coverage, documentation, and review cycles while maintaining quality",
-            "skills": [
-              "Agentic AI",
-              "MCP Tooling",
-              "AI‑Assisted Workflows"
-            ]
-          },
-          {
-            "text": "Served as a client‑facing technical architect on high‑stakes deployments, translating complex technical constraints into clear guidance for engineers and executive stakeholders",
+            "text": "Designed secure, scalable API integration layers connecting enterprise systems to cloud platforms using OAuth, SAML, and JWT",
             "skills": []
           },
           {
-            "text": "Mentored enterprise teams on auth architecture, frontend patterns, and delivery best practices, elevating team capability through complex implementations",
-            "skills": [
-              "OAuth 2.0",
-              "OIDC",
-              "SSO",
-              "React",
-              "Agile Methodologies"
-            ]
+            "text": "Built frontend applications and embedded experiences with React, Next.js, and TypeScript",
+            "skills": []
           },
           {
-            "text": "Worked extensively with hypercube data structures, complex analytics data models, multidimensional query results, and high‑volume API response payloads",
-            "skills": [
-              "Data Visualization",
-              "REST APIs"
-            ]
+            "text": "Designed developer-facing tooling and interfaces that simplified how single-page Qlik applications were configured, managed, and extended across client implementations",
+            "skills": []
+          },
+          {
+            "text": "Brought a strong maintainability mindset to shared codebases, including testing patterns, codebase conventions, and day-to-day development practices",
+            "skills": []
+          },
+          {
+            "text": "Delivered solutions across AWS, Azure, Docker, and Kubernetes environments with CI/CD pipelines tailored to client delivery models",
+            "skills": []
+          },
+          {
+            "text": "Served as a technical lead and escalation point for complex implementation issues, helping teams unblock high-impact production work",
+            "skills": []
+          },
+          {
+            "text": "Drove performance, reliability, and maintainability improvements across full-stack solutions operating under significant scale and complexity",
+            "skills": []
+          },
+          {
+            "text": "Partnered closely with client stakeholders and engineering teams to refine requirements and translate them into workable technical solutions",
+            "skills": []
+          },
+          {
+            "text": "Mentored engineers and client teams on frontend architecture, authentication patterns, and delivery best practices",
+            "skills": []
           }
         ]
       },
@@ -174,70 +127,34 @@
         "location": "",
         "startDate": "2012-01",
         "endDate": "2020-03",
-        "description": "Full‑stack developer owning consumer‑facing and internal web/mobile applications across the complete product lifecycle, from development through marketplace release and ongoing iteration.",
+        "description": "Owned consumer-facing and internal applications across the full product lifecycle, from implementation through production support and ongoing iteration.",
         "highlights": [
           {
-            "text": "Co‑designed and built a custom SAML Identity Provider (IDP) integrating with numerous TV Everywhere content platforms — a critical piece of infrastructure enabling secure subscriber authentication across the organization's entire digital ecosystem",
-            "skills": [
-              "SAML",
-              "SSO",
-              "Authorization",
-              "Ruby on Rails",
-              "Linux"
-            ]
+            "text": "Built and maintained full-stack web and mobile applications supporting customer-facing and internal business workflows",
+            "skills": []
           },
           {
-            "text": "Owned and maintained Ubuntu‑based production infrastructure 24/7, handling provisioning, monitoring, deployment, and uptime across all production environments — effectively operating as platform engineer for my projects",
-            "skills": [
-              "Linux",
-              "nginx",
-              "Apache",
-              "DevOps",
-              "CI/CD"
-            ]
+            "text": "Designed REST APIs used by the RCN mobile application, shaping backend interfaces for clarity, reliability, and long-term maintainability",
+            "skills": []
           },
           {
-            "text": "Designed, developed, deployed, and supported consumer‑facing and internal web and mobile applications across the full product lifecycle, from development through marketplace release and ongoing iteration",
-            "skills": [
-              "JavaScript",
-              "Ruby on Rails",
-              "HTML5",
-              "CSS",
-              "User Interface Design"
-            ]
+            "text": "Worked across Ruby on Rails, JavaScript, MySQL, Redis, and Linux-based infrastructure",
+            "skills": []
           },
           {
-            "text": "Collaborated with a major media technology partner to develop a content discovery system, contributing to platform‑level product architecture. Served as a primary technical point of contact across internal teams and external partners, translating complex integration requirements into actionable development plans",
-            "skills": [
-              "REST APIs",
-              "JavaScript",
-              "Ruby"
-            ]
+            "text": "Co-designed and built a custom SAML identity provider supporting secure authentication across multiple partner platforms",
+            "skills": []
           },
           {
-            "text": "Extended and refactored legacy systems and integrated third‑party applications, improving functionality and long‑term maintainability",
-            "skills": [
-              "Ruby on Rails",
-              "JavaScript"
-            ]
+            "text": "Owned production environments for assigned systems, including deployment, monitoring, uptime, and operational support",
+            "skills": []
           },
           {
-            "text": "Worked across the full stack using Ruby on Rails, JavaScript/jQuery, MySQL, Redis, and Linux‑based infrastructure (Apache, nginx), with version control via Git, GitLab, and SVN, Jenkins CI/CD",
-            "skills": [
-              "Ruby on Rails",
-              "Ruby",
-              "JavaScript",
-              "MySQL",
-              "Redis",
-              "Linux",
-              "Apache",
-              "nginx",
-              "Git",
-              "CI/CD"
-            ]
+            "text": "Collaborated across internal teams and external partners to define requirements and deliver platform-level integrations",
+            "skills": []
           },
           {
-            "text": "Two Time Quarterly MVP",
+            "text": "Extended and modernized existing systems, improving maintainability and long-term usability",
             "skills": []
           }
         ]
@@ -248,37 +165,23 @@
         "location": "",
         "startDate": "2006-10",
         "endDate": "2012-01",
-        "description": "Led a development team in designing and building a sophisticated B2B print job integration platform using the PrintTalk XML standard — replacing manual processes with an end‑to‑end automated pipeline.",
+        "description": "Led development of an end-to-end B2B workflow and integration platform that automated print job intake, production coordination, and shipping processes.",
         "highlights": [
           {
-            "text": "Architected the system to enable major digital publishing platforms, global e‑commerce organizations, and academic institutions to submit print jobs electronically and interface directly with the manufacturing workflow",
-            "skills": [
-              "REST APIs",
-              "SQL"
-            ]
-          },
-          {
-            "text": "Designed and built production lifecycle management covering customer relationship tracking, cost and materials reporting, manufacturing workflow automation, and shipping coordination",
-            "skills": [
-              "SQL",
-              "User Interface Design"
-            ]
-          },
-          {
-            "text": "Modernized how the organization received and processed work from enterprise clients, transforming a manual intake process into a fully automated, scalable integration platform",
-            "skills": [
-              "REST APIs"
-            ]
-          },
-          {
-            "text": "Coordinated directly with enterprise clients and internal stakeholders to scope requirements, resolve integration issues, and ensure successful platform adoption",
+            "text": "Led a small development team through design and delivery of a business-critical integration platform",
             "skills": []
           },
           {
-            "text": "Partnered with prepress, print, and shipping managers to design software coordinating workflows across the organization, while leading the development team throughout the engagement",
-            "skills": [
-              "Agile Methodologies"
-            ]
+            "text": "Built workflow software spanning customer intake, production lifecycle management, reporting, manufacturing coordination, and shipping",
+            "skills": []
+          },
+          {
+            "text": "Modernized how enterprise work was received and processed by replacing manual intake with an automated, scalable pipeline",
+            "skills": []
+          },
+          {
+            "text": "Worked directly with enterprise clients and internal stakeholders to refine requirements, resolve integration issues, and support adoption",
+            "skills": []
           }
         ]
       },
@@ -288,39 +191,27 @@
         "location": "",
         "startDate": "1999",
         "endDate": "2006",
-        "description": "Delivered custom integration solutions for enterprise clients across major national retailers, national utility providers, and healthcare organizations — enabling clients to modernize workflows without replacing critical legacy infrastructure.",
+        "description": "Worked on software and integration solutions built around complex legacy enterprise workflows, including systems that mapped legacy state and process behavior into event-driven application logic.",
         "highlights": [
           {
-            "text": "Built modern software interfaces that integrated seamlessly with legacy terminal systems (IBM 5250, 3270, VAX, VT100), bridging decades‑old infrastructure to contemporary platforms",
-            "skills": [
-              "Java",
-              "C#",
-              ".NET",
-              "User Interface Design"
-            ]
-          },
-          {
-            "text": "Worked both on‑site and remotely as part of collaborative project teams, serving as a key technical contributor on complex, multi‑system integration engagements",
+            "text": "Built modern software interfaces that integrated with legacy terminal systems including IBM 5250, 3270, VAX, and VT100 environments",
             "skills": []
           },
           {
-            "text": "Partnered directly with enterprise client teams to diagnose integration challenges, define technical requirements, and communicate solutions across technical and non‑technical audiences",
-            "skills": [
-              "REST APIs"
-            ]
+            "text": "Gained early experience with workflow-oriented, event-driven, and stateful system behavior through software that translated legacy system state into asynchronous application workflows",
+            "skills": []
           },
           {
-            "text": "Worked with the product team on early‑stage development of Mitem's medical software offerings, contributing to prototypes and core features that became part of the initial Blue Iris product",
-            "skills": [
-              "Java",
-              "User Interface Design"
-            ]
+            "text": "Helped enterprise clients modernize critical workflows without replacing underlying legacy infrastructure",
+            "skills": []
           },
           {
-            "text": "Received a Macromedia Flex award for UI/UX excellence — recognized for delivering an exceptional user experience on a technically complex enterprise integration project",
-            "skills": [
-              "User Interface Design"
-            ]
+            "text": "Partnered directly with client teams to diagnose integration challenges, define technical requirements, and communicate solutions across technical and non-technical audiences",
+            "skills": []
+          },
+          {
+            "text": "Contributed to early-stage development of Mitem's medical software offerings, including work that became part of the initial Blue Iris product",
+            "skills": []
           }
         ]
       },
@@ -330,20 +221,18 @@
         "location": "",
         "startDate": "1996",
         "endDate": "1998",
-        "description": "Contributed code to enterprise logistics tracking products and delivered desktop and automation solutions for Fortune 50 organizations.",
+        "description": "Contributed to enterprise software and automation solutions early in career, supporting feature development, debugging, and client delivery.",
         "highlights": [
           {
-            "text": "Contributed code to an enterprise logistics tracking product, including building a DTMF phone interface enabling clients to retrieve logistics data via telephone — predating modern IVR systems",
-            "skills": [
-              "SQL"
-            ]
-          },
-          {
-            "text": "Delivered desktop and automation solutions for Fortune 50 pharmaceutical organizations and Fortune 50 industrial conglomerates, including work directly supporting C‑suite executive operations",
+            "text": "Contributed to an enterprise logistics tracking product, including a DTMF phone interface for retrieving logistics data",
             "skills": []
           },
           {
-            "text": "Debugged and improved existing applications, developed new features, and supported enterprise client engagements early in career",
+            "text": "Delivered desktop and automation solutions for large enterprise clients",
+            "skills": []
+          },
+          {
+            "text": "Supported client engagements through debugging, feature development, and implementation work",
             "skills": []
           }
         ]
@@ -351,17 +240,7 @@
     ],
     "education": [],
     "skills": {
-      "Frontend": [
-        {
-          "name": "React",
-          "proficiency": "expert",
-          "preference": "preferred"
-        },
-        {
-          "name": "Next.js",
-          "proficiency": "proficient",
-          "preference": "preferred"
-        },
+      "Languages & Frameworks": [
         {
           "name": "TypeScript",
           "proficiency": "expert",
@@ -373,32 +252,23 @@
           "preference": "preferred"
         },
         {
-          "name": "HTML5",
-          "proficiency": "expert"
+          "name": "Node.js",
+          "proficiency": "expert",
+          "preference": "preferred"
         },
         {
-          "name": "CSS",
-          "proficiency": "proficient"
+          "name": "React",
+          "proficiency": "expert",
+          "preference": "preferred"
         },
         {
-          "name": "Tailwind CSS",
+          "name": "Next.js",
           "proficiency": "proficient",
           "preference": "preferred"
         },
         {
-          "name": "User Interface Design",
-          "proficiency": "proficient"
-        },
-        {
-          "name": "AngularJS",
+          "name": "Ruby on Rails",
           "proficiency": "proficient",
-          "status": "legacy"
-        }
-      ],
-      "Backend": [
-        {
-          "name": "Node.js",
-          "proficiency": "expert",
           "preference": "preferred"
         },
         {
@@ -407,57 +277,31 @@
           "preference": "preferred"
         },
         {
+          "name": "Python",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        }
+      ],
+      "Architecture & APIs": [
+        {
           "name": "REST APIs",
           "proficiency": "expert",
           "preference": "preferred"
         },
         {
-          "name": "SQL",
+          "name": "Service-Oriented Architecture",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "Microservices",
+          "proficiency": "proficient"
+        },
+        {
+          "name": "System Integration",
           "proficiency": "expert"
-        },
-        {
-          "name": "Python",
-          "proficiency": "proficient",
-          "preference": "preferred"
-        },
-        {
-          "name": "Ruby on Rails",
-          "proficiency": "proficient",
-          "status": "legacy",
-          "preference": "preferred"
-        },
-        {
-          "name": "C#",
-          "proficiency": "proficient",
-          "status": "legacy"
-        },
-        {
-          "name": ".NET",
-          "proficiency": "proficient",
-          "status": "legacy"
-        },
-        {
-          "name": "Java",
-          "proficiency": "proficient",
-          "status": "legacy"
-        },
-        {
-          "name": "PHP",
-          "proficiency": "familiar",
-          "status": "legacy"
         }
       ],
       "Cloud & Infrastructure": [
-        {
-          "name": "Linux",
-          "proficiency": "expert",
-          "preference": "preferred"
-        },
-        {
-          "name": "Git",
-          "proficiency": "expert",
-          "preference": "preferred"
-        },
         {
           "name": "AWS",
           "proficiency": "proficient",
@@ -469,8 +313,22 @@
           "preference": "preferred"
         },
         {
+          "name": "Kubernetes",
+          "proficiency": "familiar"
+        },
+        {
+          "name": "Linux",
+          "proficiency": "expert",
+          "preference": "preferred"
+        },
+        {
           "name": "CI/CD",
           "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "Git",
+          "proficiency": "expert",
           "preference": "preferred"
         },
         {
@@ -480,29 +338,26 @@
         {
           "name": "nginx",
           "proficiency": "proficient"
+        }
+      ],
+      "Data & Persistence": [
+        {
+          "name": "SQL",
+          "proficiency": "expert"
         },
         {
-          "name": "DevOps",
+          "name": "PostgreSQL",
+          "proficiency": "proficient",
+          "preference": "preferred"
+        },
+        {
+          "name": "MySQL",
           "proficiency": "proficient"
         },
         {
-          "name": "Kubernetes",
-          "proficiency": "familiar"
-        },
-        {
-          "name": "Unix",
+          "name": "Redis",
           "proficiency": "proficient",
-          "status": "legacy"
-        },
-        {
-          "name": "Apache",
-          "proficiency": "proficient",
-          "status": "legacy"
-        },
-        {
-          "name": "IIS",
-          "proficiency": "proficient",
-          "status": "legacy"
+          "preference": "preferred"
         }
       ],
       "Identity & Security": [
@@ -517,11 +372,6 @@
           "preference": "preferred"
         },
         {
-          "name": "SSO",
-          "proficiency": "expert",
-          "preference": "preferred"
-        },
-        {
           "name": "SAML",
           "proficiency": "expert"
         },
@@ -530,54 +380,26 @@
           "proficiency": "proficient"
         },
         {
-          "name": "Authorization",
-          "proficiency": "proficient"
+          "name": "SSO",
+          "proficiency": "expert",
+          "preference": "preferred"
         }
       ],
-      "Data": [
+      "Ways of Working": [
         {
-          "name": "PostgreSQL",
-          "proficiency": "proficient",
-          "preference": "preferred"
+          "name": "Agile",
+          "proficiency": "expert"
         },
         {
-          "name": "Redis",
-          "proficiency": "proficient",
-          "preference": "preferred"
+          "name": "Technical Leadership",
+          "proficiency": "expert"
         },
         {
-          "name": "Data Visualization",
-          "proficiency": "proficient"
+          "name": "Mentoring",
+          "proficiency": "expert"
         },
         {
-          "name": "SQL Server",
-          "proficiency": "proficient",
-          "status": "legacy"
-        },
-        {
-          "name": "MySQL",
-          "proficiency": "proficient",
-          "status": "legacy"
-        }
-      ],
-      "AI & Tooling": [
-        {
-          "name": "Agentic AI",
-          "proficiency": "proficient",
-          "preference": "preferred"
-        },
-        {
-          "name": "MCP Tooling",
-          "proficiency": "proficient",
-          "preference": "preferred"
-        },
-        {
-          "name": "AI‑Assisted Workflows",
-          "proficiency": "proficient",
-          "preference": "preferred"
-        },
-        {
-          "name": "Agile Methodologies",
+          "name": "Cross-Functional Collaboration",
           "proficiency": "expert"
         }
       ]

@@ -53,7 +53,7 @@ describe("Header", () => {
 
   it("renders the site name as a link to home", () => {
     render(<Header />);
-    const homeLink = screen.getByText("Chad Moore");
+    const homeLink = screen.getByText(siteConfig.name);
     expect(homeLink).toBeInTheDocument();
     expect(homeLink.closest("a")).toHaveAttribute("href", "/");
   });

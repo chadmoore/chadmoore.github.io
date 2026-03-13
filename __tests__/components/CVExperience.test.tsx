@@ -236,4 +236,21 @@ describe("CVExperience", () => {
     expect(screen.getByText("Senior Engineer")).toBeInTheDocument();
     expect(screen.getByText(/AcmeCorp/)).toBeInTheDocument();
   });
+
+  // ── enableFilters feature flag ────────────────────────────────────
+
+  it("hides filter and sort controls when enableFilters is false", () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} enableFilters={false} />);
+    expect(screen.queryByRole("button", { name: /expert/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /proficient/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /date/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /relevance/i })).not.toBeInTheDocument();
+  });
+
+  it("still shows all highlights when enableFilters is false", () => {
+    render(<CVExperience experience={mockExperience} skills={mockSkills} enableFilters={false} />);
+    expect(screen.getByText("Built React dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Maintained jQuery frontend")).toBeInTheDocument();
+    expect(screen.getByText("Patched PHP backend")).toBeInTheDocument();
+  });
 });
